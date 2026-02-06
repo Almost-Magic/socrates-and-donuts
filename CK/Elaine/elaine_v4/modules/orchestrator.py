@@ -38,7 +38,7 @@ class Orchestrator:
                  meeting_engine=None, innovation_engine=None,
                  thinking_engine=None, voice_formatter=None,
                  learning_radar=None, communication_engine=None,
-                 strategic_engine=None):
+                 strategic_engine=None, compassion_engine=None):
         self.gravity = gravity_field
         self.constellation = poi_engine
         self.cartographer_map = territory_map
@@ -52,6 +52,7 @@ class Orchestrator:
         self.learning = learning_radar
         self.communication = communication_engine
         self.strategic = strategic_engine
+        self.compassion = compassion_engine
 
         self._cascade_log: list[dict] = []
 
@@ -330,6 +331,15 @@ class Orchestrator:
                 cascades.append(f"meeting → learning_radar: detected '{result.topic}'")
                 self._log("chronicle", "learning_radar", "interest_detected", result.topic)
 
+        # 7. Summary → Compassion (detect emotional context)
+        if self.compassion and meeting.summary:
+            context = self.compassion.detect_context(meeting.summary)
+            if context.value != "neutral":
+                response = self.compassion.frame_response(context, meeting.title)
+                cascades.append(f"meeting → compassion: {context.value} → tone={response.tone.value}")
+                self._log("chronicle", "compassion", "context_detected",
+                           f"{context.value} — {response.tone.value}")
+
         self._log("orchestrator", "all", "post_meeting_cascade",
                    f"{meeting.title}: {len(cascades)} cascades")
 
@@ -477,6 +487,8 @@ class Orchestrator:
             "communication_auto": ["follow-ups", "content", "presentations", "proposals"],
             "strategic_auto": ["opportunities", "territories", "portfolio"],
             "learning_radar_from": ["chronicle", "amplifier", "cartographer", "conversation"],
+            "compassion_from": ["chronicle", "gravity", "voice", "conversation"],
+            "compassion_to": ["voice", "morning_briefing"],
         }
 
     def status(self) -> dict:
@@ -486,7 +498,7 @@ class Orchestrator:
                 self.gravity, self.constellation, self.cartographer,
                 self.amplifier, self.sentinel, self.chronicle,
                 self.innovator, self.thinking, self.voice, self.learning,
-                self.communication, self.strategic,
+                self.communication, self.strategic, self.compassion,
             ] if m is not None),
             "wiring": self.get_wiring_diagram(),
         }

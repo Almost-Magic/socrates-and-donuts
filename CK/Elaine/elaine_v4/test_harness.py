@@ -523,6 +523,135 @@ test("Auto: SWOT on opportunity", test_strategic_auto_swot)
 test("Auto: MECE check", test_strategic_auto_mece)
 test("Auto: presentation 10-20-30 check", test_presentation_auto_check)
 
+# ── Compassion Engine ────────────────────────────────────────────
+
+def test_compassion_detect_neutral():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("Here are the quarterly results and next steps")
+    assert ctx == EmotionalContext.NEUTRAL
+
+def test_compassion_detect_pressure():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("I'm overwhelmed with deadlines and running out of time")
+    assert ctx == EmotionalContext.HIGH_PRESSURE
+
+def test_compassion_detect_bad_news():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("Unfortunately we lost the deal with Acme Corp")
+    assert ctx == EmotionalContext.BAD_NEWS
+
+def test_compassion_detect_celebration():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("We won the contract and shipped the product! Milestone achieved!")
+    assert ctx == EmotionalContext.CELEBRATION
+
+def test_compassion_detect_grief():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("My uncle passed away last night")
+    assert ctx == EmotionalContext.GRIEF
+
+def test_compassion_detect_overwork():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    ctx = ce.detect_context("Normal day", {"hours_today": 14})
+    assert ctx == EmotionalContext.OVERWORK
+
+def test_compassion_tone_selection():
+    from modules.compassion import CompassionEngine, EmotionalContext, ToneRegister
+    ce = CompassionEngine()
+    assert ce.select_tone(EmotionalContext.GRIEF) == ToneRegister.QUIET
+    assert ce.select_tone(EmotionalContext.HIGH_PRESSURE) == ToneRegister.GROUNDING
+    assert ce.select_tone(EmotionalContext.CELEBRATION) == ToneRegister.CELEBRATORY
+    assert ce.select_tone(EmotionalContext.CREATIVE) == ToneRegister.QUIET
+
+def test_compassion_frame_response():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    r = ce.frame_response(EmotionalContext.BAD_NEWS)
+    assert r.tone.value == "warm"
+    assert r.should_push == False
+    assert r.breathing_room == True
+    assert "not easy" in r.opening.lower() or "details" in r.opening.lower()
+
+def test_compassion_frame_grief():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    r = ce.frame_response(EmotionalContext.GRIEF)
+    assert r.should_push == False
+    assert r.breathing_room == True
+    assert r.tone.value == "quiet"
+    assert len(r.framing_notes) >= 3
+
+def test_compassion_frame_creative():
+    from modules.compassion import CompassionEngine, EmotionalContext
+    ce = CompassionEngine()
+    r = ce.frame_response(EmotionalContext.CREATIVE)
+    assert r.opening == ""  # Don't interrupt flow
+    assert r.should_push == False
+    assert r.breathing_room == True
+
+def test_compassion_wellbeing_tracking():
+    from modules.compassion import CompassionEngine, WellbeingLevel
+    ce = CompassionEngine()
+    ce.log_signal("late_hours", "Worked until 11pm")
+    ce.log_signal("late_hours", "Worked until midnight")
+    ce.log_signal("late_hours", "Worked until 1am")
+    ce.log_signal("no_break", "No lunch break")
+    assert ce.wellbeing.consecutive_late_days == 3
+    assert ce.wellbeing.level in (WellbeingLevel.STRETCHED, WellbeingLevel.STRAINED, WellbeingLevel.DEPLETED)
+
+def test_compassion_wellbeing_recovery():
+    from modules.compassion import CompassionEngine, WellbeingLevel
+    ce = CompassionEngine()
+    ce.log_signal("win", "Landed new client")
+    ce.log_signal("win", "Published article")
+    ce.log_signal("win", "Great feedback from partner")
+    assert ce.wellbeing.wins_this_week == 3
+    assert ce.wellbeing.level in (WellbeingLevel.THRIVING, WellbeingLevel.STEADY)
+
+def test_compassion_morning_briefing():
+    from modules.compassion import CompassionEngine
+    ce = CompassionEngine()
+    data = ce.get_morning_compassion()
+    assert "wellbeing_level" in data
+    assert "tone" in data
+    assert "opening" in data
+    assert "stats" in data
+
+def test_compassion_voice_text():
+    from modules.compassion import CompassionEngine
+    ce = CompassionEngine()
+    text = ce.get_voice_compassion_text()
+    assert isinstance(text, str)
+
+def test_compassion_status():
+    from modules.compassion import CompassionEngine
+    ce = CompassionEngine()
+    s = ce.status()
+    assert "wellbeing_level" in s
+    assert "signals_logged" in s
+
+test("Compassion: detect neutral", test_compassion_detect_neutral)
+test("Compassion: detect pressure", test_compassion_detect_pressure)
+test("Compassion: detect bad news", test_compassion_detect_bad_news)
+test("Compassion: detect celebration", test_compassion_detect_celebration)
+test("Compassion: detect grief", test_compassion_detect_grief)
+test("Compassion: detect overwork (metadata)", test_compassion_detect_overwork)
+test("Compassion: tone selection", test_compassion_tone_selection)
+test("Compassion: frame bad news", test_compassion_frame_response)
+test("Compassion: frame grief (quiet, no push)", test_compassion_frame_grief)
+test("Compassion: frame creative (silence)", test_compassion_frame_creative)
+test("Compassion: wellbeing degrades under stress", test_compassion_wellbeing_tracking)
+test("Compassion: wellbeing recovers with wins", test_compassion_wellbeing_recovery)
+test("Compassion: morning briefing data", test_compassion_morning_briefing)
+test("Compassion: voice text", test_compassion_voice_text)
+test("Compassion: status", test_compassion_status)
+
 
 # ══════════════════════════════════════════════════════════════════
 # 3. INTEGRATION TESTS — Cross-Module Cascades
@@ -742,6 +871,8 @@ def test_api_endpoints():
         ("GET", "/api/learning/status"),
         ("GET", "/api/frameworks/communication/status"),
         ("GET", "/api/frameworks/strategic/status"),
+        ("GET", "/api/compassion/wellbeing"),
+        ("GET", "/api/compassion/status"),
     ]
 
     failed_endpoints = []
@@ -812,6 +943,7 @@ modules = [
     "Chronicle v2", "Voice (ElevenLabs)", "Innovator", "Beast",
     "Orchestrator", "Learning Radar",
     "Communication Frameworks", "Strategic Analysis",
+    "Compassion Engine",
 ]
 
 stamp = {

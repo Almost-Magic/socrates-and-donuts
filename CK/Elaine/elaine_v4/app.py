@@ -83,6 +83,10 @@ def create_app():
     from modules.strategic import StrategicEngine
     strategic_engine = StrategicEngine()
 
+    # Phase 15: Compassion Engine
+    from modules.compassion import CompassionEngine
+    compassion_engine = CompassionEngine()
+
     # Phase 12: Orchestrator (wires everything together)
     from modules.orchestrator import Orchestrator
     orchestrator = Orchestrator(
@@ -99,6 +103,7 @@ def create_app():
         learning_radar=learning_radar,
         communication_engine=communication_engine,
         strategic_engine=strategic_engine,
+        compassion_engine=compassion_engine,
     )
 
     # ── Register All Blueprints ──────────────────────────────────
@@ -139,6 +144,10 @@ def create_app():
     from api_routes_phase14b import create_framework_routes
     app.register_blueprint(create_framework_routes(communication_engine, strategic_engine, orchestrator))
 
+    # Phase 14c
+    from api_routes_phase14c import create_compassion_routes
+    app.register_blueprint(create_compassion_routes(compassion_engine))
+
     # ── System Status ────────────────────────────────────────────
 
     @app.route("/api/status", methods=["GET"])
@@ -164,6 +173,7 @@ def create_app():
                 "learning_radar": {"status": "active", "interests": len(learning_radar.interests), "connections": len(learning_radar.connections)},
                 "communication": {"status": "active", "frameworks": 7},
                 "strategic": {"status": "active", "frameworks": 8},
+                "compassion": {"status": "active", "wellbeing": compassion_engine.wellbeing.level.value},
             },
             "phase": "14 — Learning Radar",
         })
