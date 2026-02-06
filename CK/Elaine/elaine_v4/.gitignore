@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Data (runtime state — not committed)
+data/
+*.db
+*.sqlite3
+
+# Secrets (never commit)
+.env
+*.key
+*.pem
+secrets/
+
+# Test artifacts
+confidence_stamp.json
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Archives
+*.tar.gz
+*.zip
