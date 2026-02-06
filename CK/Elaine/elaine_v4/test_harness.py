@@ -652,6 +652,110 @@ test("Compassion: morning briefing data", test_compassion_morning_briefing)
 test("Compassion: voice text", test_compassion_voice_text)
 test("Compassion: status", test_compassion_status)
 
+# ── Gatekeeper ───────────────────────────────────────────────────
+
+def test_gatekeeper_clear():
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    gk = Gatekeeper()
+    r = gk.check("Hi team, here are the meeting notes from today.", "Meeting notes", channel=ContentChannel.EMAIL)
+    assert r.verdict.value in ("clear", "review")
+
+def test_gatekeeper_priority_detect_sensitive():
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    gk = Gatekeeper()
+    p = gk.detect_priority("Attached is the pricing proposal with our fee schedule", "client@acme.com")
+    assert p.value == "sensitive"
+
+def test_gatekeeper_priority_detect_critical():
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    gk = Gatekeeper()
+    p = gk.detect_priority("Board presentation for investor meeting", "")
+    assert p.value == "critical"
+
+def test_gatekeeper_with_sentinel():
+    from modules.sentinel.trust_engine import TrustEngine
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    se = TrustEngine()
+    gk = Gatekeeper(sentinel=se)
+    r = gk.check("We guarantee compliance and will ensure certification.", "Proposal", channel=ContentChannel.PROPOSAL)
+    sentinel_check = next((c for c in r.checks if c.gate_name == "sentinel"), None)
+    assert sentinel_check is not None
+    assert len(sentinel_check.issues) > 0  # "guarantee" and "ensure" flagged
+
+def test_gatekeeper_with_compassion():
+    from modules.compassion import CompassionEngine
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    ce = CompassionEngine()
+    gk = Gatekeeper(compassion=ce)
+    r = gk.check("URGENT ASAP need this done immediately, deadline passed!", "Urgent request")
+    compassion_check = next((c for c in r.checks if c.gate_name == "compassion"), None)
+    assert compassion_check is not None
+
+def test_gatekeeper_with_communication():
+    from modules.communication import CommunicationEngine
+    from modules.gatekeeper import Gatekeeper, ContentChannel
+    ce = CommunicationEngine()
+    gk = Gatekeeper(communication=ce)
+    r = gk.check("What should we do about the budget? " + "x " * 300, "Long email", channel=ContentChannel.EMAIL)
+    comm_check = next((c for c in r.checks if c.gate_name == "communication"), None)
+    assert comm_check is not None
+    assert len(comm_check.issues) > 0  # Too long + opens with question
+
+def test_gatekeeper_override():
+    from modules.gatekeeper import Gatekeeper, GateVerdict
+    gk = Gatekeeper()
+    r = gk.check("Test content", "Test")
+    overridden = gk.override(r.item_id, "I know what I'm doing")
+    assert overridden is not None
+    assert overridden.verdict == GateVerdict.OVERRIDE
+
+def test_gatekeeper_history():
+    from modules.gatekeeper import Gatekeeper
+    gk = Gatekeeper()
+    gk.check("Test 1", "Email 1")
+    gk.check("Test 2", "Email 2")
+    history = gk.get_history()
+    assert len(history) == 2
+
+def test_gatekeeper_watched_folders():
+    from modules.gatekeeper import Gatekeeper
+    gk = Gatekeeper()
+    folders = gk.get_watched_folders()
+    assert len(folders) >= 2  # Default: Outbound + Proposals
+
+def test_gatekeeper_outlook_rules():
+    from modules.gatekeeper import Gatekeeper
+    gk = Gatekeeper()
+    rules = gk.get_outlook_rules()
+    assert len(rules) >= 3  # Default: all outbound, proposals, government
+
+def test_gatekeeper_outlook_script():
+    from modules.gatekeeper import Gatekeeper
+    gk = Gatekeeper()
+    script = gk.get_outlook_hook_script()
+    assert "win32com" in script
+    assert "Outbox" in script
+
+def test_gatekeeper_status():
+    from modules.gatekeeper import Gatekeeper
+    gk = Gatekeeper()
+    gk.check("Test", "Test")
+    s = gk.status()
+    assert s["items_checked"] == 1
+
+test("Gatekeeper: clean email clears", test_gatekeeper_clear)
+test("Gatekeeper: detect sensitive priority", test_gatekeeper_priority_detect_sensitive)
+test("Gatekeeper: detect critical priority", test_gatekeeper_priority_detect_critical)
+test("Gatekeeper: Sentinel catches 'guarantee'", test_gatekeeper_with_sentinel)
+test("Gatekeeper: Compassion checks tone", test_gatekeeper_with_compassion)
+test("Gatekeeper: Communication flags structure", test_gatekeeper_with_communication)
+test("Gatekeeper: override", test_gatekeeper_override)
+test("Gatekeeper: history", test_gatekeeper_history)
+test("Gatekeeper: watched folders", test_gatekeeper_watched_folders)
+test("Gatekeeper: Outlook rules", test_gatekeeper_outlook_rules)
+test("Gatekeeper: Outlook script", test_gatekeeper_outlook_script)
+test("Gatekeeper: status", test_gatekeeper_status)
+
 
 # ══════════════════════════════════════════════════════════════════
 # 3. INTEGRATION TESTS — Cross-Module Cascades
@@ -873,6 +977,9 @@ def test_api_endpoints():
         ("GET", "/api/frameworks/strategic/status"),
         ("GET", "/api/compassion/wellbeing"),
         ("GET", "/api/compassion/status"),
+        ("GET", "/api/gatekeeper/status"),
+        ("GET", "/api/gatekeeper/folders"),
+        ("GET", "/api/gatekeeper/outlook-rules"),
     ]
 
     failed_endpoints = []
@@ -944,6 +1051,7 @@ modules = [
     "Orchestrator", "Learning Radar",
     "Communication Frameworks", "Strategic Analysis",
     "Compassion Engine",
+    "Gatekeeper",
 ]
 
 stamp = {

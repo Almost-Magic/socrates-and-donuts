@@ -87,6 +87,14 @@ def create_app():
     from modules.compassion import CompassionEngine
     compassion_engine = CompassionEngine()
 
+    # Phase 16: Gatekeeper
+    from modules.gatekeeper import Gatekeeper
+    gatekeeper = Gatekeeper(
+        sentinel=trust_engine,
+        compassion=compassion_engine,
+        communication=communication_engine,
+    )
+
     # Phase 12: Orchestrator (wires everything together)
     from modules.orchestrator import Orchestrator
     orchestrator = Orchestrator(
@@ -148,6 +156,10 @@ def create_app():
     from api_routes_phase14c import create_compassion_routes
     app.register_blueprint(create_compassion_routes(compassion_engine))
 
+    # Phase 16
+    from api_routes_phase16 import create_gatekeeper_routes
+    app.register_blueprint(create_gatekeeper_routes(gatekeeper))
+
     # ── System Status ────────────────────────────────────────────
 
     @app.route("/api/status", methods=["GET"])
@@ -174,6 +186,7 @@ def create_app():
                 "communication": {"status": "active", "frameworks": 7},
                 "strategic": {"status": "active", "frameworks": 8},
                 "compassion": {"status": "active", "wellbeing": compassion_engine.wellbeing.level.value},
+                "gatekeeper": {"status": "active", "checked": gatekeeper._items_checked, "held": gatekeeper._items_held},
             },
             "phase": "14 — Learning Radar",
         })
