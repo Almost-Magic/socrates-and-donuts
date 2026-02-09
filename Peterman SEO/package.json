@@ -1,0 +1,14 @@
+{
+  "name": "peterman-authority-engine",
+  "version": "4.1.0",
+  "description": "Peterman V4.1 — The Authority & Presence Engine. Almost Magic Tech Lab.",
+  "author": "Almost Magic Tech Lab",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "python app.py",
+    "test": "pytest tests/test_app.py -v",
+    "test:beast": "python tests/beast_tests.py",
+    "test:all": "npm run test:beast && npm run test"
+  }
+}

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peterman V4.1 — The Authority & Presence Engine</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">P</span>
+                <div class="logo-text">
+                    <span class="logo-title">Peterman</span>
+                    <span class="logo-version">V4.1</span>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-nav">
+            <button class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" data-page="brands" onclick="navigateTo('brands')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Brands</span>
+            </button>
+            <button class="nav-item" data-page="perception" onclick="navigateTo('perception')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span>Perception Scan</span>
+            </button>
+            <button class="nav-item" data-page="hallucinations" onclick="navigateTo('hallucinations')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>Hallucinations</span>
+            </button>
+            <button class="nav-item" data-page="sov" onclick="navigateTo('sov')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <span>Share of Voice</span>
+            </button>
+            <button class="nav-item" data-page="browser" onclick="navigateTo('browser')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>Browser LLMs</span>
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <div class="system-badge">
+                <span class="badge-dot" id="systemDot"></span>
+                <span id="systemLabel">Checking...</span>
+            </div>
+            <span class="footer-brand">Almost Magic Tech Lab</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-version" id="appVersion">V4.1.0</span>
+                <span class="topbar-separator">|</span>
+                <span class="topbar-label">The Authority & Presence Engine</span>
+            </div>
+        </header>
+
+        <!-- Page Container -->
+        <div class="page-container" id="pageContainer">
+
+            <!-- DASHBOARD PAGE -->
+            <section class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Brands</div>
+                        <div class="stat-value" id="statBrands">--</div>
+                        <div class="stat-sub">Monitored profiles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Scans</div>
+                        <div class="stat-value" id="statScans">--</div>
+                        <div class="stat-sub">Perception runs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Hallucinations</div>
+                        <div class="stat-value" id="statHallucinations">--</div>
+                        <div class="stat-sub">Active detections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">System Status</div>
+                        <div class="stat-value" id="statStatus">--</div>
+                        <div class="stat-sub" id="statUptime">--</div>
+                    </div>
+                </div>
+
+                <div class="panel-grid">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>System Dependencies</h3>
+                        </div>
+                        <div class="panel-body" id="depsPanel">
+                            <div class="dep-row"><span>PostgreSQL</span><span class="dep-status" id="depPg">...</span></div>
+                            <div class="dep-row"><span>Ollama (LLMs)</span><span class="dep-status" id="depOllama">...</span></div>
+                            <div class="dep-row"><span>SearXNG (Search)</span><span class="dep-status" id="depSearxng">...</span></div>
+                            <div class="dep-row"><span>Snitcher (Visitors)</span><span class="dep-status" id="depSnitcher">...</span></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>The 10 Chambers</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="chamber-list">
+                                <div class="chamber-item active-chamber"><span class="chamber-num">1</span> Perception Scan <span class="chamber-badge live">Live</span></div>
+                                <div class="chamber-item"><span class="chamber-num">2</span> Semantic Core <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">3</span> Neural Vector Map <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">4</span> Authority Engine <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">5</span> Survivability Lab <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">6</span> Machine Interface <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">7</span> Amplifier <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item active-chamber"><span class="chamber-num">8</span> The Proof <span class="chamber-badge live">Live</span></div>
+                                <div class="chamber-item"><span class="chamber-num">9</span> The Oracle <span class="chamber-badge planned">Planned</span></div>
+                                <div class="chamber-item"><span class="chamber-num">10</span> The Forge <span class="chamber-badge planned">Planned</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <div class="panel-body" id="recentActivity">
+                        <p class="empty-state">No recent activity. Add a brand and run your first scan.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BRANDS PAGE -->
+            <section class="page" id="page-brands">
+                <div class="page-actions">
+                    <button class="btn btn-gold" onclick="showAddBrandModal()">+ Add Brand</button>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Brand Profiles</h3></div>
+                    <div class="panel-body" id="brandsPanel">
+                        <p class="empty-state">No brands configured. Add your first brand to start monitoring.</p>
+                    </div>
+                </div>
+
+                <!-- Add Brand Modal -->
+                <div class="modal-overlay" id="addBrandModal">
+                    <div class="modal">
+                        <div class="modal-header">
+                            <h3>Add Brand Profile</h3>
+                            <button class="modal-close" onclick="closeModal('addBrandModal')">&times;</button>
+                        </div>
+                        <form id="addBrandForm" onsubmit="createBrand(event)">
+                            <div class="form-group">
+                                <label for="brandName">Brand Name *</label>
+                                <input type="text" id="brandName" required placeholder="e.g. Almost Magic Tech Lab">
+                            </div>
+                            <div class="form-group">
+                                <label for="brandDomain">Domain</label>
+                                <input type="text" id="brandDomain" placeholder="e.g. almostmagic.com.au">
+                            </div>
+                            <div class="form-group">
+                                <label for="brandIndustry">Industry</label>
+                                <input type="text" id="brandIndustry" placeholder="e.g. AI Consulting">
+                            </div>
+                            <div class="form-group">
+                                <label for="brandDescription">Description</label>
+                                <textarea id="brandDescription" rows="3" placeholder="What does this brand do?"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="brandTier">Tier</label>
+                                    <select id="brandTier">
+                                        <option value="growth">Growth</option>
+                                        <option value="authority">Authority</option>
+                                        <option value="enterprise">Enterprise</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="brandFreq">Scan Frequency</label>
+                                    <select id="brandFreq">
+                                        <option value="weekly">Weekly</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><input type="checkbox" id="brandClientZero"> Client Zero (internal brand)</label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-ghost" onclick="closeModal('addBrandModal')">Cancel</button>
+                                <button type="submit" class="btn btn-gold">Create Brand</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Brand Detail Modal -->
+                <div class="modal-overlay" id="brandDetailModal">
+                    <div class="modal modal-wide">
+                        <div class="modal-header">
+                            <h3 id="brandDetailTitle">Brand Detail</h3>
+                            <button class="modal-close" onclick="closeModal('brandDetailModal')">&times;</button>
+                        </div>
+                        <div id="brandDetailBody"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PERCEPTION SCAN PAGE -->
+            <section class="page" id="page-perception">
+                <div class="page-actions">
+                    <select id="scanBrandSelect" class="select-input">
+                        <option value="">Select a brand...</option>
+                    </select>
+                    <select id="scanDepth" class="select-input">
+                        <option value="standard">Standard Scan</option>
+                        <option value="deep">Deep Scan (multi-model)</option>
+                    </select>
+                    <button class="btn btn-gold" onclick="runPerceptionScan()" id="scanBtn">Run Perception Scan</button>
+                </div>
+                <div class="panel" id="scanResultsPanel" style="display:none;">
+                    <div class="panel-header"><h3>Scan Results</h3></div>
+                    <div class="panel-body" id="scanResults"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Scan History</h3></div>
+                    <div class="panel-body" id="scanHistory">
+                        <p class="empty-state">Select a brand and run a perception scan to see results.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALLUCINATIONS PAGE -->
+            <section class="page" id="page-hallucinations">
+                <div class="page-actions">
+                    <select id="halBrandSelect" class="select-input">
+                        <option value="">Select a brand...</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="loadHallucinations()">Load Hallucinations</button>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Detected Hallucinations</h3></div>
+                    <div class="panel-body" id="halPanel">
+                        <p class="empty-state">Select a brand to view detected hallucinations.</p>
+                    </div>
+                </div>
+                <div class="panel" id="inertiaPanel" style="display:none;">
+                    <div class="panel-header"><h3>Inertia Report</h3></div>
+                    <div class="panel-body" id="inertiaBody"></div>
+                </div>
+            </section>
+
+            <!-- SHARE OF VOICE PAGE -->
+            <section class="page" id="page-sov">
+                <div class="page-actions">
+                    <select id="sovBrandSelect" class="select-input">
+                        <option value="">Select a brand...</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="loadSoV()">Load Share of Voice</button>
+                </div>
+                <div class="stat-grid" id="sovStats" style="display:none;">
+                    <div class="stat-card">
+                        <div class="stat-label">Mention Rate</div>
+                        <div class="stat-value" id="sovMentionRate">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Velocity</div>
+                        <div class="stat-value" id="sovVelocity">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Trust Class</div>
+                        <div class="stat-value" id="sovTrustClass">--</div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Trust Class Breakdown</h3></div>
+                    <div class="panel-body" id="trustClassPanel">
+                        <p class="empty-state">Select a brand to view trust class analysis.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BROWSER LLMS PAGE -->
+            <section class="page" id="page-browser">
+                <div class="panel">
+                    <div class="panel-header"><h3>Browser LLM Sessions</h3></div>
+                    <div class="panel-body" id="browserSessions">
+                        <p class="empty-state">Checking browser session status...</p>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Quick Query</h3></div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="browserPrompt">Prompt</label>
+                            <textarea id="browserPrompt" rows="3" placeholder="Ask a question across all commercial LLMs..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-gold" onclick="queryAllBrowser()">Query All Models</button>
+                        </div>
+                        <div id="browserResults" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
