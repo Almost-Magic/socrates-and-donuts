@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a2332">
+<meta name="description" content="BesideYou — A free, private companion for the cancer journey. Everything stays on your device.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>BesideYou</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+<!-- ===== WELCOME ===== -->
+<div class="screen active" id="screen-welcome">
+<div class="welcome-wrap" style="justify-content:flex-start;padding-top:48px;padding-bottom:48px">
+  <div class="text-center">
+    <div class="welcome-icon">🌿</div>
+    <h1 class="welcome-title">BesideYou</h1>
+    <p class="welcome-sub">A companion for the cancer journey.</p>
+    <p class="welcome-sub2">Free. Private. Open source. Always here.</p>
+  </div>
+
+  <div class="welcome-vignette">
+    <p>"Maria kept a list of questions for her oncologist. On hard days she only answered one thing: <em>What was one small good thing today?</em> Over time, those notes became a map of her own strength."</p>
+  </div>
+
+  <!-- What's inside -->
+  <div style="margin-bottom:32px">
+    <h3 class="text-center mb-20" style="color:var(--t2);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">What's inside</h3>
+    <div class="welcome-grid">
+      <div class="wg-card"><span class="wg-icon">📊</span><div class="wg-t">Symptom Tracker</div><div class="wg-d">Log how you feel. Bring clearer notes to your doctor.</div></div>
+      <div class="wg-card"><span class="wg-icon">💊</span><div class="wg-t">Medications</div><div class="wg-d">Doses, schedules, and questions — all in one place.</div></div>
+      <div class="wg-card"><span class="wg-icon">📅</span><div class="wg-t">Appointments</div><div class="wg-d">Questions for the doctor. Notes from the visit.</div></div>
+      <div class="wg-card"><span class="wg-icon">✨</span><div class="wg-t">Good Days Jar</div><div class="wg-d">Collect small moments of light for hard days.</div></div>
+      <div class="wg-card"><span class="wg-icon">🧘</span><div class="wg-t">Moments of Peace</div><div class="wg-d">Breathing exercises and grounding techniques.</div></div>
+      <div class="wg-card"><span class="wg-icon">📖</span><div class="wg-t">Medical Glossary</div><div class="wg-d">Scary words explained in plain language.</div></div>
+      <div class="wg-card"><span class="wg-icon">📝</span><div class="wg-t">Private Journal</div><div class="wg-d">A space for your thoughts. No one sees this but you.</div></div>
+      <div class="wg-card"><span class="wg-icon">🔄</span><div class="wg-t">Carer Handoff</div><div class="wg-d">Summarise the shift for the next carer.</div></div>
+    </div>
+  </div>
+
+  <!-- Privacy -->
+  <div style="background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:24px;margin-bottom:32px">
+    <h3 class="text-center mb-12" style="font-size:.95rem">🔒 &nbsp;Your privacy, not just promised — proven</h3>
+    <div class="welcome-features">
+      <div class="wf"><span>🚫</span><p>No accounts. No sign-up. No email required.</p></div>
+      <div class="wf"><span>📱</span><p>Everything runs in your browser. There is no server.</p></div>
+      <div class="wf"><span>🔐</span><p>Save encrypted backups with a passphrase only you know.</p></div>
+      <div class="wf"><span>👁️</span><p>We literally cannot see your data. Verify it — it's open source.</p></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin-bottom:36px">
+    <h3 class="text-center mb-16" style="color:var(--t2);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Common questions</h3>
+    <div class="faq-item"><div class="faq-q">Do you see my data?</div><div class="faq-a">No. We literally can't. There is no server to send it to.</div></div>
+    <div class="faq-item"><div class="faq-q">What if I clear my browser?</div><div class="faq-a">Your data is gone — unless you saved an encrypted backup. We recommend doing this regularly.</div></div>
+    <div class="faq-item"><div class="faq-q">Is this medical advice?</div><div class="faq-a">No. BesideYou helps you organise your notes and questions. Always talk to your care team about treatment.</div></div>
+    <div class="faq-item"><div class="faq-q">Does it cost anything?</div><div class="faq-a">No. Free forever. No ads, no premium tier, no catch. It's open source.</div></div>
+    <div class="faq-item"><div class="faq-q">Can my carer use it too?</div><div class="faq-a">Yes. When you start, you choose your role — patient, carer, or supporter. Each sees what's most relevant.</div></div>
+  </div>
+
+  <!-- CTA -->
+  <button class="btn btn-primary" onclick="App.go('screen-role')" style="font-size:1rem;padding:16px 32px">
+    Get started — choose your role
+  </button>
+  <p class="text-center mt-8" style="font-size:.85rem;color:var(--t3)">Takes 10 seconds. No questions, no sign-up.</p>
+
+  <p class="welcome-safety mt-24">BesideYou does not give medical advice and should not be used in emergencies. Always contact your care team or emergency services if you are worried about your health.</p>
+
+  <!-- For carers callout -->
+  <div style="background:var(--warm-s);border:1px solid rgba(196,149,106,.2);border-radius:var(--r);padding:20px;margin-top:24px">
+    <h3 style="font-size:.95rem;margin-bottom:8px">🤝 &nbsp;For carers</h3>
+    <p class="sub sm">You're not invisible here. BesideYou has features built for you — medication logs, handoff briefings for shift changes, questions for the doctor, and a reminder to take a break yourself.</p>
+  </div>
+
+  <div class="text-center mt-24">
+    <a href="https://github.com/almost-magic/beside-you" target="_blank" rel="noopener" class="welcome-oss">Open source · Verify it yourself →</a>
+  </div>
+
+  <div class="text-center mt-16 pb-20">
+    <p style="font-size:.72rem;color:var(--t3)">A gift from <a href="https://almostmagic.au" target="_blank" rel="noopener" class="link-muted">Almost Magic Tech Lab</a> · Sydney<br>MIT Licence</p>
+  </div>
+</div>
+</div>
+
+<!-- ===== ROLE ===== -->
+<div class="screen" id="screen-role">
+<div class="welcome-wrap">
+  <div class="text-center mb-20">
+    <h1 class="h1">Who will be using BesideYou?</h1>
+    <p class="sub mt-8">This helps us show you the right things first.</p>
+  </div>
+  <div class="stack">
+    <div class="card card-role" onclick="App.setRole('patient')">
+      <div class="card-emoji">💛</div>
+      <h3>I am a patient</h3>
+      <p class="sub sm">I'm navigating my own cancer journey.</p>
+    </div>
+    <div class="card card-role" onclick="App.setRole('carer')">
+      <div class="card-emoji">🤝</div>
+      <h3>I am a carer</h3>
+      <p class="sub sm">I'm caring for someone with cancer.</p>
+    </div>
+    <div class="card card-role" onclick="App.setRole('supporter')">
+      <div class="card-emoji">🌸</div>
+      <h3>I'm supporting someone</h3>
+      <p class="sub sm">A friend or family member has cancer.</p>
+    </div>
+  </div>
+  <button class="btn btn-ghost mt-20" onclick="App.go('screen-welcome')">← Back</button>
+</div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="screen" id="screen-home">
+<div class="screen-body" style="padding-top:28px">
+  <div class="row-between mb-20">
+    <div><h1 class="h1" id="greeting">Good morning.</h1><p class="sub mt-4" id="greeting-sub">How can we help you today?</p></div>
+    <button class="icon-btn" onclick="App.toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+  </div>
+  <p class="hint italic mb-20">You don't need to use everything here. Most people start with just one thing.</p>
+
+  <!-- Check-in card -->
+  <div class="card card-checkin" onclick="App.go('screen-checkin')">
+    <span class="card-checkin-icon">🌱</span>
+    <div><h3 style="color:var(--sage)">Today's check-in</h3><p class="sub sm mt-2">A few gentle questions. About 2 minutes. Skip anything you like.</p></div>
+  </div>
+
+  <!-- Patient quick actions -->
+  <div id="qa-patient">
+    <div class="section-label mt-28">Quick actions</div>
+    <div class="stack-tight">
+      <div class="li" onclick="App.go('screen-glossary')"><div class="li-icon sky">🔍</div><div><div class="li-t">Look up a word I heard today</div><div class="li-s">Search the medical glossary</div></div></div>
+      <div class="li" onclick="App.go('screen-appointments')"><div class="li-icon warm">📖</div><div><div class="li-t">Prepare for an appointment</div><div class="li-s">Get your questions ready</div></div></div>
+      <div class="li" onclick="App.go('screen-gooddays')"><div class="li-icon gold">✨</div><div><div class="li-t">Capture a good moment</div><div class="li-s">Save it for a hard day</div></div></div>
+      <div class="li" onclick="App.go('screen-peace')"><div class="li-icon sage">🌬️</div><div><div class="li-t">I need a moment to breathe</div><div class="li-s">Grounding and breathing exercises</div></div></div>
+    </div>
+  </div>
+
+  <!-- Carer quick actions -->
+  <div id="qa-carer" style="display:none">
+    <div class="section-label mt-28">For you, as a carer</div>
+    <div class="stack-tight">
+      <div class="li" onclick="App.go('screen-medications')"><div class="li-icon warm">💊</div><div><div class="li-t">Record medications given</div><div class="li-s">What was given and when</div></div></div>
+      <div class="li" onclick="App.go('screen-symptoms')"><div class="li-icon sky">📋</div><div><div class="li-t">Note changes you've noticed</div><div class="li-s">Moods, energy, small changes</div></div></div>
+      <div class="li" onclick="App.go('screen-appointments')"><div class="li-icon gold">📝</div><div><div class="li-t">Questions for the doctor</div><div class="li-s">Build a shared list</div></div></div>
+      <div class="li" onclick="App.go('screen-handoff')"><div class="li-icon sage">🔄</div><div><div class="li-t">Carer handoff briefing</div><div class="li-s">Summarise the shift for the next carer</div></div></div>
+      <div class="li" onclick="App.go('screen-peace')"><div class="li-icon rose">💛</div><div><div class="li-t">Take a break — you deserve it</div><div class="li-s">Breathing exercises and a moment for you</div></div></div>
+    </div>
+  </div>
+
+  <!-- All features grid -->
+  <div class="section-label mt-32">All features</div>
+  <div class="feature-grid">
+    <div class="card card-feat" onclick="App.go('screen-glossary')"><div class="fe">📖</div><div class="ft">Glossary</div><div class="fs">Medical terms, simply</div></div>
+    <div class="card card-feat" onclick="App.go('screen-symptoms')"><div class="fe">📊</div><div class="ft">Symptoms</div><div class="fs">Track how you feel</div></div>
+    <div class="card card-feat" onclick="App.go('screen-medications')"><div class="fe">💊</div><div class="ft">Medications</div><div class="fs">Doses &amp; reminders</div></div>
+    <div class="card card-feat" onclick="App.go('screen-appointments')"><div class="fe">📅</div><div class="ft">Appointments</div><div class="fs">Questions &amp; notes</div></div>
+    <div class="card card-feat" onclick="App.go('screen-gooddays')"><div class="fe">✨</div><div class="ft">Good Days Jar</div><div class="fs">Moments of light</div></div>
+    <div class="card card-feat" onclick="App.go('screen-peace')"><div class="fe">🧘</div><div class="ft">Peace</div><div class="fs">Breathe &amp; ground</div></div>
+    <div class="card card-feat" onclick="App.go('screen-journal')"><div class="fe">📝</div><div class="ft">Journal</div><div class="fs">Private thoughts</div></div>
+    <div class="card card-feat" onclick="App.go('screen-resources')"><div class="fe">ℹ️</div><div class="ft">Resources</div><div class="fs">Support services</div></div>
+  </div>
+
+  <!-- Crisis -->
+  <div class="mt-24"><button class="btn btn-crisis w-full" onclick="App.go('screen-crisis')">🆘 &nbsp;I Need Help Right Now</button><p class="hint text-center mt-8">Crisis support, breathing exercises, and immediate help</p></div>
+
+  <!-- Data management -->
+  <div class="mt-32 border-top pt-24">
+    <div class="row-gap8">
+      <button class="btn btn-secondary btn-sm flex1" onclick="App.exportData()">💾 Save my data</button>
+      <button class="btn btn-secondary btn-sm flex1" onclick="document.getElementById('import-file').click()">📂 Restore data</button>
+      <input type="file" id="import-file" accept=".besideyou" style="display:none" onchange="App.importData(event)">
+    </div>
+    <p class="hint text-center mt-8 lh15">Your data lives in this browser. Save a backup to keep it safe.<br>Use restore to continue on a different device.</p>
+  </div>
+
+  <!-- Exploring -->
+  <div class="mt-32 border-top pt-24">
+    <div class="section-label" style="margin-top:0">Exploring</div>
+    <p class="sub lh17">Printable visit summaries for your doctor. Gentle weekly reflections. Carer-specific checklists for surgery, chemo, and recovery days.</p>
+    <p class="hint mt-8">BesideYou is open source. <a href="https://github.com/almost-magic/beside-you" target="_blank" rel="noopener" class="link-sage">Contribute or create a version for your community →</a></p>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-32 text-center pb-20">
+    <p class="hint lh16">BesideYou does not give medical advice.<br>Always contact your care team or emergency services if you are worried about your health.</p>
+    <p class="hint mt-12" style="font-size:.72rem">A gift from <a href="https://almostmagic.au" target="_blank" rel="noopener" class="link-muted">Almost Magic Tech Lab</a> · Sydney<br>Open source · MIT Licence</p>
+  </div>
+</div>
+</div>
+
+<!-- ===== CHECK-IN ===== -->
+<div class="screen" id="screen-checkin">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Today's check-in</h2></div>
+<div class="screen-body">
+  <p class="hint italic mb-24">Skip anything you don't want to answer. Even one answer helps.</p>
+  <h3 class="mb-12">How are you feeling today?</h3>
+  <div class="mood-grid" id="mood-grid">
+    <button class="mood-btn" data-mood="awful" onclick="App.pickMood(this)"><span class="me">😔</span>Awful</button>
+    <button class="mood-btn" data-mood="rough" onclick="App.pickMood(this)"><span class="me">😕</span>Rough</button>
+    <button class="mood-btn" data-mood="okay" onclick="App.pickMood(this)"><span class="me">😐</span>Okay</button>
+    <button class="mood-btn" data-mood="good" onclick="App.pickMood(this)"><span class="me">🙂</span>Good</button>
+    <button class="mood-btn" data-mood="great" onclick="App.pickMood(this)"><span class="me">😊</span>Great</button>
+  </div>
+  <h3 class="mt-24 mb-12">Anything bothering you physically?</h3>
+  <div class="pill-wrap" id="checkin-symptoms">
+    <button class="pill" onclick="this.classList.toggle('active')">Fatigue</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Nausea</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Pain</button>
+    <button class="pill" onclick="this.classList.toggle('active')">No appetite</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Can't sleep</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Dizzy</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Mouth sores</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Tingling</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Anxiety</button>
+    <button class="pill" onclick="this.classList.toggle('active')">Other</button>
+  </div>
+  <h3 class="mt-24 mb-8">Anything else on your mind?</h3>
+  <textarea id="ci-notes" placeholder="A question for the doctor, something you noticed, how the day went..." rows="3"></textarea>
+  <h3 class="mt-24 mb-8">What was one small good thing today?</h3>
+  <textarea id="ci-good" placeholder="A cup of tea. A text from someone. Sunshine through the window..." rows="2"></textarea>
+  <button class="btn btn-primary mt-24" onclick="App.saveCheckin()">Save today's check-in</button>
+  <button class="btn btn-ghost mt-8" onclick="App.go('screen-home')">Skip for now — no pressure</button>
+</div>
+</div>
+
+<!-- ===== SYMPTOMS ===== -->
+<div class="screen" id="screen-symptoms">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Symptom Tracker</h2></div>
+<div class="screen-body">
+  <p class="sub mb-20">Tracking symptoms helps you have clearer conversations with your care team. You don't have to track everything — even noting one symptom can help.</p>
+  <button class="btn btn-primary mb-16" onclick="App.openModal('modal-symptom')">+ Log a symptom</button>
+  <div id="symptom-list"></div>
+</div>
+</div>
+
+<!-- ===== MEDICATIONS ===== -->
+<div class="screen" id="screen-medications">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Medications</h2></div>
+<div class="screen-body">
+  <p class="sub mb-20">Keep track of what you're taking, when, and any effects you notice. This helps your care team see the full picture.</p>
+  <button class="btn btn-primary mb-16" onclick="App.openModal('modal-med')">+ Add a medication</button>
+  <div id="med-list"></div>
+</div>
+</div>
+
+<!-- ===== APPOINTMENTS ===== -->
+<div class="screen" id="screen-appointments">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Appointments</h2></div>
+<div class="screen-body">
+  <p class="sub mb-20">Keep your appointments, questions, and notes together. Patients forget 40–80% of what doctors say — writing it down helps.</p>
+  <button class="btn btn-primary mb-16" onclick="App.openModal('modal-appt')">+ Add an appointment</button>
+  <h3 class="mb-8">Questions for the doctor</h3>
+  <p class="hint mb-12">Add questions as you think of them. Bring this list to your next visit.</p>
+  <div class="row-gap8">
+    <input type="text" id="dq-input" placeholder="Type a question..." class="flex1">
+    <button class="btn btn-secondary btn-sm" onclick="App.addDQ()" style="width:auto;padding:10px 16px">Add</button>
+  </div>
+  <div id="dq-list" class="mt-12"></div>
+  <div class="section-label mt-24">Upcoming appointments</div>
+  <div id="appt-list"></div>
+</div>
+</div>
+
+<!-- ===== GOOD DAYS JAR ===== -->
+<div class="screen" id="screen-gooddays">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Good Days Jar</h2></div>
+<div class="screen-body">
+  <div class="text-center mb-24">
+    <div style="font-size:3.5rem;margin-bottom:12px">✨</div>
+    <p class="serif-body">Even on the hardest days, there can be small moments of light.</p>
+    <p class="sub mt-8">A kind word. A good cup of tea. A moment of sunshine. A text from someone who cares.</p>
+    <p class="sub mt-8">This is a place to collect them. On difficult days, you can come back here and remember: good moments exist, even in this journey.</p>
+  </div>
+  <div class="row-gap8 mb-20">
+    <input type="text" id="gd-input" placeholder="What was a small good thing today?" class="flex1">
+    <button class="btn btn-primary btn-sm" onclick="App.addGoodDay()" style="width:auto;padding:10px 20px">✨</button>
+  </div>
+  <div id="gd-list"></div>
+</div>
+</div>
+
+<!-- ===== PEACE ===== -->
+<div class="screen" id="screen-peace">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Moments of Peace</h2></div>
+<div class="screen-body">
+  <div class="text-center mb-32">
+    <p class="serif-body" style="font-size:1.15rem">Take a moment. You deserve it.</p>
+    <p class="hint italic mt-8">"This moment will pass."</p>
+  </div>
+  <div class="card text-center" style="padding:32px 20px;margin-bottom:12px">
+    <div style="font-size:1.5rem;margin-bottom:12px">🌬️</div>
+    <h3>Breathing Exercise</h3>
+    <p class="sub sm mt-6 mb-20">A gentle guided breathing to calm your nervous system.</p>
+    <div class="breath-circle" id="breath-circle"><span id="breath-text">Tap to begin</span></div>
+    <button class="btn btn-secondary btn-sm mt-16" onclick="App.startBreathing()" id="breath-btn" style="width:auto;margin:16px auto 0">Start breathing</button>
+  </div>
+  <div class="card" style="padding:24px;margin-bottom:12px">
+    <div class="text-center"><div style="font-size:1.5rem;margin-bottom:12px">💗</div><h3>5-4-3-2-1 Grounding</h3><p class="sub sm mt-6 mb-16">Connect with the present moment using your senses.</p></div>
+    <div class="stack-tight">
+      <div class="ground-step"><span>👀</span><div><strong>5 things</strong> you can see</div></div>
+      <div class="ground-step"><span>✋</span><div><strong>4 things</strong> you can touch</div></div>
+      <div class="ground-step"><span>👂</span><div><strong>3 things</strong> you can hear</div></div>
+      <div class="ground-step"><span>🌸</span><div><strong>2 things</strong> you can smell</div></div>
+      <div class="ground-step"><span>👅</span><div><strong>1 thing</strong> you can taste</div></div>
+    </div>
+  </div>
+  <p class="hint text-center italic mt-16">It's okay to close this and come back later. No pressure.</p>
+</div>
+</div>
+
+<!-- ===== JOURNAL ===== -->
+<div class="screen" id="screen-journal">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Journal</h2></div>
+<div class="screen-body">
+  <p class="sub mb-20">A private space for your thoughts. No one sees this but you.</p>
+  <textarea id="journal-input" placeholder="Whatever is on your mind..." rows="6" class="mb-12"></textarea>
+  <button class="btn btn-primary" onclick="App.saveJournal()">Save entry</button>
+  <div class="section-label mt-24">Previous entries</div>
+  <div id="journal-list"></div>
+</div>
+</div>
+
+<!-- ===== GLOSSARY ===== -->
+<div class="screen" id="screen-glossary">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Medical Glossary</h2></div>
+<div class="screen-body">
+  <p class="sub mb-16">Medical terms explained in plain language. Tap any term to learn more.</p>
+  <input type="search" id="glossary-search" placeholder="Search for a term..." oninput="App.filterGlossary()" class="mb-12">
+  <div class="pill-wrap mb-16" id="glossary-filters">
+    <button class="pill active" onclick="App.filterGlossaryCat(this,'all')">All</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'diagnosis')">Diagnosis</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'treatment')">Treatment</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'side-effects')">Side Effects</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'procedures')">Procedures</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'tests')">Tests</button>
+    <button class="pill" onclick="App.filterGlossaryCat(this,'general')">General</button>
+  </div>
+  <div id="glossary-list"></div>
+</div>
+</div>
+
+<!-- ===== RESOURCES ===== -->
+<div class="screen" id="screen-resources">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Resources</h2></div>
+<div class="screen-body">
+  <p class="sub mb-12">Australian support services for patients and carers. All free.</p>
+  <div class="crisis-box mb-20">
+    <h3 class="crisis-title mb-8">Crisis Support — 24/7</h3>
+    <div class="crisis-line"><span>Lifeline</span><a href="tel:131114">📞 13 11 14</a></div>
+    <div class="crisis-line"><span>Cancer Council</span><a href="tel:131120">📞 13 11 20</a></div>
+    <div class="crisis-line"><span>Beyond Blue</span><a href="tel:1300224636">📞 1300 22 4636</a></div>
+  </div>
+  <div class="pill-wrap mb-16">
+    <button class="pill active" onclick="App.filterRes(this,'all')">All</button>
+    <button class="pill" onclick="App.filterRes(this,'emotional')">Emotional</button>
+    <button class="pill" onclick="App.filterRes(this,'practical')">Practical</button>
+    <button class="pill" onclick="App.filterRes(this,'financial')">Financial</button>
+    <button class="pill" onclick="App.filterRes(this,'medical')">Medical</button>
+    <button class="pill" onclick="App.filterRes(this,'carer')">Carers</button>
+  </div>
+  <div id="resources-list"></div>
+  <p class="hint text-center mt-24">All resources are Australian and free to access.</p>
+</div>
+</div>
+
+<!-- ===== CRISIS ===== -->
+<div class="screen" id="screen-crisis">
+<div class="screen-body" style="padding-top:32px">
+  <div class="text-center mb-24">
+    <div style="font-size:2.5rem;margin-bottom:12px">🆘</div>
+    <h1 class="h1" style="font-size:1.6rem">I Need Help Right Now</h1>
+    <p style="font-size:1rem;margin-top:8px;color:var(--t1)">You are not alone. Support is available.</p>
+  </div>
+  <div class="emergency-box text-center mb-20">
+    <h2 style="color:var(--red);font-size:1.2rem">⚠️ Medical Emergency?</h2>
+    <p class="sub mt-8" style="color:var(--t1)">Difficulty breathing, chest pain, severe bleeding, or your cancer team told you to call in an emergency:</p>
+    <a href="tel:000" class="btn btn-crisis mt-16" style="display:inline-flex;font-size:1.1rem;padding:16px 40px;width:auto">📞 Call 000 Now</a>
+  </div>
+  <h3 class="mb-12">Need to talk to someone?</h3>
+  <p class="sub mb-16">These lines are free, confidential, and available 24/7.</p>
+  <div class="rcard" style="border-left:3px solid var(--sage)"><div class="rcard-t">Lifeline — 13 11 14</div><div class="rcard-d">24/7 crisis support and suicide prevention. Someone is always there to listen.</div><a href="tel:131114" class="rcard-a">📞 Tap to call</a></div>
+  <div class="rcard" style="border-left:3px solid var(--warm)"><div class="rcard-t">Cancer Council — 13 11 20</div><div class="rcard-d">Free, confidential support from cancer nurses. Treatment, side effects, practical support.</div><a href="tel:131120" class="rcard-a">📞 Tap to call</a></div>
+  <div class="rcard" style="border-left:3px solid var(--sky)"><div class="rcard-t">Beyond Blue — 1300 22 4636</div><div class="rcard-d">24/7 support for anxiety, depression, and emotional wellbeing.</div><a href="tel:1300224636" class="rcard-a">📞 Tap to call</a></div>
+  <div class="text-center mt-24 mb-32">
+    <h3 class="mb-8">🌬️ Need to calm down first?</h3>
+    <p class="sub mb-16">Sometimes we need a moment to breathe before we can reach out.</p>
+    <button class="btn btn-secondary" onclick="App.go('screen-peace')" style="width:auto;padding:12px 28px">💚 Breathing Exercise</button>
+  </div>
+  <div class="closing-card text-center">
+    <p class="serif-body" style="font-size:1.1rem">You are still here. That matters.</p>
+    <p class="sub mt-12">Whatever you are facing right now, you do not have to face it alone. Reaching out for help is a sign of strength, not weakness.</p>
+  </div>
+  <button class="btn btn-ghost mt-24" onclick="App.go('screen-home')">← Back to Home</button>
+</div>
+</div>
+
+<!-- ===== HANDOFF ===== -->
+<div class="screen" id="screen-handoff">
+<div class="screen-header"><button class="back-btn" onclick="App.go('screen-home')">←</button><h2>Carer Handoff</h2></div>
+<div class="screen-body">
+  <p class="sub mb-8">When you hand over to the next carer, this helps them know what happened on your shift.</p>
+  <p class="hint italic mb-24">The hardest part of caregiving isn't the medical care — it's the handoff between tired humans.</p>
+  <div class="stack">
+    <div><h3 class="mb-8">Medications given</h3><textarea id="ho-meds" placeholder="What was given and when..." rows="2"></textarea></div>
+    <div><h3 class="mb-8">How they're doing</h3><textarea id="ho-mood" placeholder="Mood, energy, appetite, pain level..." rows="2"></textarea></div>
+    <div><h3 class="mb-8">Things to know</h3><textarea id="ho-notes" placeholder="Anxious about the scan tomorrow. Don't mention the hospital until after lunch..." rows="3"></textarea></div>
+    <div><h3 class="mb-8">What's coming up</h3><textarea id="ho-upcoming" placeholder="Next medication at 6pm. Appointment tomorrow at 10am..." rows="2"></textarea></div>
+  </div>
+  <button class="btn btn-primary mt-24" onclick="App.saveHandoff()">Save handoff briefing</button>
+  <button class="btn btn-secondary mt-8" onclick="App.copyHandoff()">📋 Copy to clipboard</button>
+  <div class="section-label mt-24">Previous handoffs</div>
+  <div id="handoff-list"></div>
+</div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="modal-symptom"><div class="modal-content">
+  <div class="row-between mb-16"><h2>Log a symptom</h2><button class="back-btn" onclick="App.closeModal('modal-symptom')">✕</button></div>
+  <div class="stack">
+    <div><label class="label">What symptom?</label>
+      <div class="pill-wrap mb-8">
+        <button class="pill" onclick="App.pickSymType(this)">Fatigue</button><button class="pill" onclick="App.pickSymType(this)">Nausea</button><button class="pill" onclick="App.pickSymType(this)">Pain</button><button class="pill" onclick="App.pickSymType(this)">No appetite</button><button class="pill" onclick="App.pickSymType(this)">Can't sleep</button><button class="pill" onclick="App.pickSymType(this)">Anxiety</button><button class="pill" onclick="App.pickSymType(this)">Dizzy</button><button class="pill" onclick="App.pickSymType(this)">Mouth sores</button>
+      </div>
+      <input type="text" id="sym-name" placeholder="Or type your own...">
+    </div>
+    <div><label class="label">How bad? (1=mild, 10=severe)</label>
+      <div class="severity" id="sev-scale"></div>
+    </div>
+    <div><label class="label">Any notes?</label><textarea id="sym-notes" placeholder="When it started, what makes it better or worse..." rows="2"></textarea></div>
+  </div>
+  <button class="btn btn-primary mt-16" onclick="App.saveSymptom()">Save symptom</button>
+</div></div>
+
+<div class="modal-overlay" id="modal-med"><div class="modal-content">
+  <div class="row-between mb-16"><h2>Add medication</h2><button class="back-btn" onclick="App.closeModal('modal-med')">✕</button></div>
+  <div class="stack">
+    <div><label class="label">Medication name</label><input type="text" id="med-name" placeholder="e.g., Paracetamol, Ondansetron..."></div>
+    <div><label class="label">Dose</label><input type="text" id="med-dose" placeholder="e.g., 500mg, 1 tablet..."></div>
+    <div><label class="label">When to take it</label><input type="text" id="med-freq" placeholder="e.g., Twice daily with food..."></div>
+    <div><label class="label">What it's for</label><input type="text" id="med-purpose" placeholder="e.g., Pain relief, anti-nausea..."></div>
+    <div><label class="label">Questions about this medication</label><textarea id="med-q" placeholder="Can I take it with food? What if I miss a dose?" rows="2"></textarea></div>
+  </div>
+  <button class="btn btn-primary mt-16" onclick="App.saveMed()">Save medication</button>
+</div></div>
+
+<div class="modal-overlay" id="modal-appt"><div class="modal-content">
+  <div class="row-between mb-16"><h2>Add appointment</h2><button class="back-btn" onclick="App.closeModal('modal-appt')">✕</button></div>
+  <div class="stack">
+    <div><label class="label">What kind?</label><input type="text" id="appt-type" placeholder="e.g., Oncologist, Blood test, Scan..."></div>
+    <div><label class="label">Date</label><input type="date" id="appt-date"></div>
+    <div><label class="label">Time</label><input type="time" id="appt-time"></div>
+    <div><label class="label">Where</label><input type="text" id="appt-loc" placeholder="Hospital, clinic, doctor's rooms..."></div>
+    <div><label class="label">Notes</label><textarea id="appt-notes" placeholder="What to bring, who to ask for..." rows="2"></textarea></div>
+  </div>
+  <button class="btn btn-primary mt-16" onclick="App.saveAppt()">Save appointment</button>
+</div></div>
+
+<div class="modal-overlay" id="modal-export"><div class="modal-content">
+  <div class="row-between mb-16"><h2>Save your data</h2><button class="back-btn" onclick="App.closeModal('modal-export')">✕</button></div>
+  <p class="sub mb-16">Choose a word or phrase to protect your file. You'll need this to open it again.</p>
+  <input type="password" id="exp-pass" placeholder="Your passphrase..." class="mb-8">
+  <input type="password" id="exp-pass2" placeholder="Confirm passphrase..." class="mb-16">
+  <button class="btn btn-primary" onclick="App.doExport()">Download encrypted backup</button>
+  <p class="hint text-center mt-12">Without your passphrase, no one can read it — including us.</p>
+</div></div>
+
+<div class="modal-overlay" id="modal-import"><div class="modal-content">
+  <div class="row-between mb-16"><h2>Restore your data</h2><button class="back-btn" onclick="App.closeModal('modal-import')">✕</button></div>
+  <p class="sub mb-16">Enter the passphrase you used when you saved this file.</p>
+  <input type="password" id="imp-pass" placeholder="Your passphrase...">
+  <button class="btn btn-primary mt-12" onclick="App.doImport()">Restore</button>
+</div></div>
+
+<!-- FAB + Nav -->
+<button class="crisis-fab" id="crisis-fab" onclick="App.go('screen-crisis')">SOS</button>
+<nav class="bottom-nav" id="bottom-nav" style="display:none">
+  <button class="nav-item active" onclick="App.nav('screen-home',this)"><span class="ni">🏠</span>Home</button>
+  <button class="nav-item" onclick="App.nav('screen-symptoms',this)"><span class="ni">📊</span>Symptoms</button>
+  <button class="nav-item" onclick="App.nav('screen-medications',this)"><span class="ni">💊</span>Meds</button>
+  <button class="nav-item" onclick="App.nav('screen-gooddays',this)"><span class="ni">✨</span>Jar</button>
+  <button class="nav-item" onclick="App.nav('screen-resources',this)"><span class="ni">ℹ️</span>Help</button>
+</nav>
+<div class="toast" id="toast"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
