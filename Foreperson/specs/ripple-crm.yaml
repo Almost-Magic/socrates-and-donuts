@@ -176,3 +176,11 @@ features:
     path: /api/scoring/rules
     expected_status: 200
     expected_contains: items
+
+  # Phase 3: Email Linking + Transparency Portal
+  - id: dsar_requests_list
+    name: DSAR request management
+    check: http_get
+    path: /api/privacy/dsar-requests
+    expected_status: 200
+    expected_contains: items
