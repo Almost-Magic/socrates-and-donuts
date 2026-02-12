@@ -21,7 +21,7 @@ features:
   - id: module_launcher
     name: Module launcher (user toggles modules)
     check: http_get
-    path: /api/settings/modules
+    path: /api/modules/
     expected_status: 200
 
   - id: nav_grouping
@@ -44,17 +44,17 @@ features:
   - id: transaction_categorisation
     name: Transaction categorisation
     check: http_get
-    path: /api/transactions
+    path: /api/transactions/
     expected_status: 200
 
   - id: fraud_guard
-    name: Fraud guard alerts
+    name: Fraud guard signals
     check: http_get
-    path: /api/fraud/alerts
+    path: /api/fraud/signals
     expected_status: 200
 
   - id: zombie_hunter
     name: Zombie subscription hunter
     check: http_get
-    path: /api/subscriptions/zombies
+    path: /api/zombies/
     expected_status: 200

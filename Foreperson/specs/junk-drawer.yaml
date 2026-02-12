@@ -1,7 +1,7 @@
 app: Junk Drawer
 description: Quick capture, notes, and file management
-port: 5005
-url: http://localhost:5005
+port: 5006
+url: http://localhost:5006
 frontend_port: 3005
 frontend_url: http://localhost:3005
 category: ck
