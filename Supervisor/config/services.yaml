@@ -1,0 +1,185 @@
+# The Supervisor — Service Dependency Graph
+# Defines all managed services, their dependencies, and startup configuration
+
+boot_phases:
+  - phase: 1
+    name: "Infrastructure"
+    services: [ollama]
+    timeout_seconds: 60
+
+  - phase: 2
+    name: "Core Services"
+    services: [workshop, elaine]
+    timeout_seconds: 30
+
+  - phase: 3
+    name: "On-Demand"
+    services: []
+    note: "CK Writer, Genie, etc. started by ELAINE or user request"
+
+services:
+  ollama:
+    name: "Ollama"
+    port: 11434
+    type: process
+    health_check:
+      type: http
+      url: "http://localhost:11434/api/tags"
+      interval_seconds: 30
+    start_command: "ollama serve"
+    depends_on: []
+    critical: true
+    post_start:
+      - action: preload_model
+        model: nomic-embed-text
+      - action: preload_model
+        model: gemma2-27b
+
+  workshop:
+    name: "The Workshop"
+    port: 5003
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5003/"
+      interval_seconds: 30
+    start_command: "python app.py"
+    cwd: "CK/workshop"
+    depends_on: [ollama]
+    critical: true
+
+  elaine:
+    name: "ELAINE"
+    port: 5000
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5000/api/health"
+      interval_seconds: 30
+    start_command: "python app.py"
+    cwd: "CK/Elaine"
+    depends_on: [ollama, workshop]
+    critical: true
+
+  ck-writer:
+    name: "CK Writer"
+    port: 5004
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5004/"
+      interval_seconds: 60
+    start_command: "python app.py"
+    cwd: "CK/CK-Writer"
+    depends_on: [ollama]
+    on_demand: true
+
+  genie:
+    name: "Genie"
+    port: 8000
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:8000/api/health"
+      interval_seconds: 60
+    start_command: "python -m uvicorn app:app --host 0.0.0.0 --port 8000"
+    cwd: "Finance App/Genie/backend"
+    depends_on: [ollama]
+    on_demand: true
+
+  peterman:
+    name: "Peterman"
+    port: 5008
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5008/api/health"
+      interval_seconds: 60
+    start_command: "python app.py"
+    cwd: "Peterman SEO/backend"
+    depends_on: [ollama]
+    on_demand: true
+
+  costanza:
+    name: "Costanza"
+    port: 5001
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5001/api/health"
+      interval_seconds: 60
+    depends_on: [ollama]
+    on_demand: true
+
+  learning-assistant:
+    name: "Learning Assistant"
+    port: 5002
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5002/api/health"
+      interval_seconds: 60
+    depends_on: [ollama]
+    on_demand: true
+
+  author-studio:
+    name: "Author Studio"
+    port: 5007
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:5007/api/health"
+      interval_seconds: 60
+    depends_on: [ollama]
+    on_demand: true
+
+  foreperson:
+    name: "The Foreperson"
+    port: 9100
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:9100/api/health"
+      interval_seconds: 300
+    start_command: "python foreperson.py --serve"
+    cwd: "Foreperson"
+    depends_on: []
+    on_demand: true
+
+# Docker infrastructure (checked but not managed by Supervisor — managed by Docker itself)
+docker_services:
+  postgres:
+    name: "PostgreSQL"
+    port: 5433
+    health_check:
+      type: tcp
+  redis:
+    name: "Redis"
+    port: 6379
+    health_check:
+      type: tcp
+  n8n:
+    name: "n8n"
+    port: 5678
+    health_check:
+      type: http
+      url: "http://localhost:5678/"
+  searxng:
+    name: "SearXNG"
+    port: 8888
+    health_check:
+      type: http
+      url: "http://localhost:8888/"
+  listmonk:
+    name: "Listmonk"
+    port: 9001
+    health_check:
+      type: http
+      url: "http://localhost:9001/"
+
+# Restart policy
+restart_policy:
+  max_retries: 3
+  retry_delay_seconds: 10
+  backoff_multiplier: 2
+  alert_after_exhaustion: true

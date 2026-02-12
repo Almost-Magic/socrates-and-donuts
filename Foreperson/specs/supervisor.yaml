@@ -1,0 +1,89 @@
+app: The Supervisor
+description: Centralised runtime manager — GPU, models, health, routing
+port: 9000
+url: http://localhost:9000
+category: infra
+priority: critical
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+    expected_contains: healthy
+
+  - id: status_endpoint
+    name: Full system status
+    check: http_get
+    path: /api/status
+    expected_status: 200
+
+  - id: gpu_endpoint
+    name: GPU/VRAM status
+    check: http_get
+    path: /api/gpu
+    expected_status: 200
+
+  - id: models_endpoint
+    name: Model registry
+    check: http_get
+    path: /api/models
+    expected_status: 200
+
+  - id: services_endpoint
+    name: Service registry
+    check: http_get
+    path: /api/services
+    expected_status: 200
+
+  - id: metrics_endpoint
+    name: Request metrics
+    check: http_get
+    path: /api/metrics
+    expected_status: 200
+
+  - id: proxy_tags
+    name: Ollama-compatible /api/tags proxy
+    check: http_get
+    path: /api/tags
+    expected_status: 200
+
+  - id: proxy_chat
+    name: Ollama-compatible /api/chat proxy
+    check: http_post
+    path: /api/chat
+    body: {"model": "gemma2:27b", "messages": [{"role": "user", "content": "hello"}], "stream": false}
+    expected_status: 200
+
+  - id: proxy_embed
+    name: Ollama-compatible /api/embed proxy
+    check: http_post
+    path: /api/embed
+    body: {"model": "nomic-embed-text", "input": "test"}
+    expected_status: 200
+
+  - id: cloud_fallback
+    name: Cloud API fallback when Ollama fails
+    check: manual_ui_check
+    notes: Kill Ollama, send request — should fall back to cloud API
+
+  - id: auto_restart
+    name: Auto-restart of failed services
+    check: manual_ui_check
+    notes: Kill a managed service, verify Supervisor restarts it within 90 seconds
+
+  - id: vram_management
+    name: VRAM conflict prevention
+    check: manual_ui_check
+    notes: Request heavy model when default loaded — should unload first
+
+  - id: boot_sequence
+    name: Boot sequencer runs on startup
+    check: manual_ui_check
+    notes: After reboot, Supervisor + Workshop + ELAINE should run without manual intervention
+
+  - id: meta_guardian
+    name: Meta-Guardian Task Scheduler task
+    check: manual_ui_check
+    notes: Check Task Scheduler for 10-minute Supervisor watchdog

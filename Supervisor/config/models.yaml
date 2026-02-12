@@ -1,0 +1,76 @@
+# The Supervisor — Model Registry
+# All VRAM values in GB. Total budget: 12GB (RTX 5070)
+# This is the SINGLE SOURCE OF TRUTH for model names. No app should hardcode model names.
+
+vram_total_gb: 12.0
+vram_reserved_gb: 0.5  # OS/driver overhead
+
+models:
+  nomic-embed-text:
+    role: embeddings
+    vram_gb: 0.5
+    always_loaded: true
+    ollama_name: "nomic-embed-text"
+    description: "Text embeddings for search and similarity"
+
+  gemma2-27b:
+    role: reasoning
+    vram_gb: 6.0
+    default: true
+    ollama_name: "gemma2:27b"
+    description: "Default reasoning — balanced speed/quality"
+
+  llama3-70b:
+    role: reasoning_heavy
+    vram_gb: 10.0
+    on_demand: true
+    ollama_name: "llama3.1:70b-instruct-q4_0"
+    description: "Heavy reasoning — slow but thorough"
+
+  deepseek-coder:
+    role: coding
+    vram_gb: 9.0
+    on_demand: true
+    ollama_name: "deepseek-coder-v2:16b"
+    description: "Code generation and analysis"
+
+  qwen3-4b:
+    role: fast
+    vram_gb: 2.5
+    on_demand: true
+    ollama_name: "qwen3:4b"
+    description: "Fast lightweight queries"
+
+# Aliases — apps can use these role names instead of model names
+aliases:
+  default: gemma2-27b
+  embeddings: nomic-embed-text
+  reasoning: gemma2-27b
+  heavy: llama3-70b
+  code: deepseek-coder
+  fast: qwen3-4b
+
+# External GPU consumers (not Ollama models)
+external_gpu_consumers:
+  comfyui:
+    vram_gb: 6.0
+    port: 8188
+    description: "ComfyUI image generation"
+
+# Cloud fallback — tried in order when Ollama fails
+cloud_fallback:
+  reasoning:
+    - provider: anthropic
+      model: "claude-sonnet-4-20250514"
+      env_key: ANTHROPIC_API_KEY
+    - provider: openai
+      model: "gpt-4o-mini"
+      env_key: OPENAI_API_KEY
+  embeddings:
+    - provider: openai
+      model: "text-embedding-3-small"
+      env_key: OPENAI_API_KEY
+  coding:
+    - provider: anthropic
+      model: "claude-sonnet-4-20250514"
+      env_key: ANTHROPIC_API_KEY
