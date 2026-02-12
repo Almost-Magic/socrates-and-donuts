@@ -1,19 +1,23 @@
 """
-Elaine v4 — Phase 12: Complete System with Orchestrator
+Elaine v4 — Phase 12+: Complete System with Orchestrator + Morning Brief
 Flask application entry point.
 
-10 modules + Orchestrator cross-wiring.
+16 modules + Orchestrator + Phase 5 Morning Briefing + APScheduler.
 Almost Magic Tech Lab
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+import json
 import logging
+import sqlite3
+from datetime import datetime
 from config import *
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
 )
+logger = logging.getLogger("elaine.app")
 
 
 def create_app():
@@ -114,6 +118,10 @@ def create_app():
         compassion_engine=compassion_engine,
     )
 
+    # Phase 5: Morning Briefing Engine (news, LinkedIn, POI, deadlines)
+    from modules.phase5_briefing.morning_briefing import MorningBriefingEngine
+    briefing_engine = MorningBriefingEngine()
+
     # ── Register All Blueprints ──────────────────────────────────
 
     # Phase 7
@@ -163,6 +171,11 @@ def create_app():
     # Chat + Tool Registry + Service Health
     from api_routes_chat import create_chat_routes
     app.register_blueprint(create_chat_routes())
+
+    # Phase 5: Briefing, POI, Resilience, Memory routes
+    import modules.phase5_routes as _p5
+    _p5._briefing = briefing_engine          # share single engine instance
+    app.register_blueprint(_p5.phase5_bp)
 
     # Stabilisation: health, modules, frustration, briefing alias
     from api_routes_stabilisation import create_stabilisation_routes
@@ -228,6 +241,107 @@ def create_app():
         create_stabilisation_routes(_get_modules_status, _morning_briefing_data)
     )
 
+    # ── Combined Briefing Helper (modules + Phase 5) ─────────────
+
+    def _generate_combined_briefing():
+        """Merge module-level data with Phase 5 engine (news, LinkedIn, POI)."""
+        now = datetime.now()
+        hour = now.hour
+        greeting = "Good morning" if hour < 12 else "Good afternoon" if hour < 17 else "Good evening"
+
+        # Module data
+        gravity_snap = gravity_field.snapshot()
+        constellation_data = poi_engine.get_morning_briefing_data()
+        drift = drift_detector.analyse()
+        nudges = gravity_field.governors.get_nudges(gravity_field.items)
+        rest = gravity_field.governors.should_suggest_rest(gravity_field.items, 8.0)
+        cart_briefing = discovery_engine.get_morning_briefing()
+        amp_briefing = content_engine.get_morning_briefing_data()
+        sentinel_data = trust_engine.get_learning_report()
+        chronicle_data = meeting_engine.get_morning_briefing_data()
+        innovator_data = innovation_engine.get_morning_briefing_data()
+        learning_data = learning_radar.get_morning_briefing_data()
+
+        # Phase 5 data (news, LinkedIn, POI — skip email/calendar)
+        try:
+            news = briefing_engine._get_relevant_news()
+        except Exception:
+            news = {"title": "News", "items": [], "error": "unavailable"}
+        try:
+            linkedin = briefing_engine._get_linkedin_relevant()
+        except Exception:
+            linkedin = {"title": "LinkedIn & Industry", "items": [], "error": "unavailable"}
+        try:
+            poi = briefing_engine._get_poi_briefing()
+        except Exception:
+            poi = {"title": "People of Interest", "items": []}
+        try:
+            deadlines = briefing_engine._get_deadlines()
+        except Exception:
+            deadlines = {"title": "Deadlines & Due Dates", "items": []}
+        try:
+            actions = briefing_engine._get_pending_actions()
+        except Exception:
+            actions = {"title": "Pending Action Items", "items": []}
+
+        combined = {
+            "greeting": f"{greeting}, Mani.",
+            "generated_at": now.isoformat(),
+            "date": now.strftime("%A, %d %B %Y"),
+            "gravity": {
+                "red_giants": gravity_snap.red_giants,
+                "top_3": gravity_snap.top_3_ids,
+                "trust_debt_aud": gravity_snap.trust_debt_total_aud,
+                "collisions": len(gravity_snap.collisions),
+            },
+            "constellation": constellation_data,
+            "cartographer": cart_briefing,
+            "amplifier": amp_briefing,
+            "sentinel": sentinel_data,
+            "chronicle": chronicle_data,
+            "innovator": innovator_data,
+            "learning_radar": learning_data,
+            "drift": {
+                "alert": drift.drift_alert,
+                "severity": drift.drift_severity,
+                "recommendation": drift.recommendation,
+            },
+            "thinking_frameworks": thinking_engine.status(),
+            "orchestrator": {"cascades": len(orchestrator._cascade_log)},
+            "governor_nudges": nudges,
+            "rest_suggestion": rest,
+            "news": news,
+            "linkedin": linkedin,
+            "people": poi,
+            "deadlines": deadlines,
+            "action_items": actions,
+        }
+
+        # Store to Phase 5 SQLite DB
+        try:
+            briefing_engine._store_briefing(combined)
+        except Exception as exc:
+            logger.warning("Failed to store briefing: %s", exc)
+
+        logger.info("Combined morning briefing generated (%d news, %d POI)",
+                     len(news.get("items", [])), len(poi.get("items", [])))
+        return combined
+
+    # ── APScheduler — daily 07:00 AEST ────────────────────────────
+
+    from apscheduler.schedulers.background import BackgroundScheduler
+    from apscheduler.triggers.cron import CronTrigger
+
+    scheduler = BackgroundScheduler(daemon=True)
+    scheduler.add_job(
+        _generate_combined_briefing,
+        CronTrigger(hour=7, minute=0, timezone="Australia/Sydney"),
+        id="morning_briefing",
+        replace_existing=True,
+    )
+    scheduler.start()
+    logger.info("APScheduler started -- morning briefing at 07:00 Australia/Sydney")
+
     # ── System Status ────────────────────────────────────────────
 
     @app.route("/api/status", methods=["GET"])
@@ -263,42 +377,26 @@ def create_app():
 
     @app.route("/api/morning-briefing", methods=["GET"])
     def morning_briefing():
-        gravity_snap = gravity_field.snapshot()
-        constellation_data = poi_engine.get_morning_briefing_data()
-        drift = drift_detector.analyse()
-        nudges = gravity_field.governors.get_nudges(gravity_field.items)
-        rest = gravity_field.governors.should_suggest_rest(gravity_field.items, 8.0)
-        cart_briefing = discovery_engine.get_morning_briefing()
-        amp_briefing = content_engine.get_morning_briefing_data()
-        sentinel_data = trust_engine.get_learning_report()
-        chronicle_data = meeting_engine.get_morning_briefing_data()
-        innovator_data = innovation_engine.get_morning_briefing_data()
-        learning_data = learning_radar.get_morning_briefing_data()
+        """Generate and return the full combined briefing (modules + Phase 5)."""
+        return jsonify(_generate_combined_briefing())
 
-        return jsonify({
-            "gravity": {
-                "red_giants": gravity_snap.red_giants,
-                "top_3": gravity_snap.top_3_ids,
-                "trust_debt_aud": gravity_snap.trust_debt_total_aud,
-                "collisions": len(gravity_snap.collisions),
-            },
-            "constellation": constellation_data,
-            "cartographer": cart_briefing,
-            "amplifier": amp_briefing,
-            "sentinel": sentinel_data,
-            "chronicle": chronicle_data,
-            "innovator": innovator_data,
-            "learning_radar": learning_data,
-            "drift": {
-                "alert": drift.drift_alert,
-                "severity": drift.drift_severity,
-                "recommendation": drift.recommendation,
-            },
-            "thinking_frameworks": thinking_engine.status(),
-            "orchestrator": {"cascades": len(orchestrator._cascade_log)},
-            "governor_nudges": nudges,
-            "rest_suggestion": rest,
-        })
+    @app.route("/api/morning-briefing/latest", methods=["GET"])
+    def morning_briefing_latest():
+        """Return the most recent stored briefing without regenerating."""
+        try:
+            conn = sqlite3.connect(briefing_engine.db_path)
+            conn.row_factory = sqlite3.Row
+            c = conn.cursor()
+            c.execute("SELECT briefing_data, generated_at FROM briefings ORDER BY generated_at DESC LIMIT 1")
+            row = c.fetchone()
+            conn.close()
+            if row:
+                data = json.loads(row["briefing_data"])
+                data["_stored_at"] = row["generated_at"]
+                return jsonify(data)
+            return jsonify({"error": "No briefing stored yet. Hit GET /api/morning-briefing to generate one."}), 404
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
 
     # ── Voice Morning Briefing ───────────────────────────────────
 

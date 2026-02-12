@@ -281,6 +281,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
   <div class="sidebar-section">
     <div class="sidebar-label">Navigate</div>
     <div class="nav-item active" data-p="dashboard"><span class="nav-icon">&#9673;</span>Dashboard</div>
+    <div class="nav-item" data-p="briefing"><span class="nav-icon">&#9788;</span>Morning Brief</div>
     <div class="nav-item" data-p="chat"><span class="nav-icon">&#128172;</span>Chat<span class="nav-badge" id="chatBadge" style="display:none">!</span></div>
     <div class="nav-item" data-p="tools"><span class="nav-icon">&#9881;</span>Tools</div>
     <div class="nav-item" data-p="gravity"><span class="nav-icon">&#9883;</span>Gravity Field</div>
@@ -335,8 +336,9 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         </div>
         <!-- Morning Briefing -->
         <div class="card span-2">
-          <div class="card-head"><span class="card-label">This Morning</span></div>
+          <div class="card-head"><span class="card-label">This Morning</span><span class="card-action" onclick="nav('briefing')">Full Brief &rarr;</span></div>
           <div class="briefing-text" id="dBriefOpen">Connecting to Elaine...</div>
+          <div id="dBriefSummary" style="font-size:12px;color:var(--text-muted);margin-top:var(--sp2)"></div>
           <div class="briefing-close" id="dBriefClose"></div>
         </div>
         <!-- Gravity Top 3 -->
@@ -348,6 +350,59 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         <div class="card span-3">
           <div class="card-head"><span class="card-label">Active Modules</span></div>
           <div class="mod-grid" id="dModGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORNING BRIEF -->
+    <div class="panel" id="p-briefing">
+      <div class="dashboard" id="briefingGrid">
+        <div class="card span-3">
+          <div class="card-head"><span class="card-label">Morning Brief</span><span class="card-action" onclick="loadBriefing()">Refresh</span></div>
+          <div class="card-med" id="bGreeting">Loading briefing...</div>
+          <div class="card-sub" id="bDate"></div>
+        </div>
+        <!-- Priorities -->
+        <div class="card">
+          <div class="card-head"><span class="card-label">Top Priorities</span></div>
+          <div id="bGravity"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- Drift Alert -->
+        <div class="card">
+          <div class="card-head"><span class="card-label">Drift Alert</span></div>
+          <div id="bDrift"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- Rest Suggestion -->
+        <div class="card">
+          <div class="card-head"><span class="card-label">Wellbeing Check</span></div>
+          <div id="bRest"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- News -->
+        <div class="card span-2">
+          <div class="card-head"><span class="card-label">News &amp; Industry</span></div>
+          <div id="bNews"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- People of Interest -->
+        <div class="card">
+          <div class="card-head"><span class="card-label">People of Interest</span></div>
+          <div id="bPoi"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- LinkedIn -->
+        <div class="card span-2">
+          <div class="card-head"><span class="card-label">LinkedIn &amp; Industry</span></div>
+          <div id="bLinkedin"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- Deadlines -->
+        <div class="card">
+          <div class="card-head"><span class="card-label">Deadlines</span></div>
+          <div id="bDeadlines"><span style="color:var(--text-muted)">Loading...</span></div>
+        </div>
+        <!-- Module Data -->
+        <div class="card span-3">
+          <div class="card-head"><span class="card-label">Module Intelligence</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp3)" id="bModules">
+            <span style="color:var(--text-muted)">Loading...</span>
+          </div>
         </div>
       </div>
     </div>
@@ -453,9 +508,10 @@ function nav(p){
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');if(n.dataset.p===p)n.classList.add('active')});
   document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
   var el=document.getElementById('p-'+p);if(el)el.classList.add('active');
-  var titles={'dashboard':'Dashboard','chat':'Chat with Elaine','tools':'AMTL Tools','gravity':'Gravity Field','gatekeeper':'Gatekeeper','check':'Quick Check','sentinel':'Sentinel','learning':'Learning Radar','constellation':'Constellation'};
+  var titles={'dashboard':'Dashboard','briefing':'Morning Brief','chat':'Chat with Elaine','tools':'AMTL Tools','gravity':'Gravity Field','gatekeeper':'Gatekeeper','check':'Quick Check','sentinel':'Sentinel','learning':'Learning Radar','constellation':'Constellation'};
   document.getElementById('pageTitle').textContent=titles[p]||p;
   if(p==='tools')loadToolsHealth();
+  if(p==='briefing')loadBriefing();
 }
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){nav(n.dataset.p)})});
 if(window.elaine){window.elaine.onNavigate(function(p){nav(p)})}
@@ -526,6 +582,99 @@ function renderTools(){
     });
   });
   grid.innerHTML=html||'<div style="color:var(--text-muted)">No tools registered</div>';
+}
+
+/* === Morning Brief === */
+var briefingCache=null;
+
+async function loadBriefing(){
+  try{
+    /* Try latest (stored) first — fast. Fall back to live generate. */
+    var b;
+    try{b=await api('GET','/api/morning-briefing/latest');if(b.error)throw b.error}catch(e){b=await api('GET','/api/morning-briefing')}
+    briefingCache=b;
+    renderBriefing(b);
+  }catch(e){
+    document.getElementById('bGreeting').textContent='Could not load briefing: '+e.message;
+  }
+}
+
+function renderBriefing(b){
+  document.getElementById('bGreeting').textContent=b.greeting||'Good morning, Mani.';
+  document.getElementById('bDate').textContent=b.date||'';
+
+  /* Dashboard summary card */
+  document.getElementById('dBriefOpen').textContent=b.greeting||"Here's what needs your attention.";
+  var parts=[];
+  if((b.gravity||{}).red_giants)parts.push(b.gravity.red_giants+' red giant'+(b.gravity.red_giants!==1?'s':''));
+  var newsN=((b.news||{}).items||[]).length;if(newsN)parts.push(newsN+' news item'+(newsN!==1?'s':''));
+  var poiN=((b.people||{}).items||[]).length;if(poiN)parts.push(poiN+' POI update'+(poiN!==1?'s':''));
+  document.getElementById('dBriefSummary').textContent=parts.join(' \u00B7 ')||'Clear schedule. Good time for deep work.';
+
+  /* Gravity / priorities */
+  var grav=b.gravity||{};
+  var html='';
+  if(grav.red_giants>0)html+='<div style="color:var(--error);font-weight:600;margin-bottom:6px">\u26a0 '+grav.red_giants+' Red Giant'+(grav.red_giants!==1?'s':'')+'</div>';
+  if(grav.top_3&&grav.top_3.length){html+=grav.top_3.map(function(id){return '<div style="padding:4px 0;font-size:13px">\u2022 '+id+'</div>'}).join('')}
+  if(grav.trust_debt_aud)html+='<div style="margin-top:6px;color:var(--warning);font-size:12px">Trust debt: $'+Math.round(grav.trust_debt_aud)+'</div>';
+  document.getElementById('bGravity').innerHTML=html||'<span style="color:var(--text-muted)">Gravity field clear</span>';
+
+  /* Drift */
+  var drift=b.drift||{};
+  if(drift.alert){
+    var sev=drift.severity||'low';
+    var col=sev==='high'?'var(--error)':sev==='medium'?'var(--warning)':'var(--text-muted)';
+    document.getElementById('bDrift').innerHTML='<div style="color:'+col+';font-weight:600">\u26a0 '+drift.severity+' severity</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">'+escHtml(drift.recommendation||'')+'</div>';
+  }else{
+    document.getElementById('bDrift').innerHTML='<span style="color:var(--success)">\u2714 No drift detected</span>';
+  }
+
+  /* Rest */
+  var rest=b.rest_suggestion||{};
+  if(rest.should_rest){
+    document.getElementById('bRest').innerHTML='<div style="color:var(--warning);font-weight:600">\u{1F4A4} Rest suggested</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">'+escHtml(rest.reason||'')+'</div>';
+  }else{
+    document.getElementById('bRest').innerHTML='<span style="color:var(--success)">\u2714 Energy levels fine</span>';
+  }
+
+  /* News */
+  var news=(b.news||{}).items||[];
+  document.getElementById('bNews').innerHTML=news.length?news.slice(0,6).map(function(n){
+    return '<div style="padding:6px 0;border-bottom:1px solid var(--border)"><a href="'+escHtml(n.url||'#')+'" target="_blank" style="color:var(--text-em);text-decoration:none;font-size:13px">'+escHtml(n.title||'')+'</a><div style="font-size:11px;color:var(--text-muted)">'+escHtml(n.source||'')+' \u00B7 '+escHtml(n.published||'')+'</div></div>'
+  }).join(''):'<span style="color:var(--text-muted)">No news items — check RSS feed config</span>';
+
+  /* POI */
+  var poi=(b.people||{}).items||[];
+  document.getElementById('bPoi').innerHTML=poi.length?poi.slice(0,5).map(function(p){
+    return '<div style="padding:4px 0;font-size:13px">\u2022 '+escHtml(p.name||p.person||'')+'</div>'
+  }).join(''):'<span style="color:var(--text-muted)">No POI activity</span>';
+
+  /* LinkedIn */
+  var li=(b.linkedin||{}).items||[];
+  document.getElementById('bLinkedin').innerHTML=li.length?li.slice(0,5).map(function(n){
+    return '<div style="padding:6px 0;border-bottom:1px solid var(--border)"><a href="'+escHtml(n.url||'#')+'" target="_blank" style="color:var(--text-em);text-decoration:none;font-size:13px">'+escHtml(n.title||'')+'</a><div style="font-size:11px;color:var(--text-muted)">'+escHtml(n.source||'')+'</div></div>'
+  }).join(''):'<span style="color:var(--text-muted)">No LinkedIn/industry items</span>';
+
+  /* Deadlines */
+  var dls=(b.deadlines||{}).items||[];
+  document.getElementById('bDeadlines').innerHTML=dls.length?dls.slice(0,5).map(function(d){
+    var col=d.urgency==='overdue'?'var(--error)':d.urgency==='today'?'var(--warning)':'var(--text-muted)';
+    return '<div style="padding:4px 0;font-size:13px"><span style="color:'+col+';font-weight:600">'+escHtml(d.urgency||'')+'</span> '+escHtml(d.title||'')+'</div>'
+  }).join(''):'<span style="color:var(--text-muted)">No deadlines this week</span>';
+
+  /* Module summaries */
+  var mHtml='';
+  var modSections=[
+    ['Cartographer',b.cartographer],['Amplifier',b.amplifier],['Sentinel',b.sentinel],
+    ['Chronicle',b.chronicle],['Innovator',b.innovator],['Learning Radar',b.learning_radar],
+    ['Constellation',b.constellation],['Thinking',b.thinking_frameworks],['Orchestrator',b.orchestrator]
+  ];
+  modSections.forEach(function(ms){
+    var name=ms[0],data=ms[1]||{};
+    var summary=JSON.stringify(data).length>2?Object.keys(data).length+' fields':'idle';
+    mHtml+='<div style="padding:6px;background:var(--surface-2);border-radius:var(--r-md);font-size:12px"><span style="font-weight:600;color:var(--text-em)">'+name+'</span><div style="color:var(--text-muted);margin-top:2px">'+summary+'</div></div>';
+  });
+  document.getElementById('bModules').innerHTML=mHtml;
 }
 
 /* === Load Dashboard Data === */
@@ -712,6 +861,7 @@ async function runCheck(){
 /* === Init === */
 loadAll();
 loadToolsHealth();
+loadBriefing();
 setInterval(loadAll,30000);
 setInterval(loadToolsHealth,60000);
 </script>
