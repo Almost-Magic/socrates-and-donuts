@@ -14,6 +14,7 @@ from app.routers import (
     audit,
     channel_dna,
     channel_interactions,
+    commute_briefing,
     companies,
     commitments,
     contacts,
@@ -98,6 +99,10 @@ app.include_router(scoring_rules.router, prefix="/api")
 app.include_router(meetings.router, prefix="/api")
 app.include_router(meetings.contact_router, prefix="/api")
 app.include_router(meetings.deal_router, prefix="/api")
+# Phase 2.3: Commute Briefing
+app.include_router(commute_briefing.router, prefix="/api")
+app.include_router(commute_briefing.meeting_router, prefix="/api")
+app.include_router(commute_briefing.contact_router, prefix="/api")
 # Phase 3: Pulse — Sales Intelligence
 app.include_router(pulse.router, prefix="/api")
 

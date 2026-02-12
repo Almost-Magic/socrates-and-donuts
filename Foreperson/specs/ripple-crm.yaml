@@ -215,6 +215,14 @@ features:
     expected_status: 200
     expected_contains: items
 
+  # Phase 2.3: Commute Briefing v1
+  - id: briefing_depths
+    name: Briefing depth thresholds
+    check: http_get
+    path: /api/briefings/depths
+    expected_status: 200
+    expected_contains: depths
+
   # Phase 3: Pulse — Sales Intelligence
   - id: pulse_page
     name: Pulse daily briefing
