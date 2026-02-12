@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.middleware.rate_limit import RateLimitMiddleware
 from app.routers import (
+    attention_allocation,
     audit,
     channel_dna,
     channel_interactions,
@@ -33,6 +34,7 @@ from app.routers import (
     pulse,
     relationships,
     scoring_rules,
+    seed_data,
     settings as settings_router,
     tags,
     tasks,
@@ -107,8 +109,13 @@ app.include_router(rep_bias.deal_router, prefix="/api")
 app.include_router(commute_briefing.router, prefix="/api")
 app.include_router(commute_briefing.meeting_router, prefix="/api")
 app.include_router(commute_briefing.contact_router, prefix="/api")
+# Phase 2.5: Attention Allocation Engine
+app.include_router(attention_allocation.router, prefix="/api")
+app.include_router(attention_allocation.contact_router, prefix="/api")
 # Phase 3: Pulse — Sales Intelligence
 app.include_router(pulse.router, prefix="/api")
+# Seed data management
+app.include_router(seed_data.router, prefix="/api")
 
 
 @app.get("/")
