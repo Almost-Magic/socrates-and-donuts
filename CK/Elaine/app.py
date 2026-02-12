@@ -160,6 +160,10 @@ def create_app():
     from api_routes_phase16 import create_gatekeeper_routes
     app.register_blueprint(create_gatekeeper_routes(gatekeeper))
 
+    # Chat + Tool Registry + Service Health
+    from api_routes_chat import create_chat_routes
+    app.register_blueprint(create_chat_routes())
+
     # Stabilisation: health, modules, frustration, briefing alias
     from api_routes_stabilisation import create_stabilisation_routes
 

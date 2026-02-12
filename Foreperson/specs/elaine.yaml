@@ -100,3 +100,45 @@ features:
     check: http_get
     path: /api/modules
     expected_contains: constellation
+
+  - id: chat_ollama
+    name: Chat via Ollama (Supervisor or direct)
+    check: http_post
+    path: /api/chat
+    body: {"message": "hello"}
+    expected_status: 200
+    timeout: 120
+    notes: Returns 200 when Ollama running, 503 when offline — both acceptable. Spec checks 200 (Foreperson lacks list support).
+
+  - id: tool_registry
+    name: AMTL tool registry
+    check: http_get
+    path: /api/tools
+    expected_status: 200
+    expected_contains: tools
+
+  - id: service_health
+    name: Service health check
+    check: http_get
+    path: /api/tools/health
+    expected_status: 200
+    expected_contains: services
+    timeout: 30
+
+  - id: web_ui_chat
+    name: Web UI has Ollama chat interface
+    check: http_get
+    path: /
+    expected_contains: chatHistory
+
+  - id: web_ui_tools
+    name: Web UI has tools panel
+    check: http_get
+    path: /
+    expected_contains: tools-grid
+
+  - id: web_ui_theme
+    name: Web UI dark/light theme toggle
+    check: http_get
+    path: /
+    expected_contains: toggleTheme

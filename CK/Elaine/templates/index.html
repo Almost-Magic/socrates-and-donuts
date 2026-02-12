@@ -5,11 +5,11 @@
 <title>Elaine — Chief of Staff</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════
-   ALMOST MAGIC DESIGN SYSTEM — Elaine Desktop v2
+/* ===================================================================
+   ALMOST MAGIC DESIGN SYSTEM — Elaine Desktop v3
    Tokens from AMTL Design System v1.0
    Dark-mode native. Light mode as adaptation.
-   ═══════════════════════════════════════════════════════════ */
+   =================================================================== */
 
 :root {
   /* AMTL Core Palette — Dark (default) */
@@ -69,7 +69,7 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* ── LIGHT THEME ── */
+/* -- LIGHT THEME -- */
 [data-theme="light"] {
   --bg:          var(--n50);
   --surface:     var(--n100);
@@ -85,11 +85,11 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* ── RESET ── */
+/* -- RESET -- */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;font-size:13px;line-height:1.5;transition:background .3s,color .3s}
 
-/* ── CUSTOM TITLEBAR ── */
+/* -- CUSTOM TITLEBAR -- */
 .titlebar{height:38px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;-webkit-app-region:drag;flex-shrink:0;position:fixed;top:0;left:0;right:0;z-index:100}
 .titlebar-brand{display:flex;align-items:center;gap:10px}
 .titlebar-logo{width:20px;height:20px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:var(--bg)}
@@ -102,10 +102,10 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .theme-toggle{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:4px 10px;font-family:inherit;font-size:11px;color:var(--text-muted);cursor:pointer;transition:all .2s}
 .theme-toggle:hover{color:var(--text);border-color:var(--accent)}
 
-/* ── APP LAYOUT ── */
+/* -- APP LAYOUT -- */
 .app{display:flex;height:100vh;padding-top:38px;width:100%}
 
-/* ── SIDEBAR ── */
+/* -- SIDEBAR -- */
 .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:background .3s}
 .sidebar-section{padding:var(--sp4) var(--sp3)}
 .sidebar-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);padding:0 var(--sp3);margin-bottom:var(--sp2)}
@@ -121,7 +121,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .stat-label{font-size:11px;color:var(--text-muted)}
 .stat-value{font-size:11px;font-weight:600;color:var(--text)}
 
-/* ── MAIN CONTENT ── */
+/* -- MAIN CONTENT -- */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .main-header{padding:var(--sp4) var(--sp6);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .main-title{font-size:16px;font-weight:600;color:var(--text-em)}
@@ -133,7 +133,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .panel::-webkit-scrollbar{width:5px}
 .panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* ── DASHBOARD ── */
+/* -- DASHBOARD -- */
 .dashboard{padding:var(--sp6);display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp4);align-content:start}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:var(--sp5);transition:all .2s;box-shadow:var(--shadow-sm)}
 .card:hover{border-color:var(--border-lt);box-shadow:var(--shadow-md)}
@@ -178,11 +178,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .briefing-text{font-size:15px;line-height:1.8;color:var(--text)}
 .briefing-close{font-size:13px;color:var(--accent);font-style:italic;margin-top:var(--sp3)}
 
-/* Swoosh Motif (loading/success) */
-.swoosh{position:absolute;bottom:12px;right:16px;width:60px;height:20px;opacity:.15}
-.swoosh path{fill:var(--accent)}
-
-/* ── CHAT PANEL ── */
+/* -- CHAT PANEL -- */
 .chat-panel{display:flex;flex-direction:column;height:100%}
 .chat-msgs{flex:1;overflow-y:auto;padding:var(--sp6)}
 .chat-msgs::-webkit-scrollbar{width:5px}
@@ -194,9 +190,11 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .msg.elaine{margin-right:auto}
 .msg-who{font-size:10px;color:var(--text-muted);margin-bottom:3px;padding:0 6px}
 .msg.user .msg-who{text-align:right}
-.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.6}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.6;white-space:pre-wrap}
 .msg.user .msg-bubble{background:var(--accent);color:var(--bg);border-bottom-right-radius:var(--r-sm)}
 .msg.elaine .msg-bubble{background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:var(--r-sm)}
+
+.msg-via{font-size:10px;color:var(--text-muted);margin-top:2px;padding:0 6px}
 
 .chat-bar{padding:var(--sp4) var(--sp6);border-top:1px solid var(--border);display:flex;gap:var(--sp2);flex-shrink:0;background:var(--surface)}
 .chat-input{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);color:var(--text);font-family:inherit;font-size:13px;padding:10px 16px;outline:none;transition:border .2s}
@@ -204,11 +202,43 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .chat-input::placeholder{color:var(--text-muted)}
 .chat-btn{background:var(--accent);color:var(--bg);border:none;border-radius:var(--r-lg);width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .15s;font-weight:700}
 .chat-btn:hover{background:var(--accent-hover)}
+.chat-btn:disabled{opacity:0.5;cursor:not-allowed}
 .chat-btn.mic{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted)}
 .chat-btn.mic:hover{color:var(--text);border-color:var(--accent)}
 .chat-btn.mic.recording{background:var(--error);color:#fff;border-color:var(--error);animation:pulse 1s infinite}
 
-/* ── GATEKEEPER CHECK PANEL ── */
+/* Typing indicator */
+.typing-dots{display:inline-flex;gap:4px;padding:4px 0}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:dotBounce 1.4s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* -- TOOLS PANEL -- */
+.tools-grid{padding:var(--sp6);display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp4);align-content:start}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:var(--sp5);transition:all .2s;cursor:pointer;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:var(--sp2)}
+.tool-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md)}
+.tool-card-top{display:flex;align-items:center;justify-content:space-between}
+.tool-card-name{font-weight:600;font-size:14px;color:var(--text-em)}
+.tool-card-status{display:flex;align-items:center;gap:5px;font-size:11px}
+.tool-card-status .dot{width:7px;height:7px;border-radius:50%}
+.tool-card-status .dot.running{background:var(--success)}
+.tool-card-status .dot.stopped{background:var(--error)}
+.tool-card-status .dot.checking{background:var(--warning);animation:pulse 1s infinite}
+.tool-card-desc{font-size:12px;color:var(--text-muted)}
+.tool-card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:var(--sp2)}
+.tool-card-port{font-size:11px;color:var(--text-muted);font-family:monospace}
+.tool-card-link{font-size:11px;color:var(--accent);text-decoration:none;font-weight:500}
+.tool-card-link:hover{color:var(--accent-hover)}
+.tool-card-latency{font-size:10px;color:var(--text-muted)}
+.tool-cat-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);background:var(--surface-2);padding:2px 8px;border-radius:var(--r-sm);font-weight:500}
+
+/* Service summary bar */
+.svc-bar{display:flex;align-items:center;gap:var(--sp4);padding:var(--sp3) var(--sp6);background:var(--surface);border-bottom:1px solid var(--border);font-size:12px}
+.svc-bar-item{display:flex;align-items:center;gap:5px}
+.svc-bar-item .dot{width:6px;height:6px;border-radius:50%}
+
+/* -- GATEKEEPER CHECK PANEL -- */
 .check-area{padding:var(--sp6);max-width:700px}
 .check-textarea{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);color:var(--text);font-family:inherit;font-size:13px;padding:var(--sp4);resize:vertical;min-height:160px;outline:none;transition:border .2s}
 .check-textarea:focus{border-color:var(--accent)}
@@ -219,10 +249,11 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .check-result.review{border-left:3px solid var(--warning)}
 .check-result.hold{border-left:3px solid var(--error)}
 
-/* ── RESPONSIVE ── */
+/* -- RESPONSIVE -- */
 @media(max-width:1000px){
   .dashboard{grid-template-columns:1fr 1fr}
   .card.span-3{grid-column:span 2}
+  .tools-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -240,7 +271,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
       <div class="status-dot" id="sDot"></div>
       <span id="sTxt">Connecting...</span>
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀ Light</button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">&#9788; Light</button>
   </div>
 </div>
 
@@ -249,23 +280,24 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 <div class="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label">Navigate</div>
-    <div class="nav-item active" data-p="dashboard"><span class="nav-icon">◉</span>Dashboard</div>
-    <div class="nav-item" data-p="chat"><span class="nav-icon">💬</span>Chat<span class="nav-badge" id="chatBadge" style="display:none">!</span></div>
-    <div class="nav-item" data-p="gravity"><span class="nav-icon">⚛</span>Gravity Field</div>
-    <div class="nav-item" data-p="gatekeeper"><span class="nav-icon">🛡</span>Gatekeeper</div>
-    <div class="nav-item" data-p="check"><span class="nav-icon">✓</span>Quick Check</div>
+    <div class="nav-item active" data-p="dashboard"><span class="nav-icon">&#9673;</span>Dashboard</div>
+    <div class="nav-item" data-p="chat"><span class="nav-icon">&#128172;</span>Chat<span class="nav-badge" id="chatBadge" style="display:none">!</span></div>
+    <div class="nav-item" data-p="tools"><span class="nav-icon">&#9881;</span>Tools</div>
+    <div class="nav-item" data-p="gravity"><span class="nav-icon">&#9883;</span>Gravity Field</div>
+    <div class="nav-item" data-p="gatekeeper"><span class="nav-icon">&#128737;</span>Gatekeeper</div>
+    <div class="nav-item" data-p="check"><span class="nav-icon">&#10003;</span>Quick Check</div>
   </div>
   <div class="sidebar-section">
     <div class="sidebar-label">Intelligence</div>
-    <div class="nav-item" data-p="sentinel"><span class="nav-icon">🔍</span>Sentinel</div>
-    <div class="nav-item" data-p="learning"><span class="nav-icon">📡</span>Learning Radar</div>
-    <div class="nav-item" data-p="constellation"><span class="nav-icon">⭐</span>Constellation</div>
+    <div class="nav-item" data-p="sentinel"><span class="nav-icon">&#128269;</span>Sentinel</div>
+    <div class="nav-item" data-p="learning"><span class="nav-icon">&#128225;</span>Learning Radar</div>
+    <div class="nav-item" data-p="constellation"><span class="nav-icon">&#11088;</span>Constellation</div>
   </div>
   <div class="sidebar-stats">
-    <div class="stat-row"><span class="stat-label">Modules</span><span class="stat-value" id="sModules">—</span></div>
-    <div class="stat-row"><span class="stat-label">Wellbeing</span><span class="stat-value" id="sWellbeing">—</span></div>
+    <div class="stat-row"><span class="stat-label">Modules</span><span class="stat-value" id="sModules">&mdash;</span></div>
+    <div class="stat-row"><span class="stat-label">Services</span><span class="stat-value" id="sServices">&mdash;</span></div>
+    <div class="stat-row"><span class="stat-label">Wellbeing</span><span class="stat-value" id="sWellbeing">&mdash;</span></div>
     <div class="stat-row"><span class="stat-label">Checked</span><span class="stat-value" id="sChecked">0</span></div>
-    <div class="stat-row"><span class="stat-label">Held</span><span class="stat-value" id="sHeld" style="color:var(--error)">0</span></div>
   </div>
 </div>
 
@@ -285,21 +317,21 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         <!-- Wellbeing -->
         <div class="card">
           <div class="card-head"><span class="card-label">Wellbeing</span></div>
-          <div class="card-big" id="dWellbeing">—</div>
+          <div class="card-big" id="dWellbeing">&mdash;</div>
           <div class="wb-bar"><div class="wb-fill" id="dWbBar"></div></div>
           <div class="card-sub" id="dWbRec"></div>
         </div>
         <!-- Modules -->
         <div class="card">
           <div class="card-head"><span class="card-label">Modules Active</span></div>
-          <div class="card-big" id="dModules">—</div>
+          <div class="card-big" id="dModules">&mdash;</div>
           <div class="card-sub">All systems operational</div>
         </div>
-        <!-- Gatekeeper -->
+        <!-- AMTL Services -->
         <div class="card">
-          <div class="card-head"><span class="card-label">Gatekeeper</span><span class="card-action" onclick="nav('gatekeeper')">View →</span></div>
-          <div class="card-big" id="dGateChecked">0</div>
-          <div class="card-sub">items checked · <span id="dGateHeld" style="color:var(--error)">0</span> held</div>
+          <div class="card-head"><span class="card-label">AMTL Services</span><span class="card-action" onclick="nav('tools')">View All &rarr;</span></div>
+          <div class="card-big" id="dSvcCount">&mdash;</div>
+          <div class="card-sub" id="dSvcSub">Checking services...</div>
         </div>
         <!-- Morning Briefing -->
         <div class="card span-2">
@@ -309,8 +341,8 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         </div>
         <!-- Gravity Top 3 -->
         <div class="card">
-          <div class="card-head"><span class="card-label">Top Priorities</span><span class="card-action" onclick="nav('gravity')">All →</span></div>
-          <div id="dGravTop">—</div>
+          <div class="card-head"><span class="card-label">Top Priorities</span><span class="card-action" onclick="nav('gravity')">All &rarr;</span></div>
+          <div id="dGravTop">&mdash;</div>
         </div>
         <!-- Module Grid -->
         <div class="card span-3">
@@ -327,17 +359,29 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
           <div class="msg elaine"><div class="msg-who">Elaine</div><div class="msg-bubble" id="chatHello">Connecting...</div></div>
         </div>
         <div class="chat-bar">
-          <button class="chat-btn mic" id="micBtn" onclick="toggleMic()" title="Click to speak">🎤</button>
+          <button class="chat-btn mic" id="micBtn" onclick="toggleMic()" title="Click to speak">&#127908;</button>
           <input class="chat-input" id="chatIn" placeholder="Talk to Elaine..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
-          <button class="chat-btn" onclick="sendChat()" title="Send">→</button>
+          <button class="chat-btn" id="sendBtn" onclick="sendChat()" title="Send">&rarr;</button>
         </div>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="panel" id="p-tools">
+      <div class="svc-bar" id="toolsBar">
+        <span style="font-weight:600;color:var(--text-em)">AMTL Services</span>
+        <span id="toolsBarSummary" style="color:var(--text-muted)">Loading...</span>
+        <button onclick="loadToolsHealth()" style="margin-left:auto;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:4px 12px;font-family:inherit;font-size:11px;color:var(--text-muted);cursor:pointer">Refresh</button>
+      </div>
+      <div class="tools-grid" id="toolsGrid">
+        <div style="color:var(--text-muted);padding:var(--sp6)">Loading tools...</div>
       </div>
     </div>
 
     <!-- GRAVITY -->
     <div class="panel" id="p-gravity">
       <div style="padding:var(--sp6);max-width:700px">
-        <div class="card"><div class="card-head"><span class="card-label">Gravity Field — All Items</span></div><div id="gravAll"><span style="color:var(--text-muted)">Loading...</span></div></div>
+        <div class="card"><div class="card-head"><span class="card-label">Gravity Field &mdash; All Items</span></div><div id="gravAll"><span style="color:var(--text-muted)">Loading...</span></div></div>
       </div>
     </div>
 
@@ -366,7 +410,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
     <!-- SENTINEL -->
     <div class="panel" id="p-sentinel">
       <div style="padding:var(--sp6);max-width:700px">
-        <div class="card"><div class="card-head"><span class="card-label">Sentinel — Trust Engine</span></div>
+        <div class="card"><div class="card-head"><span class="card-label">Sentinel &mdash; Trust Engine</span></div>
           <p style="color:var(--text-muted);margin-bottom:var(--sp3)">Sentinel reviews all content for trust surface quality, dangerous language, audience fit, and risk economics.</p>
           <div id="sentinelStatus">Loading...</div>
         </div>
@@ -376,14 +420,14 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
     <!-- LEARNING -->
     <div class="panel" id="p-learning">
       <div style="padding:var(--sp6);max-width:700px">
-        <div class="card"><div class="card-head"><span class="card-label">Learning Radar — Interests</span></div><div id="learnInterests">Loading...</div></div>
+        <div class="card"><div class="card-head"><span class="card-label">Learning Radar &mdash; Interests</span></div><div id="learnInterests">Loading...</div></div>
       </div>
     </div>
 
     <!-- CONSTELLATION -->
     <div class="panel" id="p-constellation">
       <div style="padding:var(--sp6);max-width:700px">
-        <div class="card"><div class="card-head"><span class="card-label">Constellation — Relationship Intelligence</span></div>
+        <div class="card"><div class="card-head"><span class="card-label">Constellation &mdash; Relationship Intelligence</span></div>
           <p style="color:var(--text-muted)">POI profiles, trust ledger, reciprocity tracking, and network intelligence.</p>
           <div id="constellationData" style="margin-top:var(--sp3)">Loading...</div>
         </div>
@@ -395,39 +439,96 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 </div>
 
 <script>
-/* ── Theme Toggle ── */
+/* === Theme Toggle === */
 function toggleTheme(){
   var h=document.documentElement,b=document.getElementById('themeBtn');
-  if(h.dataset.theme==='dark'){h.dataset.theme='light';b.textContent='🌙 Dark'}
-  else{h.dataset.theme='dark';b.textContent='☀ Light'}
+  if(h.dataset.theme==='dark'){h.dataset.theme='light';b.innerHTML='&#127769; Dark'}
+  else{h.dataset.theme='dark';b.innerHTML='&#9788; Light'}
   try{localStorage.setItem('elaine-theme',h.dataset.theme)}catch(e){}
 }
-try{var saved=localStorage.getItem('elaine-theme');if(saved){document.documentElement.dataset.theme=saved;if(saved==='light')document.getElementById('themeBtn').textContent='🌙 Dark'}}catch(e){}
+try{var saved=localStorage.getItem('elaine-theme');if(saved){document.documentElement.dataset.theme=saved;if(saved==='light')document.getElementById('themeBtn').innerHTML='&#127769; Dark'}}catch(e){}
 
-/* ── Navigation ── */
+/* === Navigation === */
 function nav(p){
-  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');if(n.dataset.p===p)n.classList.add('active')});
-  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');if(n.dataset.p===p)n.classList.add('active')});
+  document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
   var el=document.getElementById('p-'+p);if(el)el.classList.add('active');
-  var titles={'dashboard':'Dashboard','chat':'Chat with Elaine','gravity':'Gravity Field','gatekeeper':'Gatekeeper','check':'Quick Check','sentinel':'Sentinel','learning':'Learning Radar','constellation':'Constellation'};
+  var titles={'dashboard':'Dashboard','chat':'Chat with Elaine','tools':'AMTL Tools','gravity':'Gravity Field','gatekeeper':'Gatekeeper','check':'Quick Check','sentinel':'Sentinel','learning':'Learning Radar','constellation':'Constellation'};
   document.getElementById('pageTitle').textContent=titles[p]||p;
+  if(p==='tools')loadToolsHealth();
 }
-document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',()=>nav(n.dataset.p)));
-if(window.elaine){window.elaine.onNavigate(p=>nav(p))}
+document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){nav(n.dataset.p)})});
+if(window.elaine){window.elaine.onNavigate(function(p){nav(p)})}
 
-/* ── Time ── */
-function tick(){var d=new Date();document.getElementById('pageTime').textContent=d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+/* === Time === */
+function tick(){var d=new Date();document.getElementById('pageTime').textContent=d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' \u00B7 '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
 tick();setInterval(tick,30000);
 
-/* ── API ── */
+/* === API Helper === */
 async function api(m,p,b){
   if(window.elaine)return window.elaine.api(m,p,b);
   var o={method:m,headers:{'Content-Type':'application/json'}};
   if(b)o.body=JSON.stringify(b);
-  var r=await fetch('http://127.0.0.1:5000'+p,o);return r.json();
+  var r=await fetch(p,o);return r.json();
 }
 
-/* ── Load All Data ── */
+/* === Tool/Service Data === */
+var toolsData=[];
+var toolsHealth={};
+
+async function loadToolsHealth(){
+  try{
+    var [tr,hr]=await Promise.all([api('GET','/api/tools'),api('GET','/api/tools/health')]);
+    toolsData=tr.tools||[];
+    toolsHealth=hr.services||{};
+    var running=hr.running||0,total=hr.total||0;
+    renderTools();
+    document.getElementById('dSvcCount').textContent=running+'/'+total;
+    document.getElementById('dSvcSub').textContent=running===total?'All services operational':((total-running)+' service'+(total-running>1?'s':'')+' offline');
+    document.getElementById('sServices').textContent=running+'/'+total;
+    document.getElementById('toolsBarSummary').textContent=running+'/'+total+' running';
+  }catch(e){
+    document.getElementById('toolsBarSummary').textContent='Error loading';
+    document.getElementById('dSvcCount').textContent='?';
+    document.getElementById('dSvcSub').textContent='Cannot reach service registry';
+  }
+}
+
+function renderTools(){
+  var grid=document.getElementById('toolsGrid');
+  var cats={core:'Core',business:'Business',creative:'Creative',intelligence:'Intelligence',learning:'Learning',finance:'Finance',infra:'Infrastructure'};
+  var grouped={};
+  toolsData.forEach(function(t){
+    var c=t.category||'other';
+    if(!grouped[c])grouped[c]=[];
+    grouped[c].push(t);
+  });
+  var html='';
+  Object.keys(cats).forEach(function(cat){
+    var items=grouped[cat];
+    if(!items)return;
+    items.forEach(function(t){
+      var h=toolsHealth[t.id]||{};
+      var st=h.status||'checking';
+      var lat=h.latency_ms;
+      html+='<div class="tool-card" onclick="window.open(\''+t.url+'\',\'_blank\')">';
+      html+='<div class="tool-card-top">';
+      html+='<div class="tool-card-name">'+t.name+'</div>';
+      html+='<div class="tool-card-status"><div class="dot '+st+'"></div>'+st;
+      if(lat)html+=' <span class="tool-card-latency">('+lat+'ms)</span>';
+      html+='</div></div>';
+      html+='<div class="tool-card-desc">'+t.desc+'</div>';
+      html+='<div class="tool-card-bottom">';
+      html+='<span class="tool-card-port">:'+t.port+'</span>';
+      html+='<span class="tool-cat-label">'+cats[t.category]+'</span>';
+      html+='<a class="tool-card-link" href="'+t.url+'" target="_blank" onclick="event.stopPropagation()">Open &rarr;</a>';
+      html+='</div></div>';
+    });
+  });
+  grid.innerHTML=html||'<div style="color:var(--text-muted)">No tools registered</div>';
+}
+
+/* === Load Dashboard Data === */
 async function loadAll(){
   try{
     var s=await api('GET','/api/status');
@@ -438,9 +539,9 @@ async function loadAll(){
     var mods=Object.keys(s.modules||{});
     document.getElementById('dModules').textContent=mods.length;
     document.getElementById('sModules').textContent=mods.length;
-    document.getElementById('dModGrid').innerHTML=mods.map(m=>'<div class="mod-chip"><div class="mod-dot"></div>'+m+'</div>').join('');
+    document.getElementById('dModGrid').innerHTML=mods.map(function(m){return '<div class="mod-chip"><div class="mod-dot"></div>'+m+'</div>'}).join('');
 
-    document.getElementById('chatHello').innerHTML="Good morning, Mani. What would you like to work on?<br><br><small style='color:var(--text-muted)'>Try: priorities · wellbeing · briefing · status · check this · learning</small>";
+    document.getElementById('chatHello').innerHTML="Good morning, Mani. I'm connected to Ollama \u2014 ask me anything.<br><br><small style='color:var(--text-muted)'>I know about all your AMTL tools, priorities, relationships, and content. Try asking about your tools, priorities, or just have a conversation.</small>";
 
     try{
       var c=await api('GET','/api/compassion/wellbeing');
@@ -457,13 +558,11 @@ async function loadAll(){
     try{
       var g=await api('GET','/api/gravity/top?limit=8');
       var items=g.items||[];
-      // Dashboard top 3
-      document.getElementById('dGravTop').innerHTML=items.slice(0,3).map(x=>{
+      document.getElementById('dGravTop').innerHTML=items.slice(0,3).map(function(x){
         var m=x.mass||x.force||0,cl=m>=80?'red':m>=50?'amber':'green';
         return '<div class="grav-item"><div class="grav-force '+cl+'">'+Math.round(m)+'</div><div class="grav-name">'+(x.title||x.name||'')+'</div></div>';
       }).join('')||'<span style="color:var(--text-muted)">No items</span>';
-      // Full gravity panel
-      document.getElementById('gravAll').innerHTML=items.map(x=>{
+      document.getElementById('gravAll').innerHTML=items.map(function(x){
         var m=x.mass||x.force||0,cl=m>=80?'red':m>=50?'amber':'green';
         return '<div class="grav-item"><div class="grav-force '+cl+'">'+Math.round(m)+'</div><div class="grav-name">'+(x.title||x.name||'')+'</div></div>';
       }).join('')||'<span style="color:var(--text-muted)">Gravity field is clear</span>';
@@ -471,29 +570,26 @@ async function loadAll(){
 
     try{
       var gt=await api('GET','/api/gatekeeper/status');
-      document.getElementById('dGateChecked').textContent=gt.items_checked||0;
-      document.getElementById('dGateHeld').textContent=gt.items_held||0;
       document.getElementById('sChecked').textContent=gt.items_checked||0;
-      document.getElementById('sHeld').textContent=gt.items_held||0;
       document.getElementById('gateStats').innerHTML=[
         ['Items Checked',gt.items_checked||0],['Items Held',gt.items_held||0,'var(--error)'],
         ['Overrides',gt.overrides||0],['Watched Folders',gt.watched_folders||0],['Outlook Rules',gt.outlook_rules||0]
-      ].map(r=>'<div class="gate-row"><span class="gate-lbl">'+r[0]+'</span><span class="gate-val"'+(r[2]?' style="color:'+r[2]+'"':'')+'>'+r[1]+'</span></div>').join('');
+      ].map(function(r){return '<div class="gate-row"><span class="gate-lbl">'+r[0]+'</span><span class="gate-val"'+(r[2]?' style="color:'+r[2]+'"':'')+'>'+r[1]+'</span></div>'}).join('');
     }catch(e){}
 
     try{
       var rules=await api('GET','/api/gatekeeper/outlook-rules');
-      document.getElementById('gateRules').innerHTML=(rules.rules||[]).map(r=>'<div class="gate-row"><span class="gate-lbl">'+r.name+'</span><span class="gate-val">'+r.priority+'</span></div>').join('')||'No rules';
+      document.getElementById('gateRules').innerHTML=(rules.rules||[]).map(function(r){return '<div class="gate-row"><span class="gate-lbl">'+r.name+'</span><span class="gate-val">'+r.priority+'</span></div>'}).join('')||'No rules';
     }catch(e){}
 
     try{
       var folders=await api('GET','/api/gatekeeper/folders');
-      document.getElementById('gateFolders').innerHTML=(folders.folders||[]).map(f=>'<div class="gate-row"><span class="gate-lbl" style="font-size:11px">'+f.path+'</span><span class="gate-val">'+f.priority+'</span></div>').join('')||'No folders';
+      document.getElementById('gateFolders').innerHTML=(folders.folders||[]).map(function(f){return '<div class="gate-row"><span class="gate-lbl" style="font-size:11px">'+f.path+'</span><span class="gate-val">'+f.priority+'</span></div>'}).join('')||'No folders';
     }catch(e){}
 
     try{
       var lr=await api('GET','/api/learning/interests');
-      document.getElementById('learnInterests').innerHTML=(lr.interests||[]).map(i=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 0"><div style="width:6px;height:6px;border-radius:50%;background:var(--info)"></div><span>'+i.topic+'</span></div>').join('')||'<span style="color:var(--text-muted)">No interests tracked yet</span>';
+      document.getElementById('learnInterests').innerHTML=(lr.interests||[]).map(function(i){return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0"><div style="width:6px;height:6px;border-radius:50%;background:var(--info)"></div><span>'+i.topic+'</span></div>'}).join('')||'<span style="color:var(--text-muted)">No interests tracked yet</span>';
     }catch(e){}
 
     try{
@@ -503,7 +599,7 @@ async function loadAll(){
 
     try{
       var cn=await api('GET','/api/constellation/pois');
-      document.getElementById('constellationData').innerHTML=(cn.pois||[]).slice(0,10).map(p=>'<div class="gate-row"><span class="gate-lbl">'+p.name+'</span><span class="gate-val">'+p.relationship_type+'</span></div>').join('')||'<span style="color:var(--text-muted)">No POIs tracked yet</span>';
+      document.getElementById('constellationData').innerHTML=(cn.pois||[]).slice(0,10).map(function(p){return '<div class="gate-row"><span class="gate-lbl">'+p.name+'</span><span class="gate-val">'+p.relationship_type+'</span></div>'}).join('')||'<span style="color:var(--text-muted)">No POIs tracked yet</span>';
     }catch(e){document.getElementById('constellationData').innerHTML='<span style="color:var(--text-muted)">Add people to start tracking relationships</span>'}
 
   }catch(e){
@@ -514,39 +610,110 @@ async function loadAll(){
   }
 }
 
-/* ── Chat ── */
+/* === Chat === */
 var chatMsgs=document.getElementById('chatMsgs'),chatIn=document.getElementById('chatIn');
-function addMsg(t,s){var d=document.createElement('div');d.className='msg '+s;d.innerHTML='<div class="msg-who">'+(s==='user'?'You':'Elaine')+'</div><div class="msg-bubble">'+t+'</div>';chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight}
+var chatHistory=[];
+var chatBusy=false;
 
-async function sendChat(){
-  var t=chatIn.value.trim();if(!t)return;chatIn.value='';addMsg(t,'user');var l=t.toLowerCase();
-  try{var r;
-    if(l.match(/gravit|priorit|what should|top items|what.s pulling/)){r=await api('GET','/api/gravity/top?limit=5');if(r.items&&r.items.length){addMsg("Your gravity field:<br><br>"+r.items.map((x,i)=>(i+1)+'. <strong>'+(x.title||x.name)+'</strong> (force: '+Math.round(x.mass||x.force||0)+')').join('<br>'),'elaine')}else addMsg("Gravity field clear. Nothing pulling.","elaine")}
-    else if(l.match(/how am i|wellbeing|how are|feeling|energy/)){r=await api('GET','/api/compassion/wellbeing');addMsg((r.opening||"Here's what's on the radar.")+'<br><br>Wellbeing: <strong>'+(r.wellbeing_level||'steady')+'</strong>'+(r.recommendation?'<br>'+r.recommendation:'')+'<br><br><em>'+(r.closing||'')+'</em>','elaine')}
-    else if(l.match(/check this|review this|before i send|scan this/)){r=await api('POST','/api/gatekeeper/check',{content:t,title:'Chat check'});var v=r.verdict||'clear',c=v==='clear'?'🟢':v==='review'?'🟡':'🔴';addMsg(c+' <strong>'+v.toUpperCase()+'</strong> ('+Math.round((r.score||1)*100)+'%)<br>'+(r.summary||'Looks good.'),'elaine');loadAll()}
-    else if(l.match(/^gate|gatekeeper/)){r=await api('GET','/api/gatekeeper/status');addMsg('Gatekeeper: '+(r.items_checked||0)+' checked, '+(r.items_held||0)+' held, '+(r.overrides||0)+' overrides.','elaine')}
-    else if(l.match(/morning|briefing|good morning/)){r=await api('GET','/api/compassion/wellbeing');addMsg((r.opening||"Here's what's on the radar.")+'<br><br><em>'+(r.closing||'')+'</em>','elaine')}
-    else if(l.match(/status|modules|system/)){r=await api('GET','/api/status');addMsg('All systems operational. <strong>'+Object.keys(r.modules||{}).length+' modules</strong> active.','elaine')}
-    else if(l.match(/learning|interest|reading|curious/)){r=await api('GET','/api/learning/interests');addMsg(r.interests&&r.interests.length?'Your interests:<br><br>'+r.interests.map(i=>'• '+i.topic).join('<br>'):"No interests tracked yet.",'elaine')}
-    else if(l.match(/frustrat|friction|log frustration|that.s annoying|ugh/)){var ftext=t.replace(/^(elaine,?\s*)?(log\s+)?frustrat(ion)?:?\s*/i,'').trim();if(!ftext)ftext=t;r=await api('POST','/api/frustration',{text:ftext,source:'elaine'});addMsg("Logged in the friction file. I'll make sure it gets addressed.",'elaine')}
-    else{addMsg("I'm here. Try: <strong>priorities</strong>, <strong>wellbeing</strong>, <strong>briefing</strong>, <strong>status</strong>, <strong>learning</strong>, <strong>frustration</strong>, or <strong>\"check this\"</strong> + content.",'elaine')}
-  }catch(e){addMsg("Can't reach the server.<br><small>"+e.message+"</small>",'elaine')}
+function addMsg(t,s,via){
+  var d=document.createElement('div');d.className='msg '+s;
+  var html='<div class="msg-who">'+(s==='user'?'You':'Elaine')+'</div><div class="msg-bubble">'+t+'</div>';
+  if(via)html+='<div class="msg-via">via '+via+'</div>';
+  d.innerHTML=html;chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight;
 }
 
-/* ── Microphone ── */
-var recognition=null,isRec=false;
-if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-AU';recognition.onresult=function(e){chatIn.value=e.results[0][0].transcript;sendChat()};recognition.onend=function(){isRec=false;document.getElementById('micBtn').classList.remove('recording')};recognition.onerror=recognition.onend}
-function toggleMic(){if(!recognition){addMsg("Speech not available. Type instead.",'elaine');return}if(isRec){recognition.stop()}else{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}}
+function addTyping(){
+  var d=document.createElement('div');d.className='msg elaine';d.id='typing';
+  d.innerHTML='<div class="msg-who">Elaine</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
 
-/* ── Quick Check ── */
+function removeTyping(){var el=document.getElementById('typing');if(el)el.remove()}
+
+function escHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+async function sendChat(){
+  if(chatBusy)return;
+  var t=chatIn.value.trim();if(!t)return;
+  chatIn.value='';
+  addMsg(escHtml(t),'user');
+
+  var l=t.toLowerCase();
+
+  /* Fast-path shortcuts for local ELAINE APIs */
+  try{
+    /* Frustration logging - always handle locally */
+    if(l.match(/frustrat|friction|log frustration|that.s annoying|ugh/)){
+      var ftext=t.replace(/^(elaine,?\s*)?(log\s+)?frustrat(ion)?:?\s*/i,'').trim();
+      if(!ftext)ftext=t;
+      var r=await api('POST','/api/frustration',{text:ftext,source:'elaine'});
+      addMsg("Logged in the friction file. I'll make sure it gets addressed.",'elaine','local');
+      return;
+    }
+    /* Gatekeeper check - local processing */
+    if(l.match(/^check this|^review this|^before i send|^scan this/)){
+      var r=await api('POST','/api/gatekeeper/check',{content:t,title:'Chat check'});
+      var v=r.verdict||'clear',icon=v==='clear'?'\u{1F7E2}':v==='review'?'\u{1F7E1}':'\u{1F534}';
+      addMsg(icon+' <strong>'+v.toUpperCase()+'</strong> ('+Math.round((r.score||1)*100)+'%)<br>'+(r.summary||'Looks good.'),'elaine','gatekeeper');
+      loadAll();
+      return;
+    }
+  }catch(e){}
+
+  /* All other messages go to Ollama via /api/chat */
+  chatBusy=true;
+  document.getElementById('sendBtn').disabled=true;
+  addTyping();
+
+  chatHistory.push({role:'user',content:t});
+
+  try{
+    var r=await api('POST','/api/chat',{message:t,history:chatHistory});
+    removeTyping();
+    if(r.error&&!r.reply){
+      addMsg('Sorry, I could not reach the AI backend. '+escHtml(r.error),'elaine','error');
+    }else{
+      var reply=r.reply||'No response from model.';
+      chatHistory.push({role:'assistant',content:reply});
+      /* Basic markdown: **bold**, \n to <br> */
+      var formatted=escHtml(reply).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+      addMsg(formatted,'elaine',r.via||'ollama');
+    }
+  }catch(e){
+    removeTyping();
+    addMsg("Can't reach the server.<br><small>"+escHtml(e.message)+"</small>",'elaine','error');
+  }
+
+  chatBusy=false;
+  document.getElementById('sendBtn').disabled=false;
+}
+
+/* === Microphone === */
+var recognition=null,isRec=false;
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-AU';
+  recognition.onresult=function(e){chatIn.value=e.results[0][0].transcript;sendChat()};
+  recognition.onend=function(){isRec=false;document.getElementById('micBtn').classList.remove('recording')};
+  recognition.onerror=recognition.onend;
+}
+function toggleMic(){
+  if(!recognition){addMsg("Speech not available in this browser. Type instead.",'elaine');return}
+  if(isRec){recognition.stop()}else{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}
+}
+
+/* === Quick Check === */
 async function runCheck(){
   var c=document.getElementById('chkContent').value;if(!c.trim())return;
   var b=document.getElementById('chkResult');b.style.display='block';b.className='check-result';b.textContent='Checking...';
   try{var r=await api('POST','/api/gatekeeper/check',{content:c,title:'Quick check'});var v=r.verdict||'clear';b.className='check-result '+v;b.innerHTML='<strong>'+v.toUpperCase()+'</strong> ('+Math.round((r.score||1)*100)+'%)<br>'+(r.summary||'');loadAll()}catch(e){b.textContent='Error: '+e.message}
 }
 
-/* ── Init ── */
-loadAll();setInterval(loadAll,30000);
+/* === Init === */
+loadAll();
+loadToolsHealth();
+setInterval(loadAll,30000);
+setInterval(loadToolsHealth,60000);
 </script>
 </body>
 </html>

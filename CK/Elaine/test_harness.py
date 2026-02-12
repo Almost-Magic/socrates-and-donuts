@@ -1137,6 +1137,155 @@ test("Regression: existing endpoints still 200", test_regression_existing_endpoi
 
 
 # ══════════════════════════════════════════════════════════════════
+# 4c. CHAT + TOOLS + SERVICE HEALTH TESTS
+# ══════════════════════════════════════════════════════════════════
+
+print("\n" + "=" * 60)
+print("4c. CHAT + TOOLS + SERVICE HEALTH TESTS")
+print("=" * 60)
+
+
+def test_import_chat_routes():
+    from api_routes_chat import create_chat_routes, TOOLS, SYSTEM_PROMPT
+    assert callable(create_chat_routes)
+    assert len(TOOLS) >= 10
+    assert "Maestro Elaine" in SYSTEM_PROMPT
+
+
+def test_tools_endpoint():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/api/tools")
+    assert resp.status_code == 200, f"Expected 200, got {resp.status_code}"
+    data = resp.get_json()
+    assert "tools" in data
+    assert "total" in data
+    assert data["total"] >= 10
+    assert "lan_ip" in data
+    # Check structure of first tool
+    tool = data["tools"][0]
+    for key in ("id", "name", "desc", "port", "url", "health", "category"):
+        assert key in tool, f"Tool missing key: {key}"
+
+
+def test_tools_contains_core_services():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/api/tools")
+    data = resp.get_json()
+    ids = [t["id"] for t in data["tools"]]
+    for required in ("workshop", "supervisor", "elaine", "ollama"):
+        assert required in ids, f"Missing core service: {required}"
+
+
+def test_tools_contains_business_services():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/api/tools")
+    data = resp.get_json()
+    ids = [t["id"] for t in data["tools"]]
+    for expected in ("ripple", "ripple-api", "touchstone", "peterman", "genie"):
+        assert expected in ids, f"Missing business service: {expected}"
+
+
+def test_tools_health_endpoint():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/api/tools/health")
+    assert resp.status_code == 200, f"Expected 200, got {resp.status_code}"
+    data = resp.get_json()
+    assert "services" in data
+    assert "running" in data
+    assert "total" in data
+    assert "timestamp" in data
+    assert isinstance(data["running"], int)
+    assert data["total"] >= 10
+    # Each service has status + latency_ms
+    for svc_id, svc_data in data["services"].items():
+        assert "status" in svc_data, f"Service {svc_id} missing status"
+        assert svc_data["status"] in ("running", "stopped"), f"Invalid status for {svc_id}"
+
+
+def test_chat_rejects_empty():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.post("/api/chat", json={"message": ""})
+    assert resp.status_code == 400
+    data = resp.get_json()
+    assert "error" in data
+
+
+def test_chat_rejects_missing_message():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.post("/api/chat", json={})
+    assert resp.status_code == 400
+
+
+def test_chat_graceful_when_offline():
+    """Chat returns structured response even when Ollama is unreachable."""
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.post("/api/chat", json={"message": "hello"})
+    # Either 200 (if Ollama is running) or 503 (offline) — both valid
+    assert resp.status_code in (200, 503), f"Unexpected status: {resp.status_code}"
+    data = resp.get_json()
+    assert "reply" in data or "error" in data
+    assert "via" in data
+
+
+def test_chat_accepts_history():
+    """Chat endpoint accepts conversation history."""
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.post("/api/chat", json={
+        "message": "hello",
+        "history": [
+            {"role": "user", "content": "previous message"},
+            {"role": "assistant", "content": "previous reply"},
+        ],
+    })
+    assert resp.status_code in (200, 503)
+    data = resp.get_json()
+    assert "via" in data
+
+
+def test_web_ui_contains_tools():
+    """Web UI has tools panel, chat integration, and key features."""
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/")
+    assert resp.status_code == 200
+    html = resp.get_data(as_text=True)
+    for feature in ("tools-grid", "loadToolsHealth", "chatHistory", "typing-dots",
+                     "/api/chat", "/api/tools", "AMTL Services"):
+        assert feature in html, f"Web UI missing: {feature}"
+
+
+def test_web_ui_has_dark_light_toggle():
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/")
+    html = resp.get_data(as_text=True)
+    assert "toggleTheme" in html
+    assert "elaine-theme" in html
+    assert 'data-theme="dark"' in html
+
+
+test("Import: chat routes module", test_import_chat_routes)
+test("Tools: /api/tools returns tool registry", test_tools_endpoint)
+test("Tools: contains core services", test_tools_contains_core_services)
+test("Tools: contains business services", test_tools_contains_business_services)
+test("Tools Health: /api/tools/health returns statuses", test_tools_health_endpoint)
+test("Chat: rejects empty message", test_chat_rejects_empty)
+test("Chat: rejects missing message", test_chat_rejects_missing_message)
+test("Chat: graceful when Ollama offline", test_chat_graceful_when_offline)
+test("Chat: accepts conversation history", test_chat_accepts_history)
+test("Web UI: contains tools + chat features", test_web_ui_contains_tools)
+test("Web UI: dark/light theme toggle", test_web_ui_has_dark_light_toggle)
+
+
+# ══════════════════════════════════════════════════════════════════
 # 5. CONFIDENCE STAMP
 # ══════════════════════════════════════════════════════════════════
 
