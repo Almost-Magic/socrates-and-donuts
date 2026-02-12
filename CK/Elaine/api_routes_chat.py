@@ -6,7 +6,7 @@ Ollama only — no cloud APIs.
 Almost Magic Tech Lab
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 import json
 import logging
 import os
@@ -23,6 +23,12 @@ OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 CHAT_MODEL = os.environ.get("ELAINE_CHAT_MODEL", "llama3.2:3b")
 CHAT_TIMEOUT = 15  # seconds — fast model, should respond well within this
 CHAT_MAX_TOKENS = 150  # concise replies, not essays
+
+# ── ElevenLabs Voice (TTS output) ─────────────────────────────
+ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY", "")
+ELEVENLABS_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID", "XQanfahzbl1YiUlZi5NW")
+ELEVENLABS_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_turbo_v2_5")
+TTS_TIMEOUT = 10  # seconds
 
 # ── AMTL Tool Registry ─────────────────────────────────────────
 
@@ -315,6 +321,80 @@ def create_chat_routes():
             "total": len(TOOLS),
             "timestamp": datetime.now(timezone.utc).isoformat(),
         })
+
+    # ── GET /api/tts/status ───────────────────────────────────────
+
+    @bp.route("/api/tts/status", methods=["GET"])
+    def tts_status():
+        """Report voice capability — is ElevenLabs configured?"""
+        has_key = bool(ELEVENLABS_API_KEY)
+        return jsonify({
+            "elevenlabs": has_key,
+            "voice_id": ELEVENLABS_VOICE_ID if has_key else None,
+            "model": ELEVENLABS_MODEL if has_key else None,
+            "fallback": "browser-tts",
+            "setup": None if has_key else (
+                "Set ELEVENLABS_API_KEY environment variable or add it to CK/Elaine/.env. "
+                "Get your key from https://elevenlabs.io/app/settings/api-keys"
+            ),
+        })
+
+    # ── POST /api/tts ───────────────────────────────────────────────
+
+    @bp.route("/api/tts", methods=["POST"])
+    def tts():
+        """Convert text to speech via ElevenLabs. Returns audio/mpeg.
+        Body: {"text": "..."} — max 500 chars for chat responses.
+        Falls back to 503 if no API key configured."""
+        if not ELEVENLABS_API_KEY:
+            return jsonify({
+                "error": "ElevenLabs API key not configured",
+                "setup": "Set ELEVENLABS_API_KEY env var. Get key: https://elevenlabs.io/app/settings/api-keys",
+            }), 503
+
+        data = request.get_json(silent=True) or {}
+        text = data.get("text", "").strip()
+        if not text:
+            return jsonify({"error": "text is required"}), 400
+
+        # Cap length for chat — don't burn API credits on essays
+        if len(text) > 500:
+            text = text[:500] + "... that's the gist of it."
+
+        try:
+            payload = json.dumps({
+                "text": text,
+                "model_id": ELEVENLABS_MODEL,
+                "voice_settings": {
+                    "stability": 0.5,
+                    "similarity_boost": 0.75,
+                    "style": 0.3,
+                },
+            }).encode("utf-8")
+
+            url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
+            req = urllib.request.Request(
+                url,
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "xi-api-key": ELEVENLABS_API_KEY,
+                    "Accept": "audio/mpeg",
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=TTS_TIMEOUT) as resp:
+                audio_data = resp.read()
+                logger.info("ElevenLabs TTS: %d bytes for %d chars", len(audio_data), len(text))
+                return Response(audio_data, mimetype="audio/mpeg")
+
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", errors="replace")
+            logger.warning("ElevenLabs HTTP %d: %s", e.code, body[:200])
+            return jsonify({"error": f"ElevenLabs error: HTTP {e.code}", "detail": body[:200]}), 502
+        except Exception as e:
+            logger.warning("ElevenLabs TTS failed: %s", e)
+            return jsonify({"error": f"TTS failed: {e}"}), 502
 
     return bp
 

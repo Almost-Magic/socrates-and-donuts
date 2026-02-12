@@ -10,6 +10,7 @@ Almost Magic Tech Lab
 from flask import Flask, jsonify, request
 import json
 import logging
+import os
 import sqlite3
 import subprocess
 import threading
@@ -17,6 +18,15 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 from config import *
+
+# Load .env file if present (for ELEVENLABS_API_KEY etc.)
+_env_path = Path(__file__).parent / ".env"
+if _env_path.exists():
+    for line in _env_path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, _, v = line.partition("=")
+            os.environ.setdefault(k.strip(), v.strip())
 
 try:
     import requests as http_requests

@@ -766,28 +766,38 @@ function toggleMic(){
   }
 }
 
-/* === Voice Output (Text-to-Speech via browser) === */
+/* === Voice Output (ElevenLabs TTS + browser fallback) === */
 var voiceEnabled=false;
+var voiceMode='unknown'; /* 'elevenlabs', 'browser', 'none' */
+var currentAudio=null;
 var speechSynth=window.speechSynthesis||null;
 var elaineVoice=null;
 
+/* Browser TTS fallback setup */
 function findAusVoice(){
   if(!speechSynth)return;
   var voices=speechSynth.getVoices();
-  /* Prefer Australian English female voice */
   elaineVoice=voices.find(function(v){return v.lang==='en-AU'&&/female/i.test(v.name)})
     ||voices.find(function(v){return v.lang==='en-AU'})
     ||voices.find(function(v){return v.lang.startsWith('en')&&/female/i.test(v.name)})
     ||voices.find(function(v){return v.lang.startsWith('en')})
     ||null;
 }
-if(speechSynth){
-  findAusVoice();
-  if(speechSynth.onvoiceschanged!==undefined)speechSynth.onvoiceschanged=findAusVoice;
-}
+if(speechSynth){findAusVoice();if(speechSynth.onvoiceschanged!==undefined)speechSynth.onvoiceschanged=findAusVoice}
 
-function speakText(text){
-  if(!speechSynth||!voiceEnabled)return;
+/* Check voice capability on load */
+async function checkVoiceStatus(){
+  try{
+    var r=await api('GET','/api/tts/status');
+    voiceMode=r.elevenlabs?'elevenlabs':'browser';
+    if(r.setup)logger.info('Voice setup needed: '+r.setup);
+  }catch(e){voiceMode=speechSynth?'browser':'none'}
+}
+var logger={info:function(m){console.log('[ELAINE]',m)}};
+checkVoiceStatus();
+
+function speakBrowser(text){
+  if(!speechSynth)return;
   speechSynth.cancel();
   var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
   if(clean.length>500)clean=clean.substring(0,500)+'... that is the summary.';
@@ -797,14 +807,45 @@ function speakText(text){
   speechSynth.speak(utt);
 }
 
+async function speakText(text){
+  if(!voiceEnabled)return;
+  var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
+  if(!clean.trim())return;
+
+  /* Stop any currently playing audio */
+  if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
+  if(speechSynth)speechSynth.cancel();
+
+  if(voiceMode==='elevenlabs'){
+    try{
+      var resp=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
+      if(!resp.ok){throw new Error('HTTP '+resp.status)}
+      var blob=await resp.blob();
+      var url=URL.createObjectURL(blob);
+      currentAudio=new Audio(url);
+      currentAudio.onended=function(){URL.revokeObjectURL(url);currentAudio=null};
+      currentAudio.play();
+      return;
+    }catch(e){
+      logger.info('ElevenLabs TTS failed, falling back to browser: '+e.message);
+    }
+  }
+  /* Browser TTS fallback */
+  speakBrowser(clean);
+}
+
 function toggleSpeak(){
   voiceEnabled=!voiceEnabled;
   var btn=document.getElementById('speakBtn');
   btn.innerHTML=voiceEnabled?'&#128266;':'&#128264;';
-  btn.title=voiceEnabled?'Voice replies ON':'Voice replies OFF';
+  btn.title=voiceEnabled?'Voice replies ON ('+voiceMode+')':'Voice replies OFF';
   btn.style.color=voiceEnabled?'var(--accent)':'';
-  if(!voiceEnabled&&speechSynth)speechSynth.cancel();
-  addMsg(voiceEnabled?'Voice replies enabled. I will speak my responses.':'Voice replies disabled.','elaine','local');
+  if(!voiceEnabled){
+    if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
+    if(speechSynth)speechSynth.cancel();
+  }
+  var modeLabel=voiceMode==='elevenlabs'?'ElevenLabs (cloned voice)':voiceMode==='browser'?'browser voice (set ELEVENLABS_API_KEY for cloned voice)':'unavailable';
+  addMsg(voiceEnabled?'Voice replies ON — using '+modeLabel+'.':'Voice replies disabled.','elaine','local');
 }
 
 /* === Morning Brief === */
