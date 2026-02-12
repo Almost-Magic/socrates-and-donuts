@@ -26,11 +26,8 @@ features:
 
   - id: nav_grouping
     name: Navigation grouped (Overview/Money/Intelligence/Reports/Tools)
-    check: http_get
-    path: /api/modules/nav-groups
-    expected_status: 200
-    expected_contains: groups
-    notes: Backend returns 5 nav groups (Overview, Money, Intelligence, Reports, Tools)
+    check: manual_ui_check
+    notes: Frontend hardcodes NAV_GROUPS in App.jsx — verified by Proof tests (test_nav_groups_visible, test_nav_collapse)
 
   - id: mobile_receipt_scanner
     name: Mobile receipt scanner

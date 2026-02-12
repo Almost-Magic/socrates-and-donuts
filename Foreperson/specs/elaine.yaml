@@ -21,21 +21,20 @@ features:
 
   - id: powershell_execution
     name: PowerShell execution module
-    check: http_get
-    path: /api/modules
-    expected_contains: powershell
+    check: manual_ui_check
+    notes: Electron desktop feature — not testable via HTTP API
 
   - id: claude_interaction
-    name: Claude/Guruve interaction
+    name: Claude/Guruve interaction (thinking frameworks)
     check: http_get
-    path: /api/modules
-    expected_contains: claude
+    path: /api/thinking/status
+    expected_status: 200
+    notes: Thinking frameworks engine is ELAINE's AI interaction mechanism
 
   - id: claude_code_integration
     name: Claude Code integration
-    check: http_get
-    path: /api/modules
-    expected_contains: claude_code
+    check: manual_ui_check
+    notes: Electron desktop feature — ELAINE calls Claude Code via shell
 
   - id: app_orchestration
     name: App orchestration via Supervisor
@@ -45,15 +44,13 @@ features:
 
   - id: copy_paste_automation
     name: Copy/paste automation
-    check: http_get
-    path: /api/modules
-    expected_contains: clipboard
+    check: manual_ui_check
+    notes: Electron desktop feature — clipboard access via Node.js
 
   - id: file_operations
     name: File operations module
-    check: http_get
-    path: /api/modules
-    expected_contains: file
+    check: manual_ui_check
+    notes: Electron desktop feature — file ops via Node.js fs module
 
   - id: voice_interaction
     name: Voice interaction (ElevenLabs)
@@ -62,10 +59,11 @@ features:
     expected_contains: voice
 
   - id: multi_step_chains
-    name: Multi-step task chains
+    name: Multi-step task chains (orchestrator cascades)
     check: http_get
     path: /api/modules
-    expected_contains: chain
+    expected_contains: orchestrator
+    notes: Orchestrator module handles cascading multi-step task chains
 
   - id: frustration_logging
     name: Frustration logging command

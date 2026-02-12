@@ -91,16 +91,22 @@ def load_specs(app_filter=None):
 # ---------------------------------------------------------------------------
 # Check runners
 # ---------------------------------------------------------------------------
-def check_port_open(host, port, timeout=3):
-    """Check if a TCP port is open."""
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(timeout)
-        result = sock.connect_ex((host, int(port)))
-        sock.close()
-        return result == 0
-    except Exception:
-        return False
+def check_port_open(host, port, timeout=3, retries=2):
+    """Check if a TCP port is open (with retry for transient failures)."""
+    for attempt in range(retries):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(timeout)
+            result = sock.connect_ex((host, int(port)))
+            sock.close()
+            if result == 0:
+                return True
+        except Exception:
+            pass
+        if attempt < retries - 1:
+            import time
+            time.sleep(1)
+    return False
 
 
 def http_request(url, method="GET", body=None, timeout=5):

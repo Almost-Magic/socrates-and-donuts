@@ -1,0 +1,1184 @@
+{
+  "timestamp": "2026-02-12T07:01:41.255348+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Author Studio",
+      "port": 5007,
+      "category": "ck",
+      "priority": "medium",
+      "description": "Book DNA + Amazon Listings + ARIA conversation system",
+      "url": "http://localhost:5007",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "book_dna",
+          "name": "Book DNA extraction",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "amazon_listings",
+          "name": "Amazon listing generator",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "aria_conversation",
+          "name": "ARIA conversation system",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "manuscript_upload",
+          "name": "Manuscript upload and analysis",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'available'",
+          "notes": "Upload service reports status and accepted formats"
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "working": 6,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    },
+    {
+      "app": "CK Writer",
+      "port": 5004,
+      "category": "ck",
+      "priority": "high",
+      "description": "8-Mode Writing Studio — Multi-LLM comparison",
+      "url": "http://localhost:5004",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "multi_llm_comparison",
+          "name": "Multi-LLM comparison (side-by-side)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'compar'",
+          "notes": ""
+        },
+        {
+          "id": "plagiarism_check",
+          "name": "Plagiarism check",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'plagiar'",
+          "notes": ""
+        },
+        {
+          "id": "ai_detection",
+          "name": "AI detection analysis",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'detect'",
+          "notes": ""
+        },
+        {
+          "id": "style_refinement",
+          "name": "Style refinement mode",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'style'",
+          "notes": ""
+        },
+        {
+          "id": "ollama_connection",
+          "name": "Connects to Ollama (via Supervisor)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'ollama'",
+          "notes": ""
+        },
+        {
+          "id": "cloud_fallback",
+          "name": "Cloud API fallback when Ollama fails",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "When Ollama is down, should transparently route to cloud API"
+        },
+        {
+          "id": "draft_saving",
+          "name": "Draft saving and retrieval",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 9,
+        "working": 8,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 88.9
+      }
+    },
+    {
+      "app": "Costanza",
+      "port": 5001,
+      "category": "ck",
+      "priority": "medium",
+      "description": "Mental Models Engine — 166 models",
+      "url": "http://localhost:5001",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "model_library",
+          "name": "Mental model library (166 models)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "model_search",
+          "name": "Model search and filter",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "situation_analysis",
+          "name": "Situation analysis (apply models)",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "model_combinations",
+          "name": "Multi-model combinations",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'frameworks_applied'",
+          "notes": "High-stakes analysis applies multiple frameworks (six_hats, second_order, pre_mortem)"
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "working": 6,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    },
+    {
+      "app": "ELAINE",
+      "port": 5000,
+      "category": "ck",
+      "priority": "critical",
+      "description": "AI Chief of Staff — 16 modules",
+      "url": "http://localhost:5000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "powershell_execution",
+          "name": "PowerShell execution module",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Electron desktop feature — not testable via HTTP API"
+        },
+        {
+          "id": "claude_interaction",
+          "name": "Claude/Guruve interaction (thinking frameworks)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": "Thinking frameworks engine is ELAINE's AI interaction mechanism"
+        },
+        {
+          "id": "claude_code_integration",
+          "name": "Claude Code integration",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Electron desktop feature — ELAINE calls Claude Code via shell"
+        },
+        {
+          "id": "app_orchestration",
+          "name": "App orchestration via Supervisor",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'orchestrat'",
+          "notes": ""
+        },
+        {
+          "id": "copy_paste_automation",
+          "name": "Copy/paste automation",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Electron desktop feature — clipboard access via Node.js"
+        },
+        {
+          "id": "file_operations",
+          "name": "File operations module",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Electron desktop feature — file ops via Node.js fs module"
+        },
+        {
+          "id": "voice_interaction",
+          "name": "Voice interaction (ElevenLabs)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'voice'",
+          "notes": ""
+        },
+        {
+          "id": "multi_step_chains",
+          "name": "Multi-step task chains (orchestrator cascades)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'orchestrator'",
+          "notes": "Orchestrator module handles cascading multi-step task chains"
+        },
+        {
+          "id": "frustration_logging",
+          "name": "Frustration logging command",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "morning_briefing",
+          "name": "Morning Briefing",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "mobile_access",
+          "name": "Mobile access from anywhere (Tailscale)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Requires Tailscale setup — currently WiFi-only"
+        },
+        {
+          "id": "gatekeeper",
+          "name": "Gatekeeper module",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gatekeeper'",
+          "notes": ""
+        },
+        {
+          "id": "gravity_engine",
+          "name": "Gravity priority engine",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gravity'",
+          "notes": ""
+        },
+        {
+          "id": "constellation",
+          "name": "Constellation people intelligence",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'constellation'",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 16,
+        "working": 11,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 5,
+        "not_implemented": 0,
+        "score": 68.8
+      }
+    },
+    {
+      "app": "Genie",
+      "port": 8000,
+      "category": "ck",
+      "priority": "high",
+      "description": "AI bookkeeper — categorisation, fraud guard, zombie hunter",
+      "url": "http://localhost:8000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "module_launcher",
+          "name": "Module launcher (user toggles modules)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "nav_grouping",
+          "name": "Navigation grouped (Overview/Money/Intelligence/Reports/Tools)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Frontend hardcodes NAV_GROUPS in App.jsx — verified by Proof tests (test_nav_groups_visible, test_nav_collapse)"
+        },
+        {
+          "id": "mobile_receipt_scanner",
+          "name": "Mobile receipt scanner",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "ask_genie_ai",
+          "name": "Ask Genie AI chat",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "transaction_categorisation",
+          "name": "Transaction categorisation",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "fraud_guard",
+          "name": "Fraud guard signals",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "zombie_hunter",
+          "name": "Zombie subscription hunter",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 9,
+        "working": 8,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 88.9
+      }
+    },
+    {
+      "app": "Junk Drawer",
+      "port": 5006,
+      "category": "ck",
+      "priority": "medium",
+      "description": "Quick capture, notes, and file management",
+      "url": "http://localhost:5006",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Backend health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "frontend_ui",
+          "name": "Frontend UI responds (port 3005)",
+          "check_type": "port_open",
+          "status": "working",
+          "detail": "Port 3005 is open",
+          "notes": ""
+        },
+        {
+          "id": "quick_capture",
+          "name": "Quick capture notes",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "file_management",
+          "name": "File management (sort, organise)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "chat_with_files",
+          "name": "Chat with files (AI-powered)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Needs full audit — status unknown"
+        },
+        {
+          "id": "search",
+          "name": "Search across captures",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "working": 5,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 83.3
+      }
+    },
+    {
+      "app": "Learning Assistant",
+      "port": 5002,
+      "category": "ck",
+      "priority": "medium",
+      "description": "Skill Augmentation — micro-skill training with local AI",
+      "url": "http://localhost:5002",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "skill_training",
+          "name": "Micro-skill training sessions",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "local_ai",
+          "name": "Local AI integration (Ollama)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'ollama'",
+          "notes": ""
+        },
+        {
+          "id": "mobile_access",
+          "name": "Mobile app access (Tailscale)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Needs Tailscale — currently no mobile outside WiFi"
+        },
+        {
+          "id": "progress_tracking",
+          "name": "Learning progress tracking",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "working": 5,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 83.3
+      }
+    },
+    {
+      "app": "n8n",
+      "port": 5678,
+      "category": "infra",
+      "priority": "high",
+      "description": "Workflow automation backbone",
+      "url": "http://localhost:5678",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "web_ui",
+          "name": "n8n UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "health_monitoring",
+          "name": "Health monitoring workflow (every 5 min)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Health Monitoring'",
+          "notes": "Workflow should ping all services and log results"
+        },
+        {
+          "id": "foreperson_schedule",
+          "name": "Foreperson weekly schedule (Sun 6 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Foreperson Weekly'",
+          "notes": "Run audit and report to Dropbox"
+        },
+        {
+          "id": "backup_workflow",
+          "name": "Backup workflow (Sat 2 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Backup'",
+          "notes": "pg_dump, sqlite3, n8n export to Dropbox"
+        },
+        {
+          "id": "vram_monitor",
+          "name": "VRAM monitor (every 15 min)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'VRAM Monitor'",
+          "notes": "nvidia-smi logging"
+        },
+        {
+          "id": "disk_space_alert",
+          "name": "Disk space alert (daily)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Disk Space'",
+          "notes": "Alert if <10% free"
+        },
+        {
+          "id": "friction_digest",
+          "name": "Friction digest (Fri 5 PM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Friction Digest'",
+          "notes": "Summarise frustration logs weekly"
+        },
+        {
+          "id": "synthetic_test",
+          "name": "Synthetic end-to-end test (daily 6 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Synthetic'",
+          "notes": "ELAINE -> CK Writer -> Ollama chain test"
+        }
+      ],
+      "summary": {
+        "total": 8,
+        "working": 8,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    },
+    {
+      "app": "Ollama",
+      "port": 11434,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Local LLM inference server (15 models)",
+      "url": "http://localhost:11434",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "api_running",
+          "name": "Ollama API responding",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "default_model_loaded",
+          "name": "Default model loaded (gemma2:27b)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gemma'",
+          "notes": ""
+        },
+        {
+          "id": "embeddings_model",
+          "name": "Embeddings model available (nomic-embed-text)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'nomic'",
+          "notes": ""
+        },
+        {
+          "id": "generate_endpoint",
+          "name": "Generate endpoint works",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart on crash (Supervisor)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Supervisor should detect and restart within 30 seconds"
+        }
+      ],
+      "summary": {
+        "total": 5,
+        "working": 4,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 80.0
+      }
+    },
+    {
+      "app": "Peterman",
+      "port": 5008,
+      "category": "ck",
+      "priority": "medium",
+      "description": "Brand Intelligence Engine — Authority & Presence",
+      "url": "http://localhost:5008",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "brand_analysis",
+          "name": "Brand analysis chambers",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "authority_engine",
+          "name": "Authority engine",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": "Functional endpoint — returns authority scan results for brand 1"
+        },
+        {
+          "id": "presence_engine",
+          "name": "Presence engine (Technical SEO)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": "Machine Chamber — returns technical audit results for brand 1"
+        },
+        {
+          "id": "linkedin_integration",
+          "name": "Content amplification engine",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": "Amplifier Chamber — returns citation results for brand 1"
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "working": 6,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    },
+    {
+      "app": "Ripple CRM",
+      "port": 8100,
+      "category": "ck",
+      "priority": "high",
+      "description": "Relationship Intelligence Engine",
+      "url": "http://localhost:8100",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "frontend_loads",
+          "name": "Frontend loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "contacts_crud",
+          "name": "Contact CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "companies_crud",
+          "name": "Company CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "deals_crud",
+          "name": "Deal CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "interactions_list",
+          "name": "Interactions list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "tasks_list",
+          "name": "Tasks list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "commitments_list",
+          "name": "Commitments list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "dashboard",
+          "name": "Daily Command Centre",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'metrics'",
+          "notes": ""
+        },
+        {
+          "id": "relationship_health",
+          "name": "Relationship health recalculate",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'count'",
+          "notes": ""
+        },
+        {
+          "id": "privacy_consents",
+          "name": "Privacy consent list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "settings",
+          "name": "Settings endpoint",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'user_name'",
+          "notes": ""
+        },
+        {
+          "id": "export_contacts",
+          "name": "CSV export contacts",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "validation",
+          "name": "Input validation endpoint",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'valid'",
+          "notes": ""
+        },
+        {
+          "id": "notes_list",
+          "name": "Notes list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "audit_log",
+          "name": "Audit log accessible",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 16,
+        "working": 16,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    },
+    {
+      "app": "The Supervisor",
+      "port": 9000,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Centralised runtime manager — GPU, models, health, routing",
+      "url": "http://localhost:9000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "status_endpoint",
+          "name": "Full system status",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "gpu_endpoint",
+          "name": "GPU/VRAM status",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "models_endpoint",
+          "name": "Model registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "services_endpoint",
+          "name": "Service registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "metrics_endpoint",
+          "name": "Request metrics",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_tags",
+          "name": "Ollama-compatible /api/tags proxy",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_chat",
+          "name": "Ollama-compatible /api/chat proxy",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_embed",
+          "name": "Ollama-compatible /api/embed proxy",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "cloud_fallback",
+          "name": "Cloud API fallback when Ollama fails",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill Ollama, send request — should fall back to cloud API"
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart of failed services",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill a managed service, verify Supervisor restarts it within 90 seconds"
+        },
+        {
+          "id": "vram_management",
+          "name": "VRAM conflict prevention",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Request heavy model when default loaded — should unload first"
+        },
+        {
+          "id": "boot_sequence",
+          "name": "Boot sequencer runs on startup",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "After reboot, Supervisor + Workshop + ELAINE should run without manual intervention"
+        },
+        {
+          "id": "meta_guardian",
+          "name": "Meta-Guardian Task Scheduler task",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Check Task Scheduler for 10-minute Supervisor watchdog"
+        }
+      ],
+      "summary": {
+        "total": 14,
+        "working": 9,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 5,
+        "not_implemented": 0,
+        "score": 64.3
+      }
+    },
+    {
+      "app": "The Workshop",
+      "port": 5003,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Central app launcher and status dashboard",
+      "url": "http://localhost:5003",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Workshop UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "app_registry",
+          "name": "App registry renders all apps",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'ELAINE'",
+          "notes": "HTML contains app cards for ELAINE, CK Writer, Genie, etc."
+        },
+        {
+          "id": "health_check",
+          "name": "Health check function works",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'summary'",
+          "notes": "Pings all registered services and returns live/stopped status"
+        },
+        {
+          "id": "search",
+          "name": "Search/filter works (Ctrl+K)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'searchBar'",
+          "notes": "Real search input element with id=searchBar"
+        },
+        {
+          "id": "auto_start_boot",
+          "name": "Auto-start on machine boot",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "No Task Scheduler entry or nssm service found — not yet configured"
+        },
+        {
+          "id": "status_indicators",
+          "name": "Live status indicators (green/amber/grey dots)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'status-dot'",
+          "notes": "Real CSS class status-dot renders for each app card"
+        }
+      ],
+      "summary": {
+        "total": 7,
+        "working": 6,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 85.7
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 13,
+    "total_features": 114,
+    "total_working": 98,
+    "overall_score": 86.0
+  }
+}
