@@ -12,19 +12,24 @@ from app.config import settings
 from app.middleware.rate_limit import RateLimitMiddleware
 from app.routers import (
     audit,
+    channel_dna,
     companies,
     commitments,
     contacts,
     dashboard,
+    deal_analytics,
     deals,
     health,
     import_export,
     interactions,
+    lead_scoring,
     notes,
     privacy,
     relationships,
     settings as settings_router,
+    tags,
     tasks,
+    trust_decay,
     validation,
 )
 
@@ -66,6 +71,15 @@ app.include_router(import_export.router, prefix="/api")
 app.include_router(settings_router.router, prefix="/api")
 app.include_router(validation.router, prefix="/api")
 app.include_router(audit.router, prefix="/api")
+# Phase 2: Intelligence
+app.include_router(tags.router, prefix="/api")
+app.include_router(lead_scoring.router, prefix="/api")
+app.include_router(lead_scoring.contact_router, prefix="/api")
+app.include_router(channel_dna.router, prefix="/api")
+app.include_router(channel_dna.contact_router, prefix="/api")
+app.include_router(trust_decay.router, prefix="/api")
+app.include_router(trust_decay.contact_router, prefix="/api")
+app.include_router(deal_analytics.router, prefix="/api")
 
 
 @app.get("/")

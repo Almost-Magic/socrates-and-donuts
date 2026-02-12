@@ -5,7 +5,9 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
+
+from app.schemas.tag import TagResponse
 
 
 class ContactCreate(BaseModel):
@@ -57,6 +59,8 @@ class ContactResponse(BaseModel):
     preferred_channel: str | None = None
     relationship_health_score: float | None = None
     trust_decay_days: int | None = None
+    trust_decay_status: str | None = None
+    tags: list[TagResponse] = []
     created_at: datetime
     updated_at: datetime
 

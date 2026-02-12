@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models.contact import Contact
+from app.models.tag import Tag
 from app.schemas.contact import (
     ContactCreate,
     ContactListResponse,
@@ -126,3 +127,32 @@ async def delete_contact(contact_id: uuid.UUID, db: AsyncSession = Depends(get_d
     await log_action(db, "contact", str(contact_id), "delete")
     await db.commit()
     return {"detail": "Contact deleted"}
+
+
+@router.post("/{contact_id}/tags")
+async def assign_tags(
+    contact_id: uuid.UUID,
+    tag_ids: list[uuid.UUID],
+    db: AsyncSession = Depends(get_db),
+):
+    """Set tags on a contact (replaces existing tags)."""
+    result = await db.execute(
+        select(Contact).where(Contact.id == contact_id, Contact.is_deleted == False)
+    )
+    contact = result.scalar_one_or_none()
+    if not contact:
+        raise HTTPException(status_code=404, detail="Contact not found")
+
+    # Fetch requested tags
+    tags = []
+    for tid in tag_ids:
+        r = await db.execute(select(Tag).where(Tag.id == tid))
+        tag = r.scalar_one_or_none()
+        if tag:
+            tags.append(tag)
+
+    contact.tags = tags
+    await log_action(db, "contact", str(contact_id), "tags_updated")
+    await db.commit()
+    await db.refresh(contact)
+    return {"detail": f"Set {len(tags)} tags on contact", "tag_count": len(tags)}

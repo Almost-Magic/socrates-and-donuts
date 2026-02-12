@@ -9,6 +9,8 @@ import {
   ClipboardDocumentCheckIcon,
   ShieldCheckIcon,
   ArrowsRightLeftIcon,
+  SparklesIcon,
+  ChartBarIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 
@@ -22,6 +24,8 @@ const navItems = [
   { to: '/tasks', label: 'Tasks', icon: ClipboardDocumentCheckIcon },
   { to: '/privacy', label: 'Transparency', icon: ShieldCheckIcon },
   { to: '/import-export', label: 'Import/Export', icon: ArrowsRightLeftIcon },
+  { to: '/intelligence', label: 'Intelligence', icon: SparklesIcon },
+  { to: '/deal-analytics', label: 'Deal Analytics', icon: ChartBarIcon },
   { to: '/settings', label: 'Settings', icon: Cog6ToothIcon },
 ];
 

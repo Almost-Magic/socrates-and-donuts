@@ -118,3 +118,46 @@ features:
     path: /api/audit-log
     expected_status: 200
     timeout: 5
+
+  # Phase 2: Intelligence Layer
+  - id: tags_crud
+    name: Tag CRUD
+    check: http_get
+    path: /api/tags
+    expected_status: 200
+    expected_contains: items
+
+  - id: lead_scoring
+    name: Three Brains lead score leaderboard
+    check: http_get
+    path: /api/lead-scores/top
+    expected_status: 200
+    expected_contains: items
+
+  - id: channel_dna
+    name: Channel DNA summary
+    check: http_get
+    path: /api/channel-dna/summary
+    expected_status: 200
+    expected_contains: items
+
+  - id: trust_decay
+    name: Trust decay at-risk list
+    check: http_get
+    path: /api/trust-decay/at-risk
+    expected_status: 200
+    expected_contains: items
+
+  - id: deal_analytics_pipeline
+    name: Deal analytics pipeline
+    check: http_get
+    path: /api/deal-analytics/pipeline
+    expected_status: 200
+    expected_contains: stages
+
+  - id: deal_analytics_stalled
+    name: Deal analytics stalled deals
+    check: http_get
+    path: /api/deal-analytics/stalled
+    expected_status: 200
+    expected_contains: items

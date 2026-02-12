@@ -12,6 +12,8 @@ import Commitments from './pages/Commitments';
 import Tasks from './pages/Tasks';
 import Privacy from './pages/Privacy';
 import ImportExport from './pages/ImportExport';
+import Intelligence from './pages/Intelligence';
+import DealAnalytics from './pages/DealAnalytics';
 import Settings from './pages/Settings';
 
 export default function App() {
@@ -30,6 +32,8 @@ export default function App() {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/import-export" element={<ImportExport />} />
+            <Route path="/intelligence" element={<Intelligence />} />
+            <Route path="/deal-analytics" element={<DealAnalytics />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

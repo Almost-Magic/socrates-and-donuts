@@ -1,0 +1,36 @@
+"""Ripple CRM — Tag Pydantic schemas."""
+
+from __future__ import annotations
+
+import uuid
+from datetime import datetime
+
+from pydantic import BaseModel, Field
+
+
+class TagCreate(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    colour: str | None = Field(None, max_length=20)
+
+
+class TagUpdate(BaseModel):
+    name: str | None = Field(None, min_length=1, max_length=100)
+    colour: str | None = Field(None, max_length=20)
+
+
+class TagResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    colour: str | None = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class TagWithCountResponse(TagResponse):
+    contact_count: int = 0
+
+
+class TagListResponse(BaseModel):
+    items: list[TagWithCountResponse]
+    total: int
