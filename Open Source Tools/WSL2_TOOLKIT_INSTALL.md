@@ -459,6 +459,7 @@ deactivate
 | 8088 | Apache Superset | Tier 1 |
 | 8222 | Vaultwarden | Tier 1 |
 | 9002 | Penpot | Tier 1 |
+| 3350 | Wisdom Quotes API | Wisdom |
 | 9050 | Tor SOCKS5 Proxy | OSINT Layer |
 | 8118 | Privoxy HTTP Proxy | OSINT Layer |
 | 8282 | IVRE Network Recon | OSINT Layer |
@@ -507,6 +508,10 @@ deactivate
 | OSINT | IVRE Network Recon | DONE | 2026-02-13 | Port 8282. 5 containers (web, uwsgi, doku, MongoDB, client). HTTP 200 verified. Compose at /tmp/ivre-src/docker/docker-compose-amtl.yml. |
 | OSINT | HIBP Offline Checker | DONE | 2026-02-13 | Port 8284. Custom Flask + gunicorn. Placeholder responses until 35GB DB downloaded. download-hibp.sh at ~/hibp-checker/. |
 | OSINT | SpiderFoot Tor | DONE | 2026-02-13 | Connected to osint-net Docker network. tor-socks-proxy resolves from SpiderFoot. Configure SOCKS5 proxy via web UI at http://localhost:5009. |
+| WIS | Wisdom Quotes API | DONE | 2026-02-13 | Port 3350. FastAPI + uvicorn in ~/wisdom-quotes/venv. 2034 quotes, 24 authors, 11 traditions (Stoic + Buddhist + Sufi + Tao + Western + more). Cloned stoic-quotes repo (1774 base) + 260 multi-tradition additions. Endpoints: /api/quote/random, /api/quote/daily, /api/quotes?author=X, /api/stats. nohup daemonised. |
+| WIS | Daily Wisdom Fetcher | DONE | 2026-02-13 | ~/daily-wisdom/fetch_daily.py. Calls /api/quote/daily, saves YYYY-MM-DD.json + appends to wisdom_log.json. Ready for n8n 6 AM AEST cron. |
+| WIS | Homepage registration | DONE | 2026-02-13 | Added "Wisdom & Philosophy" category to Homepage (:3011). Auto-reloaded. |
+| WIS | Uptime Kuma monitor | MANUAL | 2026-02-13 | Add HTTP monitor for http://localhost:3350/api/health via Uptime Kuma web UI at http://localhost:3001. |
 | OSINT | Homepage update | DONE | 2026-02-13 | Added "Security & OSINT" category with Tor, Privoxy, IVRE, HIBP Checker + existing OpenVAS, Wazuh, SpiderFoot. |
 | OSINT | Workshop update | DONE | 2026-02-13 | Added 4 OSINT tool cards to Open Source Tools grid + SERVICES dict in app.py. |
 
