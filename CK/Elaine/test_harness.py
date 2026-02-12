@@ -1285,6 +1285,63 @@ test("Web UI: contains tools + chat features", test_web_ui_contains_tools)
 test("Web UI: dark/light theme toggle", test_web_ui_has_dark_light_toggle)
 
 
+def test_stt_rejects_no_audio():
+    """POST /api/stt without audio file returns 400."""
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.post("/api/stt")
+    assert resp.status_code == 400, f"Expected 400, got {resp.status_code}"
+    data = resp.get_json()
+    assert "error" in data
+
+
+def test_stt_endpoint_exists():
+    """POST /api/stt route is registered and accepts audio field."""
+    app = _get_test_app()
+    client = app.test_client()
+    # Send a tiny WAV file (44-byte empty WAV header) to confirm route exists
+    import io
+    import struct
+    # Minimal valid WAV: RIFF header + fmt chunk + empty data chunk
+    buf = io.BytesIO()
+    sample_rate = 16000
+    buf.write(b"RIFF")
+    buf.write(struct.pack("<I", 36))  # file size - 8
+    buf.write(b"WAVE")
+    buf.write(b"fmt ")
+    buf.write(struct.pack("<I", 16))  # chunk size
+    buf.write(struct.pack("<HHIIHH", 1, 1, sample_rate, sample_rate * 2, 2, 16))
+    buf.write(b"data")
+    buf.write(struct.pack("<I", 0))   # 0 bytes of audio data
+    buf.seek(0)
+    resp = client.post(
+        "/api/stt",
+        data={"audio": (buf, "test.wav", "audio/wav")},
+        content_type="multipart/form-data",
+    )
+    # 200 (transcribed silence) or 500 (whisper error on empty audio) — not 404
+    assert resp.status_code != 404, "STT endpoint not registered"
+    data = resp.get_json()
+    assert "text" in data or "error" in data
+
+
+def test_web_ui_has_stt_support():
+    """Web UI has MediaRecorder/Whisper STT fallback code."""
+    app = _get_test_app()
+    client = app.test_client()
+    resp = client.get("/")
+    html = resp.get_data(as_text=True)
+    assert "transcribeAudio" in html, "Missing Whisper transcribeAudio function"
+    assert "/api/stt" in html, "Missing /api/stt endpoint reference"
+    assert "MediaRecorder" in html, "Missing MediaRecorder API usage"
+    assert "sttMode" in html, "Missing sttMode detection"
+
+
+test("STT: rejects request without audio", test_stt_rejects_no_audio)
+test("STT: endpoint exists and accepts audio", test_stt_endpoint_exists)
+test("Web UI: has Whisper STT fallback", test_web_ui_has_stt_support)
+
+
 # ══════════════════════════════════════════════════════════════════
 # 5. CONFIDENCE STAMP
 # ══════════════════════════════════════════════════════════════════

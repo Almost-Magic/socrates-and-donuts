@@ -21,7 +21,7 @@ SUPERVISOR_URL = os.environ.get("SUPERVISOR_URL", "http://localhost:9000")
 LAN_IP = os.environ.get("ELAINE_LAN_IP", "192.168.4.55")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 CHAT_MODEL = os.environ.get("ELAINE_CHAT_MODEL", "llama3.2:3b")
-CHAT_TIMEOUT = 15  # seconds — fast model, should respond well within this
+CHAT_TIMEOUT = 10  # seconds — hard cap per user spec
 CHAT_MAX_TOKENS = 150  # concise replies, not essays
 
 # ── ElevenLabs Voice (TTS output) ─────────────────────────────

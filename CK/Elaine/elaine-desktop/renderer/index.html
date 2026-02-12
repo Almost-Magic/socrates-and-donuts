@@ -208,6 +208,16 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .chat-btn.mic:hover{color:var(--text);border-color:var(--accent)}
 .chat-btn.mic.recording{background:var(--error);color:#fff;border-color:var(--error);animation:pulse 1s infinite}
 
+/* Voice Mode Toggle (gold pencil) */
+.voice-mode-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .25s;color:var(--text-muted);position:relative}
+.voice-mode-btn:hover{color:var(--gold);border-color:var(--gold)}
+.voice-mode-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);box-shadow:0 0 12px rgba(201,148,74,0.3)}
+.voice-mode-btn.active:hover{background:var(--amber)}
+.voice-mode-indicator{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--success);display:none;border:2px solid var(--surface)}
+.voice-mode-btn.active .voice-mode-indicator{display:block;animation:pulse 2s infinite}
+.voice-bar{display:none;padding:6px var(--sp6);background:rgba(201,148,74,0.08);border-top:1px solid rgba(201,148,74,0.2);font-size:11px;color:var(--gold);text-align:center;flex-shrink:0}
+.voice-bar.active{display:block}
+
 /* ── GATEKEEPER CHECK PANEL ── */
 .check-area{padding:var(--sp6);max-width:700px}
 .check-textarea{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);color:var(--text);font-family:inherit;font-size:13px;padding:var(--sp4);resize:vertical;min-height:160px;outline:none;transition:border .2s}
@@ -326,7 +336,9 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         <div class="chat-msgs" id="chatMsgs">
           <div class="msg elaine"><div class="msg-who">Elaine</div><div class="msg-bubble" id="chatHello">Connecting...</div></div>
         </div>
+        <div class="voice-bar" id="voiceBar">Voice Mode ON — listening after each reply. Click gold button to disable.</div>
         <div class="chat-bar">
+          <button class="voice-mode-btn" id="voiceModeBtn" onclick="toggleVoiceMode()" title="Toggle Voice Mode (ElevenLabs + mic)">&#9998;<span class="voice-mode-indicator"></span></button>
           <button class="chat-btn mic" id="micBtn" onclick="toggleMic()" title="Click to speak">🎤</button>
           <input class="chat-input" id="chatIn" placeholder="Talk to Elaine..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
           <button class="chat-btn" onclick="sendChat()" title="Send">→</button>
@@ -569,6 +581,7 @@ async function sendChat(){
       chatHistory.push({role:'assistant',content:reply});
       var formatted=escHtml(reply).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
       addMsg(formatted,'elaine',r.via||'ollama');
+      speakText(reply);
     }
   }catch(e){
     removeTyping();
@@ -580,7 +593,96 @@ async function sendChat(){
 /* ── Microphone ── */
 var recognition=null,isRec=false;
 if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-AU';recognition.onresult=function(e){chatIn.value=e.results[0][0].transcript;sendChat()};recognition.onend=function(){isRec=false;document.getElementById('micBtn').classList.remove('recording')};recognition.onerror=recognition.onend}
-function toggleMic(){if(!recognition){addMsg("Speech not available. Type instead.",'elaine');return}if(isRec){recognition.stop()}else{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}}
+function toggleMic(){if(!recognition){addMsg("Speech not available. Type instead.",'elaine');return}if(isRec){recognition.stop()}else{try{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}catch(e){addMsg('Mic error: '+e.message,'elaine','local')}}}
+
+/* ── Voice Output (ElevenLabs TTS + browser fallback) ── */
+var voiceEnabled=false;
+var voiceModeActive=false;
+var voiceBackend='unknown';
+var currentAudio=null;
+var speechSynth=window.speechSynthesis||null;
+var elaineVoice=null;
+var continuousListen=false;
+
+function findAusVoice(){
+  if(!speechSynth)return;
+  var voices=speechSynth.getVoices();
+  elaineVoice=voices.find(function(v){return v.lang==='en-AU'&&/female/i.test(v.name)})
+    ||voices.find(function(v){return v.lang==='en-AU'})
+    ||voices.find(function(v){return v.lang.startsWith('en')&&/female/i.test(v.name)})
+    ||voices.find(function(v){return v.lang.startsWith('en')})||null;
+}
+if(speechSynth){findAusVoice();if(speechSynth.onvoiceschanged!==undefined)speechSynth.onvoiceschanged=findAusVoice}
+
+async function checkVoiceStatus(){
+  try{
+    var r=await api('GET','/api/tts/status');
+    voiceBackend=r.elevenlabs?'elevenlabs':'browser';
+  }catch(e){voiceBackend=speechSynth?'browser':'none'}
+  updateVoiceModeUI();
+}
+checkVoiceStatus();
+
+function speakBrowser(text){
+  if(!speechSynth)return;speechSynth.cancel();
+  var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
+  if(clean.length>500)clean=clean.substring(0,500)+'... that is the summary.';
+  var utt=new SpeechSynthesisUtterance(clean);
+  utt.lang='en-AU';utt.rate=1.0;utt.pitch=1.0;
+  if(elaineVoice)utt.voice=elaineVoice;
+  utt.onend=function(){if(continuousListen)startListeningAfterReply()};
+  speechSynth.speak(utt);
+}
+
+async function speakText(text){
+  if(!voiceEnabled)return;
+  var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
+  if(!clean.trim())return;
+  if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
+  if(speechSynth)speechSynth.cancel();
+  if(voiceBackend==='elevenlabs'){
+    try{
+      var resp=await fetch('http://127.0.0.1:5000/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
+      if(!resp.ok)throw new Error('HTTP '+resp.status);
+      var blob=await resp.blob();var url=URL.createObjectURL(blob);
+      currentAudio=new Audio(url);
+      currentAudio.onended=function(){URL.revokeObjectURL(url);currentAudio=null;if(continuousListen)startListeningAfterReply()};
+      currentAudio.play();return;
+    }catch(e){console.log('[ELAINE] ElevenLabs TTS failed, falling back to browser:',e.message)}
+  }
+  speakBrowser(clean);
+}
+
+function startListeningAfterReply(){
+  if(!voiceModeActive)return;
+  setTimeout(function(){if(!isRec&&voiceModeActive)toggleMic()},400);
+}
+
+function updateVoiceModeUI(){
+  var btn=document.getElementById('voiceModeBtn');
+  var bar=document.getElementById('voiceBar');
+  if(voiceModeActive){
+    btn.classList.add('active');bar.classList.add('active');
+    var src=voiceBackend==='elevenlabs'?'ElevenLabs cloned voice':'browser voice';
+    bar.textContent='Voice Mode ON \u2014 '+src+'. Listening after each reply.';
+  }else{btn.classList.remove('active');bar.classList.remove('active')}
+}
+
+function toggleVoiceMode(){
+  voiceModeActive=!voiceModeActive;voiceEnabled=voiceModeActive;continuousListen=voiceModeActive;
+  if(voiceModeActive){
+    var modeLabel=voiceBackend==='elevenlabs'?'ElevenLabs (cloned voice)':voiceBackend==='browser'?'browser voice':'unavailable';
+    addMsg('Voice Mode ON \u2014 using '+modeLabel+'. Click gold button to disable.','elaine','local');
+    if(!isRec)toggleMic();
+  }else{
+    continuousListen=false;
+    if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
+    if(speechSynth)speechSynth.cancel();
+    if(isRec&&recognition)recognition.stop();
+    addMsg('Voice Mode OFF \u2014 back to text.','elaine','local');
+  }
+  updateVoiceModeUI();
+}
 
 /* ── Quick Check ── */
 async function runCheck(){

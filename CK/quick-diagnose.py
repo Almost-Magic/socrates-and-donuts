@@ -162,7 +162,7 @@ def test_supervisor_llm_route():
             try:
                 status, body = http_post_json(
                     f"http://localhost:{SUPERVISOR_PORT}{endpoint}",
-                    {"prompt": "Say hi", "model": "gemma2:27b"},
+                    {"messages": [{"role": "user", "content": "Say hi"}], "model": "llama3.2:3b", "stream": False, "options": {"num_predict": 5}},
                     timeout=TIMEOUT,
                 )
                 if status == 200 and len(body) > 5:

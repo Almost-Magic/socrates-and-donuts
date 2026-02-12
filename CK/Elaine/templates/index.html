@@ -230,6 +230,18 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .chat-btn.mic:hover{color:var(--text);border-color:var(--accent)}
 .chat-btn.mic.recording{background:var(--error);color:#fff;border-color:var(--error);animation:pulse 1s infinite}
 
+/* Voice Mode Toggle (gold pencil) */
+.voice-mode-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .25s;color:var(--text-muted);position:relative}
+.voice-mode-btn:hover{color:var(--gold);border-color:var(--gold)}
+.voice-mode-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);box-shadow:0 0 12px rgba(201,148,74,0.3)}
+.voice-mode-btn.active:hover{background:var(--amber)}
+.voice-mode-indicator{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--success);display:none;border:2px solid var(--surface)}
+.voice-mode-btn.active .voice-mode-indicator{display:block;animation:pulse 2s infinite}
+
+/* Voice mode bar */
+.voice-bar{display:none;padding:6px var(--sp6);background:rgba(201,148,74,0.08);border-top:1px solid rgba(201,148,74,0.2);font-size:11px;color:var(--gold);text-align:center;flex-shrink:0}
+.voice-bar.active{display:block}
+
 /* Typing indicator */
 .typing-dots{display:inline-flex;gap:4px;padding:4px 0}
 .typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:dotBounce 1.4s infinite}
@@ -403,10 +415,11 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
         <div class="chat-msgs" id="chatMsgs">
           <div class="msg elaine"><div class="msg-who">Elaine</div><div class="msg-bubble" id="chatHello">Connecting...</div></div>
         </div>
+        <div class="voice-bar" id="voiceBar">Voice Mode ON — listening after each reply. Click gold button to disable.</div>
         <div class="chat-bar">
+          <button class="voice-mode-btn" id="voiceModeBtn" onclick="toggleVoiceMode()" title="Toggle Voice Mode (ElevenLabs + mic)">&#9998;<span class="voice-mode-indicator"></span></button>
           <button class="chat-btn mic" id="micBtn" onclick="toggleMic()" title="Click to speak (Chrome/Edge)">&#127908;</button>
           <input class="chat-input" id="chatIn" placeholder="Talk to Elaine..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
-          <button class="chat-btn" id="speakBtn" onclick="toggleSpeak()" title="Toggle voice replies" style="font-size:14px">&#128264;</button>
           <button class="chat-btn" id="sendBtn" onclick="sendChat()" title="Send">&rarr;</button>
         </div>
       </div>
@@ -846,10 +859,12 @@ async function transcribeAudio(blob,mime){
 
 /* === Voice Output (ElevenLabs TTS + browser fallback) === */
 var voiceEnabled=false;
-var voiceMode='unknown'; /* 'elevenlabs', 'browser', 'none' */
+var voiceModeActive=false; /* master voice mode toggle */
+var voiceBackend='unknown'; /* 'elevenlabs', 'browser', 'none' */
 var currentAudio=null;
 var speechSynth=window.speechSynthesis||null;
 var elaineVoice=null;
+var continuousListen=false; /* auto-restart mic after TTS finishes */
 
 /* Browser TTS fallback setup */
 function findAusVoice(){
@@ -867,9 +882,10 @@ if(speechSynth){findAusVoice();if(speechSynth.onvoiceschanged!==undefined)speech
 async function checkVoiceStatus(){
   try{
     var r=await api('GET','/api/tts/status');
-    voiceMode=r.elevenlabs?'elevenlabs':'browser';
+    voiceBackend=r.elevenlabs?'elevenlabs':'browser';
     if(r.setup)logger.info('Voice setup needed: '+r.setup);
-  }catch(e){voiceMode=speechSynth?'browser':'none'}
+  }catch(e){voiceBackend=speechSynth?'browser':'none'}
+  updateVoiceModeUI();
 }
 var logger={info:function(m){console.log('[ELAINE]',m)}};
 checkVoiceStatus();
@@ -882,6 +898,7 @@ function speakBrowser(text){
   var utt=new SpeechSynthesisUtterance(clean);
   utt.lang='en-AU';utt.rate=1.0;utt.pitch=1.0;
   if(elaineVoice)utt.voice=elaineVoice;
+  utt.onend=function(){if(continuousListen)startListeningAfterReply()};
   speechSynth.speak(utt);
 }
 
@@ -894,14 +911,17 @@ async function speakText(text){
   if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
   if(speechSynth)speechSynth.cancel();
 
-  if(voiceMode==='elevenlabs'){
+  if(voiceBackend==='elevenlabs'){
     try{
       var resp=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
       if(!resp.ok){throw new Error('HTTP '+resp.status)}
       var blob=await resp.blob();
       var url=URL.createObjectURL(blob);
       currentAudio=new Audio(url);
-      currentAudio.onended=function(){URL.revokeObjectURL(url);currentAudio=null};
+      currentAudio.onended=function(){
+        URL.revokeObjectURL(url);currentAudio=null;
+        if(continuousListen)startListeningAfterReply();
+      };
       currentAudio.play();
       return;
     }catch(e){
@@ -912,18 +932,54 @@ async function speakText(text){
   speakBrowser(clean);
 }
 
-function toggleSpeak(){
-  voiceEnabled=!voiceEnabled;
-  var btn=document.getElementById('speakBtn');
-  btn.innerHTML=voiceEnabled?'&#128266;':'&#128264;';
-  btn.title=voiceEnabled?'Voice replies ON ('+voiceMode+')':'Voice replies OFF';
-  btn.style.color=voiceEnabled?'var(--accent)':'';
-  if(!voiceEnabled){
+function startListeningAfterReply(){
+  /* After TTS finishes, auto-activate mic for next voice input */
+  if(!voiceModeActive)return;
+  setTimeout(function(){
+    if(!isRec&&voiceModeActive){
+      toggleMic();
+    }
+  },400);
+}
+
+function updateVoiceModeUI(){
+  var btn=document.getElementById('voiceModeBtn');
+  var bar=document.getElementById('voiceBar');
+  if(voiceModeActive){
+    btn.classList.add('active');
+    bar.classList.add('active');
+    var src=voiceBackend==='elevenlabs'?'ElevenLabs cloned voice':'browser voice';
+    bar.textContent='Voice Mode ON \u2014 '+src+'. Listening after each reply. Click gold button to disable.';
+  }else{
+    btn.classList.remove('active');
+    bar.classList.remove('active');
+  }
+}
+
+function toggleVoiceMode(){
+  voiceModeActive=!voiceModeActive;
+  voiceEnabled=voiceModeActive;
+  continuousListen=voiceModeActive;
+
+  if(voiceModeActive){
+    /* Activate voice mode */
+    var modeLabel=voiceBackend==='elevenlabs'?'ElevenLabs (cloned voice)':voiceBackend==='browser'?'browser voice (set ELEVENLABS_API_KEY for cloned voice)':'unavailable';
+    addMsg('Voice Mode ON \u2014 using '+modeLabel+'. I\'ll speak replies and listen after each one. Click the gold button or type normally to disable.','elaine','local');
+    /* Auto-start listening */
+    if(!isRec)toggleMic();
+  }else{
+    /* Deactivate voice mode */
+    continuousListen=false;
     if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
     if(speechSynth)speechSynth.cancel();
+    /* Stop mic if recording */
+    if(isRec){
+      if(sttMode==='browser'&&recognition)recognition.stop();
+      else if(sttMode==='whisper'&&mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop();
+    }
+    addMsg('Voice Mode OFF \u2014 back to text.','elaine','local');
   }
-  var modeLabel=voiceMode==='elevenlabs'?'ElevenLabs (cloned voice)':voiceMode==='browser'?'browser voice (set ELEVENLABS_API_KEY for cloned voice)':'unavailable';
-  addMsg(voiceEnabled?'Voice replies ON — using '+modeLabel+'.':'Voice replies disabled.','elaine','local');
+  updateVoiceModeUI();
 }
 
 /* === Morning Brief === */
