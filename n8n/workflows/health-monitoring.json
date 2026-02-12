@@ -1,0 +1,77 @@
+{
+  "name": "AMTL Health Monitoring (every 5 min)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 5 }] } },
+      "name": "Every 5 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5000/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "ELAINE Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, -200]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5003/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "Workshop Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, -100]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:9000/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "Supervisor Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5004/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "CK Writer Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 100]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:11434/api/tags",
+        "options": { "timeout": 5000 }
+      },
+      "name": "Ollama Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 200]
+    }
+  ],
+  "connections": {
+    "Every 5 Minutes": {
+      "main": [
+        [
+          { "node": "ELAINE Health", "type": "main", "index": 0 },
+          { "node": "Workshop Health", "type": "main", "index": 0 },
+          { "node": "Supervisor Health", "type": "main", "index": 0 },
+          { "node": "CK Writer Health", "type": "main", "index": 0 },
+          { "node": "Ollama Health", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

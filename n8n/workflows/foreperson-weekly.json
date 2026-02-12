@@ -1,0 +1,35 @@
+{
+  "name": "Foreperson Weekly Audit (Sun 6 AM)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{
+            "field": "cronExpression",
+            "expression": "0 6 * * 0"
+          }]
+        }
+      },
+      "name": "Sunday 6 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ManiPadisetti/Dropbox/'Desktop DB'/'Books and Articles Mani'/Books/'Almost Magic Tech Lab AMTL'/'Source and Brand' && python Foreperson/foreperson.py --all --json"
+      },
+      "name": "Run Foreperson",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0]
+    }
+  ],
+  "connections": {
+    "Sunday 6 AM": {
+      "main": [[ { "node": "Run Foreperson", "type": "main", "index": 0 } ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

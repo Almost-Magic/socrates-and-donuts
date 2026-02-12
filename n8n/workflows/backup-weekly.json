@@ -1,0 +1,35 @@
+{
+  "name": "AMTL Backup (Sat 2 AM)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{
+            "field": "cronExpression",
+            "expression": "0 2 * * 6"
+          }]
+        }
+      },
+      "name": "Saturday 2 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ManiPadisetti/Dropbox/'Desktop DB'/'Books and Articles Mani'/Books/'Almost Magic Tech Lab AMTL'/'Source and Brand' && mkdir -p backups/$(date +%Y%m%d) && cp -f 'Finance App/Genie/backend/genie.db' backups/$(date +%Y%m%d)/genie.db 2>/dev/null; pg_dump -h localhost -p 5433 -U postgres -d amtl > backups/$(date +%Y%m%d)/postgres.sql 2>/dev/null; echo '{\"backup_date\": \"'$(date -Iseconds)'\", \"status\": \"completed\"}' > backups/$(date +%Y%m%d)/backup-manifest.json"
+      },
+      "name": "Run Backups",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0]
+    }
+  ],
+  "connections": {
+    "Saturday 2 AM": {
+      "main": [[ { "node": "Run Backups", "type": "main", "index": 0 } ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

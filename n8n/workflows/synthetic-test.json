@@ -1,0 +1,62 @@
+{
+  "name": "AMTL Synthetic End-to-End Test (daily 6 AM)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{
+            "field": "cronExpression",
+            "expression": "0 6 * * *"
+          }]
+        }
+      },
+      "name": "Daily 6 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5000/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "1. ELAINE Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5004/api/health",
+        "options": { "timeout": 5000 }
+      },
+      "name": "2. CK Writer Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:11434/api/tags",
+        "options": { "timeout": 5000 }
+      },
+      "name": "3. Ollama Tags",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "Daily 6 AM": {
+      "main": [[ { "node": "1. ELAINE Health", "type": "main", "index": 0 } ]]
+    },
+    "1. ELAINE Health": {
+      "main": [[ { "node": "2. CK Writer Health", "type": "main", "index": 0 } ]]
+    },
+    "2. CK Writer Health": {
+      "main": [[ { "node": "3. Ollama Tags", "type": "main", "index": 0 } ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

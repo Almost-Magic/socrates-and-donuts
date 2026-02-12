@@ -1,0 +1,35 @@
+{
+  "name": "AMTL Friction Digest (Fri 5 PM)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{
+            "field": "cronExpression",
+            "expression": "0 17 * * 5"
+          }]
+        }
+      },
+      "name": "Friday 5 PM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ManiPadisetti/Dropbox/'Desktop DB'/'Books and Articles Mani'/Books/'Almost Magic Tech Lab AMTL'/'Source and Brand' && if [ -f CK/Elaine/logs/friction-log.jsonl ]; then echo '=== Friction Digest ===' && tail -100 CK/Elaine/logs/friction-log.jsonl && echo '=== End ===' ; else echo 'No friction log found'; fi"
+      },
+      "name": "Read Friction Log",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0]
+    }
+  ],
+  "connections": {
+    "Friday 5 PM": {
+      "main": [[ { "node": "Read Friction Log", "type": "main", "index": 0 } ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

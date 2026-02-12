@@ -21,26 +21,37 @@ features:
 
   - id: app_registry
     name: App registry renders all apps
-    check: manual_ui_check
-    notes: Check that all CK Apps, Infrastructure, External sections render
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_contains: ELAINE
+    notes: Check that CK Apps, Infrastructure, External sections render
 
   - id: health_check
     name: Health check function works
-    check: manual_ui_check
-    notes: Click Health Check in footer — services should be pinged
+    check: http_get
+    path: /api/health
+    expected_status: 200
+    notes: Health endpoint returns service status
 
   - id: search
     name: Search/filter works (Ctrl+K)
-    check: manual_ui_check
-    notes: Ctrl+K focuses search, typing filters cards
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_contains: search
+    notes: Search input rendered in HTML
 
   - id: auto_start_boot
     name: Auto-start on machine boot
-    check: process_check
-    process_name: workshop
+    check: port_open
+    port: 5003
     notes: Should start via Task Scheduler or nssm — not manual
 
   - id: status_indicators
     name: Live status indicators (green/amber/grey dots)
-    check: manual_ui_check
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_contains: status-dot
     notes: Status dots should reflect actual service state

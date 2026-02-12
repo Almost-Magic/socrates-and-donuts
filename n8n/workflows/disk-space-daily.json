@@ -1,0 +1,35 @@
+{
+  "name": "AMTL Disk Space Alert (daily 7 AM)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{
+            "field": "cronExpression",
+            "expression": "0 7 * * *"
+          }]
+        }
+      },
+      "name": "Daily 7 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "df -h / /mnt/c 2>/dev/null || wmic logicaldisk get size,freespace,caption 2>/dev/null || echo 'disk check unavailable in container'"
+      },
+      "name": "Check Disk Space",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0]
+    }
+  ],
+  "connections": {
+    "Daily 7 AM": {
+      "main": [[ { "node": "Check Disk Space", "type": "main", "index": 0 } ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

@@ -176,6 +176,33 @@ def run_check(feature, base_url):
             result["detail"] = f"Port {port} is not reachable"
         return result
 
+    if check_type == "command_check":
+        cmd = feature.get("command", "")
+        expected = feature.get("expected_contains", "")
+        try:
+            import subprocess
+            out = subprocess.check_output(
+                cmd, shell=True, text=True, timeout=feature.get("timeout", 15),
+                stderr=subprocess.STDOUT,
+                creationflags=0x08000000  # CREATE_NO_WINDOW
+            )
+            if expected and expected.lower() in out.lower():
+                result["status"] = STATUS_WORKING
+                result["detail"] = f"Command output contains '{expected}'"
+            elif not expected and out.strip():
+                result["status"] = STATUS_WORKING
+                result["detail"] = "Command executed successfully"
+            else:
+                result["status"] = STATUS_MISSING
+                result["detail"] = f"Output missing '{expected}'"
+        except subprocess.TimeoutExpired:
+            result["status"] = STATUS_MISSING
+            result["detail"] = "Command timed out"
+        except Exception as e:
+            result["status"] = STATUS_MISSING
+            result["detail"] = f"Command failed: {e}"
+        return result
+
     # HTTP checks
     path = feature.get("path", "/")
     url = f"{base_url.rstrip('/')}{path}"

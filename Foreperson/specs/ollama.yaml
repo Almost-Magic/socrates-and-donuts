@@ -30,6 +30,7 @@ features:
     path: /api/generate
     body: {"model": "gemma2:27b", "prompt": "hello", "stream": false}
     expected_status: 200
+    timeout: 60
 
   - id: auto_restart
     name: Auto-restart on crash (Supervisor)

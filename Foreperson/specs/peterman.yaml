@@ -26,15 +26,24 @@ features:
 
   - id: authority_engine
     name: Authority engine
-    check: manual_ui_check
+    check: http_get
+    path: /api/chambers
+    expected_status: 200
+    expected_contains: authority
     notes: All 10 chambers should be functional
 
   - id: presence_engine
     name: Presence engine
-    check: manual_ui_check
-    notes: Echo-Authority-Presence pipeline
+    check: http_get
+    path: /api/chambers
+    expected_status: 200
+    expected_contains: machine
+    notes: Machine Chamber handles machine-readable presence audit
 
   - id: linkedin_integration
     name: LinkedIn content generation
-    check: manual_ui_check
-    notes: Content templates and scheduling
+    check: http_get
+    path: /api/chambers
+    expected_status: 200
+    expected_contains: amplifier
+    notes: Amplifier Chamber handles content amplification
