@@ -737,8 +737,14 @@ async function sendChat(){
 }
 
 /* === Microphone (Speech-to-Text) === */
+/* Dual mode: browser webkitSpeechRecognition (Chrome/Edge) or MediaRecorder + /api/stt (Whisper) */
+var sttMode='none'; /* 'browser', 'whisper', 'none' */
 var recognition=null,isRec=false;
+var mediaRecorder=null,audioChunks=[];
+
+/* Try browser speech recognition first (Chrome/Edge — fastest, no server load) */
 if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  sttMode='browser';
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-AU';
   recognition.onresult=function(e){
@@ -749,22 +755,94 @@ if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
   recognition.onend=function(){isRec=false;document.getElementById('micBtn').classList.remove('recording')};
   recognition.onerror=function(e){
     isRec=false;document.getElementById('micBtn').classList.remove('recording');
-    var msg='Microphone error';
-    if(e.error==='not-allowed')msg='Microphone permission denied. Click the lock icon in the address bar to allow.';
+    if(e.error==='aborted')return;
+    var msg='Microphone error: '+e.error;
+    if(e.error==='not-allowed')msg='Microphone permission denied. Click the lock icon to allow.';
     else if(e.error==='no-speech')msg='No speech detected. Try again.';
-    else if(e.error==='network')msg='Speech recognition needs an internet connection (Chrome sends audio to Google).';
-    else if(e.error==='aborted')return;
-    else msg='Microphone error: '+e.error;
+    else if(e.error==='network')msg='Speech recognition needs internet (Chrome sends audio to Google).';
     addMsg(msg,'elaine','local');
   };
 }
+/* Fallback: MediaRecorder + server-side Whisper (works in PyWebView/Electron) */
+else if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+  sttMode='whisper';
+}
+
 function toggleMic(){
-  if(!recognition){addMsg("Speech recognition not available. Use Chrome or Edge for voice input.",'elaine','local');return}
-  if(isRec){recognition.stop()}else{
-    try{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}
-    catch(e){addMsg('Could not start microphone: '+e.message,'elaine','local')}
+  if(sttMode==='browser'){
+    if(!recognition){addMsg("Speech recognition unavailable.",'elaine','local');return}
+    if(isRec){recognition.stop()}else{
+      try{recognition.start();isRec=true;document.getElementById('micBtn').classList.add('recording')}
+      catch(e){addMsg('Could not start microphone: '+e.message,'elaine','local')}
+    }
+  }else if(sttMode==='whisper'){
+    if(isRec){
+      /* Stop recording and transcribe */
+      if(mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop();
+    }else{
+      /* Start recording via MediaRecorder */
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+        audioChunks=[];
+        var mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':
+                 MediaRecorder.isTypeSupported('audio/ogg')?'audio/ogg':'';
+        var opts=mime?{mimeType:mime}:{};
+        mediaRecorder=new MediaRecorder(stream,opts);
+        mediaRecorder.ondataavailable=function(e){if(e.data.size>0)audioChunks.push(e.data)};
+        mediaRecorder.onstop=function(){
+          isRec=false;
+          document.getElementById('micBtn').classList.remove('recording');
+          stream.getTracks().forEach(function(t){t.stop()});
+          if(audioChunks.length===0)return;
+          var blob=new Blob(audioChunks,{type:mime||'audio/webm'});
+          transcribeAudio(blob,mime||'audio/webm');
+        };
+        mediaRecorder.start();
+        isRec=true;
+        document.getElementById('micBtn').classList.add('recording');
+        addMsg('Listening... click mic again to stop.','elaine','local');
+      }).catch(function(e){
+        var msg='Microphone access denied.';
+        if(e.name==='NotAllowedError')msg='Microphone permission denied. Allow access and try again.';
+        else if(e.name==='NotFoundError')msg='No microphone found on this device.';
+        addMsg(msg,'elaine','local');
+      });
+    }
+  }else{
+    addMsg("No microphone support. Use Chrome/Edge for browser STT, or PyWebView/Electron for Whisper STT.",'elaine','local');
   }
 }
+
+async function transcribeAudio(blob,mime){
+  addTyping();
+  try{
+    var ext=mime.indexOf('ogg')>=0?'ogg':mime.indexOf('wav')>=0?'wav':'webm';
+    var fd=new FormData();
+    fd.append('audio',blob,'recording.'+ext);
+    var resp=await fetch('/api/stt',{method:'POST',body:fd});
+    var r=await resp.json();
+    removeTyping();
+    if(r.error){
+      addMsg('Transcription error: '+r.error,'elaine','local');
+    }else if(r.text&&r.text.trim()){
+      chatIn.value=r.text;
+      addMsg('Heard: "'+escHtml(r.text)+'" ('+r.elapsed_s+'s via Whisper)','elaine','stt');
+      sendChat();
+    }else{
+      addMsg('No speech detected in recording.','elaine','local');
+    }
+  }catch(e){
+    removeTyping();
+    addMsg('Could not transcribe audio: '+e.message,'elaine','local');
+  }
+}
+
+/* Update mic button tooltip to show mode */
+(function(){
+  var btn=document.getElementById('micBtn');
+  if(sttMode==='browser')btn.title='Voice input (browser speech recognition)';
+  else if(sttMode==='whisper')btn.title='Voice input (Whisper STT — click to record, click again to stop)';
+  else btn.title='Voice input unavailable';
+})()
 
 /* === Voice Output (ElevenLabs TTS + browser fallback) === */
 var voiceEnabled=false;

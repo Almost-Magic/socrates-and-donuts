@@ -30,6 +30,22 @@ ELEVENLABS_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID", "XQanfahzbl1YiUlZi5N
 ELEVENLABS_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_turbo_v2_5")
 TTS_TIMEOUT = 10  # seconds
 
+# ── Whisper STT (lazy-loaded on first request) ──────────────
+WHISPER_MODEL_SIZE = os.environ.get("ELAINE_WHISPER_MODEL", "tiny")
+_whisper_model = None
+
+
+def _get_whisper():
+    """Lazy-load the faster-whisper model. CPU int8 for speed (~75MB RAM)."""
+    global _whisper_model
+    if _whisper_model is None:
+        from faster_whisper import WhisperModel
+        _whisper_model = WhisperModel(
+            WHISPER_MODEL_SIZE, device="cpu", compute_type="int8"
+        )
+        logger.info("Whisper '%s' loaded (CPU, int8)", WHISPER_MODEL_SIZE)
+    return _whisper_model
+
 # ── AMTL Tool Registry ─────────────────────────────────────────
 
 TOOLS = [
@@ -321,6 +337,60 @@ def create_chat_routes():
             "total": len(TOOLS),
             "timestamp": datetime.now(timezone.utc).isoformat(),
         })
+
+    # ── POST /api/stt ────────────────────────────────────────────
+
+    @bp.route("/api/stt", methods=["POST"])
+    def stt():
+        """Transcribe audio to text via faster-whisper (local, no API key).
+        Accepts multipart/form-data with 'audio' file field (webm/wav/ogg).
+        Returns: {"text": "...", "language": "en", "elapsed_s": 0.5}"""
+        if "audio" not in request.files:
+            return jsonify({"error": "audio file required"}), 400
+
+        audio_file = request.files["audio"]
+
+        import tempfile
+        import time as _time
+
+        start = _time.time()
+
+        # Determine file extension from content type
+        ct = audio_file.content_type or ""
+        ext = ".webm" if "webm" in ct else ".ogg" if "ogg" in ct else ".wav"
+
+        # Save to temp file (faster-whisper needs a file path)
+        tmp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+                audio_file.save(tmp)
+                tmp_path = tmp.name
+
+            model = _get_whisper()
+            segments, info = model.transcribe(tmp_path, language="en")
+            text = " ".join(seg.text for seg in segments).strip()
+
+            elapsed = round(_time.time() - start, 2)
+            logger.info("STT: '%s' (%.2fs, lang=%s)", text[:80], elapsed, info.language)
+            return jsonify({
+                "text": text,
+                "language": info.language,
+                "elapsed_s": elapsed,
+            })
+
+        except ImportError:
+            return jsonify({
+                "error": "faster-whisper not installed. Run: pip install faster-whisper",
+            }), 503
+        except Exception as e:
+            logger.warning("STT failed: %s", e)
+            return jsonify({"error": f"Transcription failed: {e}"}), 500
+        finally:
+            if tmp_path:
+                try:
+                    os.unlink(tmp_path)
+                except Exception:
+                    pass
 
     # ── GET /api/tts/status ───────────────────────────────────────
 
