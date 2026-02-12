@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-02-12T06:35:56.886553+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "n8n",
+      "port": 5678,
+      "category": "infra",
+      "priority": "high",
+      "description": "Workflow automation backbone",
+      "url": "http://localhost:5678",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "web_ui",
+          "name": "n8n UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "health_monitoring",
+          "name": "Health monitoring workflow (every 5 min)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Health Monitoring'",
+          "notes": "Workflow should ping all services and log results"
+        },
+        {
+          "id": "foreperson_schedule",
+          "name": "Foreperson weekly schedule (Sun 6 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Foreperson Weekly'",
+          "notes": "Run audit and report to Dropbox"
+        },
+        {
+          "id": "backup_workflow",
+          "name": "Backup workflow (Sat 2 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Backup'",
+          "notes": "pg_dump, sqlite3, n8n export to Dropbox"
+        },
+        {
+          "id": "vram_monitor",
+          "name": "VRAM monitor (every 15 min)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'VRAM Monitor'",
+          "notes": "nvidia-smi logging"
+        },
+        {
+          "id": "disk_space_alert",
+          "name": "Disk space alert (daily)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Disk Space'",
+          "notes": "Alert if <10% free"
+        },
+        {
+          "id": "friction_digest",
+          "name": "Friction digest (Fri 5 PM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Friction Digest'",
+          "notes": "Summarise frustration logs weekly"
+        },
+        {
+          "id": "synthetic_test",
+          "name": "Synthetic end-to-end test (daily 6 AM)",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Synthetic'",
+          "notes": "ELAINE -> CK Writer -> Ollama chain test"
+        }
+      ],
+      "summary": {
+        "total": 8,
+        "working": 8,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 8,
+    "total_working": 8,
+    "overall_score": 100.0
+  }
+}

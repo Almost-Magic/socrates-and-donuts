@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-02-12T06:46:34.611001+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Ripple CRM",
+      "port": 8100,
+      "category": "ck",
+      "priority": "high",
+      "description": "Relationship Intelligence Engine",
+      "url": "http://localhost:8100",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "frontend_loads",
+          "name": "Frontend loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "contacts_crud",
+          "name": "Contact CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "companies_crud",
+          "name": "Company CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "deals_crud",
+          "name": "Deal CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "interactions_list",
+          "name": "Interactions list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "tasks_list",
+          "name": "Tasks list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "commitments_list",
+          "name": "Commitments list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "dashboard",
+          "name": "Daily Command Centre",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'metrics'",
+          "notes": ""
+        },
+        {
+          "id": "relationship_health",
+          "name": "Relationship health recalculate",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'count'",
+          "notes": ""
+        },
+        {
+          "id": "privacy_consents",
+          "name": "Privacy consent list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "settings",
+          "name": "Settings endpoint",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'user_name'",
+          "notes": ""
+        },
+        {
+          "id": "export_contacts",
+          "name": "CSV export contacts",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "validation",
+          "name": "Input validation endpoint",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'valid'",
+          "notes": ""
+        },
+        {
+          "id": "notes_list",
+          "name": "Notes list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "audit_log",
+          "name": "Audit log accessible",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 16,
+        "working": 16,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 100.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 16,
+    "total_working": 16,
+    "overall_score": 100.0
+  }
+}

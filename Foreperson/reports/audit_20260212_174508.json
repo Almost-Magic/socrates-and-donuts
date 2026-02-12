@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-02-12T06:44:21.416185+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Ripple CRM",
+      "port": 8100,
+      "category": "ck",
+      "priority": "high",
+      "description": "Relationship Intelligence Engine",
+      "url": "http://localhost:8100",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "frontend_loads",
+          "name": "Frontend loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "contacts_crud",
+          "name": "Contact CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "companies_crud",
+          "name": "Company CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "deals_crud",
+          "name": "Deal CRUD",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "interactions_list",
+          "name": "Interactions list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "tasks_list",
+          "name": "Tasks list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "commitments_list",
+          "name": "Commitments list",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "dashboard",
+          "name": "Daily Command Centre",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'metrics'",
+          "notes": ""
+        },
+        {
+          "id": "relationship_health",
+          "name": "Relationship health recalculate",
+          "check_type": "http_post",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/relationships/recalculate",
+          "notes": ""
+        },
+        {
+          "id": "privacy_consents",
+          "name": "Privacy consent list",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/privacy/consents",
+          "notes": ""
+        },
+        {
+          "id": "settings",
+          "name": "Settings endpoint",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/settings",
+          "notes": ""
+        },
+        {
+          "id": "export_contacts",
+          "name": "CSV export contacts",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/import-export/export/contacts",
+          "notes": ""
+        },
+        {
+          "id": "validation",
+          "name": "Input validation endpoint",
+          "check_type": "http_post",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/validate",
+          "notes": ""
+        },
+        {
+          "id": "notes_list",
+          "name": "Notes list",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/notes",
+          "notes": ""
+        },
+        {
+          "id": "audit_log",
+          "name": "Audit log accessible",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:8100/api/audit-log",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 16,
+        "working": 9,
+        "partial": 0,
+        "missing": 7,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 56.2
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 16,
+    "total_working": 9,
+    "overall_score": 56.2
+  }
+}

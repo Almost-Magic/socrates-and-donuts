@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-02-12T04:29:03.502511+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Genie",
+      "port": 8000,
+      "category": "ck",
+      "priority": "high",
+      "description": "AI bookkeeper — categorisation, fraud guard, zombie hunter",
+      "url": "http://localhost:8000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "module_launcher",
+          "name": "Module launcher (user toggles modules)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "nav_grouping",
+          "name": "Navigation grouped (Overview/Money/Intelligence/Reports/Tools)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Grouped into 5 collapsible sections in sidebar — verified in Proof tests"
+        },
+        {
+          "id": "mobile_receipt_scanner",
+          "name": "Mobile receipt scanner",
+          "check_type": "not_implemented",
+          "status": "not_implemented",
+          "detail": "Explicitly marked as not yet built",
+          "notes": "Not yet built"
+        },
+        {
+          "id": "ask_genie_ai",
+          "name": "Ask Genie AI chat",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "transaction_categorisation",
+          "name": "Transaction categorisation",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "fraud_guard",
+          "name": "Fraud guard signals",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "zombie_hunter",
+          "name": "Zombie subscription hunter",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 9,
+        "working": 7,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 1,
+        "score": 77.8
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 9,
+    "total_working": 7,
+    "overall_score": 77.8
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-02-12T06:56:02.813878+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Ollama",
+      "port": 11434,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Local LLM inference server (15 models)",
+      "url": "http://localhost:11434",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "api_running",
+          "name": "Ollama API responding",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "default_model_loaded",
+          "name": "Default model loaded (gemma2:27b)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gemma'",
+          "notes": ""
+        },
+        {
+          "id": "embeddings_model",
+          "name": "Embeddings model available (nomic-embed-text)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'nomic'",
+          "notes": ""
+        },
+        {
+          "id": "generate_endpoint",
+          "name": "Generate endpoint works",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart on crash (Supervisor)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Supervisor should detect and restart within 30 seconds"
+        }
+      ],
+      "summary": {
+        "total": 5,
+        "working": 4,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 80.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 5,
+    "total_working": 4,
+    "overall_score": 80.0
+  }
+}

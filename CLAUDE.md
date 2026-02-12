@@ -96,6 +96,10 @@ Source and Brand/
 │   ├── frontend/          → React 19 + Vite 7 + Tailwind v4
 │   ├── tests/             → Proof (Playwright) E2E tests
 │   └── docs/              → Specs, build plan, roadmap
+├── Touchstone/            → Open Source Marketing Attribution (AMTL Commons, MIT)
+│   ├── backend/           → FastAPI + async SQLAlchemy + Alembic (port 8200)
+│   ├── pixel/             → Tracking pixel (touchstone.js, < 5KB)
+│   └── tests/             → Proof (Playwright) E2E tests
 ├── Code Orchestrator/     → Code management
 └── local-ai-stack/        → Docker infrastructure
 ```
@@ -121,6 +125,7 @@ Source and Brand/
 | 8420 | Signal Hunter | **NOT The Workshop. Separate app.** |
 | 3100 | Ripple CRM Frontend | React 19 + Vite |
 | 8100 | Ripple CRM API | FastAPI backend, PostgreSQL |
+| 8200 | Touchstone | Open Source Marketing Attribution (AMTL Commons, MIT) |
 | 9000 | The Supervisor | Centralised runtime manager |
 
 ### Docker Infrastructure (local-ai-stack)
@@ -266,7 +271,7 @@ A PowerShell service manager script exists at `Source and Brand/services.ps1`:
 .\services.ps1 restart supervisor  # Restart Supervisor
 ```
 
-Service keys: `supervisor`, `workshop`, `elaine`, `costanza`, `learning`, `writer`, `junkdrawer`, `authorstudio`, `peterman`, `genie`, `ripple`, `geniefe`, `ripplefe`
+Service keys: `supervisor`, `workshop`, `elaine`, `costanza`, `learning`, `writer`, `junkdrawer`, `authorstudio`, `peterman`, `genie`, `ripple`, `touchstone`, `geniefe`, `ripplefe`
 
 Aliases: `ck-writer`/`ck_writer` → writer, `author-studio`/`author` → authorstudio, `junk-drawer`/`junk` → junkdrawer, `genie-fe` → geniefe, `ripple-fe`/`ripple-crm` → ripple, `suze` → elaine, `supe` → supervisor
 
@@ -306,6 +311,7 @@ Aliases: `ck-writer`/`ck_writer` → writer, `author-studio`/`author` → author
 | **Peterman** | Brand intelligence |
 | **Genie** | AI bookkeeper |
 | **Ripple CRM** | Relationship Intelligence Engine (API :8100, UI :3100) |
+| **Touchstone** | Open Source Marketing Attribution (AMTL Commons, MIT) — :8200 |
 | **The Supervisor** | Runtime manager (GPU, models, health) — :9000 |
 | **The Foreperson** | Quality inspector (promised vs delivered) |
 | **The Workshop** | Central launcher (App 0) |

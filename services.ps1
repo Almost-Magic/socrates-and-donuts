@@ -95,10 +95,17 @@ $Services = [ordered]@{
     }
     ripple = @{
         Name   = "Ripple Backend"
-        Port   = 8101
+        Port   = 8100
         Dir    = "$BASE\Ripple CRM and Spark Marketing\backend"
-        Cmd    = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8101"
+        Cmd    = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8100"
         Health = "/api/health"
+    }
+    touchstone = @{
+        Name   = "Touchstone"
+        Port   = 8200
+        Dir    = "$BASE\Touchstone\backend"
+        Cmd    = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8200"
+        Health = "/api/v1/health"
     }
     geniefe = @{
         Name   = "Genie Frontend"

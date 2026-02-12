@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-02-12T17:18:26.904869+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Touchstone",
+      "port": 8200,
+      "category": "commons",
+      "priority": "high",
+      "description": "Open Source Marketing Attribution Engine",
+      "url": "http://localhost:8200",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'ok'",
+          "notes": ""
+        },
+        {
+          "id": "root_endpoint",
+          "name": "Root returns service info",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'Touchstone'",
+          "notes": ""
+        },
+        {
+          "id": "collect_endpoint",
+          "name": "Event collection endpoint",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 204 OK",
+          "notes": ""
+        },
+        {
+          "id": "identify_endpoint",
+          "name": "Contact identification endpoint",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'contact_id'",
+          "notes": ""
+        },
+        {
+          "id": "campaigns_list",
+          "name": "Campaigns list endpoint",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "contacts_list",
+          "name": "Contacts list endpoint",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'items'",
+          "notes": ""
+        },
+        {
+          "id": "webhook_crm",
+          "name": "CRM webhook endpoint",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'deal_id'",
+          "notes": ""
+        },
+        {
+          "id": "pixel_serves",
+          "name": "Tracking pixel JavaScript served",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "pixel_test_page",
+          "name": "Pixel test page loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'Touchstone Pixel Test'",
+          "notes": ""
+        },
+        {
+          "id": "cors_headers",
+          "name": "CORS headers present on collect",
+          "check_type": "http_options",
+          "status": "not_tested",
+          "detail": "Unknown check type: http_options",
+          "notes": ""
+        },
+        {
+          "id": "rate_limiting",
+          "name": "Rate limiter active",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "session_stitching",
+          "name": "Session stitching (anonymous to known)",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200, contains 'touchpoints_linked'",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 12,
+        "working": 11,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 91.7,
+        "achievable": 11,
+        "max_achievable_score": 100.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 12,
+    "total_working": 11,
+    "overall_score": 91.7,
+    "total_achievable": 11,
+    "overall_max_achievable_score": 100.0
+  }
+}

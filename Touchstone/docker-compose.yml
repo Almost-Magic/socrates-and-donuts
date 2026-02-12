@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  touchstone:
+    build: .
+    ports:
+      - "8200:8200"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/touchstone_db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: touchstone_db
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - touchstone_data:/var/lib/postgresql/data
+
+volumes:
+  touchstone_data:

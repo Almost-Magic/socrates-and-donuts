@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-02-12T17:17:26.231821+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "The Supervisor",
+      "port": 9000,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Centralised runtime manager — GPU, models, health, routing",
+      "url": "http://localhost:9000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "status_endpoint",
+          "name": "Full system status",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "gpu_endpoint",
+          "name": "GPU/VRAM status",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "models_endpoint",
+          "name": "Model registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "services_endpoint",
+          "name": "Service registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "metrics_endpoint",
+          "name": "Request metrics",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_tags",
+          "name": "Ollama-compatible /api/tags proxy",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_chat",
+          "name": "Ollama-compatible /api/chat proxy",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_embed",
+          "name": "Ollama-compatible /api/embed proxy",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "cloud_fallback",
+          "name": "Cloud API fallback when Ollama fails",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill Ollama, send request — should fall back to cloud API"
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart of failed services",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill a managed service, verify Supervisor restarts it within 90 seconds"
+        },
+        {
+          "id": "vram_management",
+          "name": "VRAM conflict prevention",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Request heavy model when default loaded — should unload first"
+        },
+        {
+          "id": "boot_sequence",
+          "name": "Boot sequencer runs on startup",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains '\"status\":\"healthy\"'",
+          "notes": "Verifies Supervisor API shows critical services healthy — proves boot sequence completed (Workshop, ELAINE, Ollama all running)"
+        },
+        {
+          "id": "meta_guardian",
+          "name": "Meta-Guardian Task Scheduler task",
+          "check_type": "command_check",
+          "status": "working",
+          "detail": "Command output contains 'Ready'",
+          "notes": "Verifies 10-minute Supervisor watchdog is registered and active in Windows Task Scheduler"
+        }
+      ],
+      "summary": {
+        "total": 14,
+        "working": 11,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 3,
+        "not_implemented": 0,
+        "score": 78.6,
+        "achievable": 11,
+        "max_achievable_score": 100.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 14,
+    "total_working": 11,
+    "overall_score": 78.6,
+    "total_achievable": 11,
+    "overall_max_achievable_score": 100.0
+  }
+}

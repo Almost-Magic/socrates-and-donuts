@@ -1,0 +1,93 @@
+app: Touchstone
+description: Open Source Marketing Attribution Engine
+port: 8200
+url: http://localhost:8200
+category: commons
+priority: high
+license: MIT
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/v1/health
+    expected_status: 200
+    expected_contains: ok
+
+  - id: root_endpoint
+    name: Root returns service info
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_contains: Touchstone
+
+  - id: collect_endpoint
+    name: Event collection endpoint
+    check: http_post
+    path: /api/v1/collect
+    body: '{"anonymous_id": "test-foreperson-001", "touchpoint_type": "page_view", "page_url": "https://example.com"}'
+    expected_status: 204
+
+  - id: identify_endpoint
+    name: Contact identification endpoint
+    check: http_post
+    path: /api/v1/identify
+    body: '{"anonymous_id": "test-foreperson-001", "email": "foreperson@example.com", "name": "Foreperson Test"}'
+    expected_status: 200
+    expected_contains: contact_id
+
+  - id: campaigns_list
+    name: Campaigns list endpoint
+    check: http_get
+    path: /api/v1/campaigns
+    expected_status: 200
+    expected_contains: items
+
+  - id: contacts_list
+    name: Contacts list endpoint
+    check: http_get
+    path: /api/v1/contacts
+    expected_status: 200
+    expected_contains: items
+
+  - id: webhook_crm
+    name: CRM webhook endpoint
+    check: http_post
+    path: /api/v1/webhooks/crm
+    body: '{"crm_source": "foreperson", "crm_deal_id": "FP-001", "contact_email": "foreperson@example.com", "deal_name": "Foreperson Audit"}'
+    expected_status: 200
+    expected_contains: deal_id
+
+  - id: pixel_serves
+    name: Tracking pixel JavaScript served
+    check: http_get
+    path: /pixel/touchstone.js
+    expected_status: 200
+
+  - id: pixel_test_page
+    name: Pixel test page loads
+    check: http_get
+    path: /pixel/test
+    expected_status: 200
+    expected_contains: Touchstone Pixel Test
+
+  - id: cors_headers
+    name: CORS headers present on collect
+    check: http_options
+    path: /api/v1/collect
+    expected_header: access-control-allow-origin
+
+  - id: rate_limiting
+    name: Rate limiter active
+    check: http_get
+    path: /api/v1/health
+    expected_status: 200
+    note: Rate limiting middleware is loaded (200 req/min)
+
+  - id: session_stitching
+    name: Session stitching (anonymous to known)
+    check: http_post
+    path: /api/v1/identify
+    body: '{"anonymous_id": "test-stitch-fp", "email": "stitch-fp@example.com"}'
+    expected_status: 200
+    expected_contains: touchpoints_linked

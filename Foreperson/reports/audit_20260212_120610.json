@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-02-12T01:05:34.787707+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "The Supervisor",
+      "port": 9000,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Centralised runtime manager — GPU, models, health, routing",
+      "url": "http://localhost:9000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "status_endpoint",
+          "name": "Full system status",
+          "check_type": "http_get",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:9000/api/status",
+          "notes": ""
+        },
+        {
+          "id": "gpu_endpoint",
+          "name": "GPU/VRAM status",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "models_endpoint",
+          "name": "Model registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "services_endpoint",
+          "name": "Service registry",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "metrics_endpoint",
+          "name": "Request metrics",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_tags",
+          "name": "Ollama-compatible /api/tags proxy",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "proxy_chat",
+          "name": "Ollama-compatible /api/chat proxy",
+          "check_type": "http_post",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:9000/api/chat",
+          "notes": ""
+        },
+        {
+          "id": "proxy_embed",
+          "name": "Ollama-compatible /api/embed proxy",
+          "check_type": "http_post",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:9000/api/embed",
+          "notes": ""
+        },
+        {
+          "id": "cloud_fallback",
+          "name": "Cloud API fallback when Ollama fails",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill Ollama, send request — should fall back to cloud API"
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart of failed services",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Kill a managed service, verify Supervisor restarts it within 90 seconds"
+        },
+        {
+          "id": "vram_management",
+          "name": "VRAM conflict prevention",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Request heavy model when default loaded — should unload first"
+        },
+        {
+          "id": "boot_sequence",
+          "name": "Boot sequencer runs on startup",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "After reboot, Supervisor + Workshop + ELAINE should run without manual intervention"
+        },
+        {
+          "id": "meta_guardian",
+          "name": "Meta-Guardian Task Scheduler task",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Check Task Scheduler for 10-minute Supervisor watchdog"
+        }
+      ],
+      "summary": {
+        "total": 14,
+        "working": 6,
+        "partial": 0,
+        "missing": 3,
+        "not_tested": 5,
+        "not_implemented": 0,
+        "score": 42.9
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 14,
+    "total_working": 6,
+    "overall_score": 42.9
+  }
+}

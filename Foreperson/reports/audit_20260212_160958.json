@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-12T17:20:36.603129+00:00",
+  "timestamp": "2026-02-12T05:06:31.042896+00:00",
   "generated_by": "The Foreperson v2.0",
   "apps": [
     {
@@ -54,22 +54,20 @@
         {
           "id": "manuscript_upload",
           "name": "Manuscript upload and analysis",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'available'",
-          "notes": "Upload service reports status and accepted formats"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Upload .docx/.pdf and extract structure"
         }
       ],
       "summary": {
         "total": 6,
-        "working": 6,
+        "working": 5,
         "partial": 0,
         "missing": 0,
-        "not_tested": 0,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -161,9 +159,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 88.9,
-        "achievable": 8,
-        "max_achievable_score": 100.0
+        "score": 88.9
       }
     },
     {
@@ -218,22 +214,20 @@
         {
           "id": "model_combinations",
           "name": "Multi-model combinations",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'frameworks_applied'",
-          "notes": "High-stakes analysis applies multiple frameworks (six_hats, second_order, pre_mortem)"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Combine multiple models for deeper analysis"
         }
       ],
       "summary": {
         "total": 6,
-        "working": 6,
+        "working": 5,
         "partial": 0,
         "missing": 0,
-        "not_tested": 0,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -264,26 +258,26 @@
         {
           "id": "powershell_execution",
           "name": "PowerShell execution module",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — not testable via HTTP API"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'powershell' not found in response",
+          "notes": ""
         },
         {
           "id": "claude_interaction",
-          "name": "Claude/Guruve interaction (thinking frameworks)",
+          "name": "Claude/Guruve interaction",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": "Thinking frameworks engine is ELAINE's AI interaction mechanism"
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude' not found in response",
+          "notes": ""
         },
         {
           "id": "claude_code_integration",
           "name": "Claude Code integration",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — ELAINE calls Claude Code via shell"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude_code' not found in response",
+          "notes": ""
         },
         {
           "id": "app_orchestration",
@@ -296,18 +290,18 @@
         {
           "id": "copy_paste_automation",
           "name": "Copy/paste automation",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — clipboard access via Node.js"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'clipboard' not found in response",
+          "notes": ""
         },
         {
           "id": "file_operations",
           "name": "File operations module",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — file ops via Node.js fs module"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'file' not found in response",
+          "notes": ""
         },
         {
           "id": "voice_interaction",
@@ -319,11 +313,11 @@
         },
         {
           "id": "multi_step_chains",
-          "name": "Multi-step task chains (orchestrator cascades)",
+          "name": "Multi-step task chains",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'orchestrator'",
-          "notes": "Orchestrator module handles cascading multi-step task chains"
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'chain' not found in response",
+          "notes": ""
         },
         {
           "id": "frustration_logging",
@@ -376,14 +370,12 @@
       ],
       "summary": {
         "total": 16,
-        "working": 11,
-        "partial": 0,
+        "working": 9,
+        "partial": 6,
         "missing": 0,
-        "not_tested": 5,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 68.8,
-        "achievable": 11,
-        "max_achievable_score": 100.0
+        "score": 56.2
       }
     },
     {
@@ -422,18 +414,18 @@
         {
           "id": "nav_grouping",
           "name": "Navigation grouped (Overview/Money/Intelligence/Reports/Tools)",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'NAV_GROUPS'",
-          "notes": "Verifies NAV_GROUPS constant exists in frontend source — 5 groups rendered in sidebar"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Grouped into 5 collapsible sections in sidebar — verified in Proof tests"
         },
         {
           "id": "mobile_receipt_scanner",
           "name": "Mobile receipt scanner",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
+          "check_type": "not_implemented",
+          "status": "not_implemented",
+          "detail": "Explicitly marked as not yet built",
+          "notes": "Not yet built"
         },
         {
           "id": "ask_genie_ai",
@@ -470,14 +462,12 @@
       ],
       "summary": {
         "total": 9,
-        "working": 9,
+        "working": 7,
         "partial": 0,
         "missing": 0,
-        "not_tested": 0,
-        "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 9,
-        "max_achievable_score": 100.0
+        "not_tested": 1,
+        "not_implemented": 1,
+        "score": 77.8
       }
     },
     {
@@ -545,9 +535,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 83.3,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -615,9 +603,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 83.3,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -701,9 +687,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 8,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -749,23 +733,21 @@
         },
         {
           "id": "auto_restart",
-          "name": "Auto-restart on crash (Supervisor managed)",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains '\"critical\":true'",
-          "notes": "Supervisor Health Guardian monitors Ollama as critical service with auto-restart (3 retries, exponential backoff)"
+          "name": "Auto-restart on crash (Supervisor)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Supervisor should detect and restart within 30 seconds"
         }
       ],
       "summary": {
         "total": 5,
-        "working": 5,
+        "working": 4,
         "partial": 0,
         "missing": 0,
-        "not_tested": 0,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 80.0
       }
     },
     {
@@ -806,24 +788,24 @@
           "name": "Authority engine",
           "check_type": "http_get",
           "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": "Functional endpoint — returns authority scan results for brand 1"
+          "detail": "HTTP 200, contains 'authority'",
+          "notes": "All 10 chambers should be functional"
         },
         {
           "id": "presence_engine",
-          "name": "Presence engine (Technical SEO)",
+          "name": "Presence engine",
           "check_type": "http_get",
           "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": "Machine Chamber — returns technical audit results for brand 1"
+          "detail": "HTTP 200, contains 'machine'",
+          "notes": "Machine Chamber handles machine-readable presence audit"
         },
         {
           "id": "linkedin_integration",
-          "name": "Content amplification engine",
+          "name": "LinkedIn content generation",
           "check_type": "http_get",
           "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": "Amplifier Chamber — returns citation results for brand 1"
+          "detail": "HTTP 200, contains 'amplifier'",
+          "notes": "Amplifier Chamber handles content amplification"
         }
       ],
       "summary": {
@@ -833,159 +815,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
-      }
-    },
-    {
-      "app": "Ripple CRM",
-      "port": 8100,
-      "category": "ck",
-      "priority": "high",
-      "description": "Relationship Intelligence Engine",
-      "url": "http://localhost:8100",
-      "port_alive": true,
-      "features": [
-        {
-          "id": "health_endpoint",
-          "name": "Health endpoint responds",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'healthy'",
-          "notes": ""
-        },
-        {
-          "id": "frontend_loads",
-          "name": "Frontend loads",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "contacts_crud",
-          "name": "Contact CRUD",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "companies_crud",
-          "name": "Company CRUD",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "deals_crud",
-          "name": "Deal CRUD",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "interactions_list",
-          "name": "Interactions list",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "tasks_list",
-          "name": "Tasks list",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "commitments_list",
-          "name": "Commitments list",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "dashboard",
-          "name": "Daily Command Centre",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'metrics'",
-          "notes": ""
-        },
-        {
-          "id": "relationship_health",
-          "name": "Relationship health recalculate",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'count'",
-          "notes": ""
-        },
-        {
-          "id": "privacy_consents",
-          "name": "Privacy consent list",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "settings",
-          "name": "Settings endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'user_name'",
-          "notes": ""
-        },
-        {
-          "id": "export_contacts",
-          "name": "CSV export contacts",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "validation",
-          "name": "Input validation endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'valid'",
-          "notes": ""
-        },
-        {
-          "id": "notes_list",
-          "name": "Notes list",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "audit_log",
-          "name": "Audit log accessible",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        }
-      ],
-      "summary": {
-        "total": 16,
-        "working": 16,
-        "partial": 0,
-        "missing": 0,
-        "not_tested": 0,
-        "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 16,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -1096,148 +926,28 @@
         {
           "id": "boot_sequence",
           "name": "Boot sequencer runs on startup",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains '\"status\":\"healthy\"'",
-          "notes": "Verifies Supervisor API shows critical services healthy — proves boot sequence completed (Workshop, ELAINE, Ollama all running)"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "After reboot, Supervisor + Workshop + ELAINE should run without manual intervention"
         },
         {
           "id": "meta_guardian",
           "name": "Meta-Guardian Task Scheduler task",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Ready'",
-          "notes": "Verifies 10-minute Supervisor watchdog is registered and active in Windows Task Scheduler"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Check Task Scheduler for 10-minute Supervisor watchdog"
         }
       ],
       "summary": {
         "total": 14,
-        "working": 11,
+        "working": 9,
         "partial": 0,
         "missing": 0,
-        "not_tested": 3,
+        "not_tested": 5,
         "not_implemented": 0,
-        "score": 78.6,
-        "achievable": 11,
-        "max_achievable_score": 100.0
-      }
-    },
-    {
-      "app": "Touchstone",
-      "port": 8200,
-      "category": "commons",
-      "priority": "high",
-      "description": "Open Source Marketing Attribution Engine",
-      "url": "http://localhost:8200",
-      "port_alive": true,
-      "features": [
-        {
-          "id": "health_endpoint",
-          "name": "Health endpoint responds",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'ok'",
-          "notes": ""
-        },
-        {
-          "id": "root_endpoint",
-          "name": "Root returns service info",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone'",
-          "notes": ""
-        },
-        {
-          "id": "collect_endpoint",
-          "name": "Event collection endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 204 OK",
-          "notes": ""
-        },
-        {
-          "id": "identify_endpoint",
-          "name": "Contact identification endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'contact_id'",
-          "notes": ""
-        },
-        {
-          "id": "campaigns_list",
-          "name": "Campaigns list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "contacts_list",
-          "name": "Contacts list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "webhook_crm",
-          "name": "CRM webhook endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'deal_id'",
-          "notes": ""
-        },
-        {
-          "id": "pixel_serves",
-          "name": "Tracking pixel JavaScript served",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "pixel_test_page",
-          "name": "Pixel test page loads",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone Pixel Test'",
-          "notes": ""
-        },
-        {
-          "id": "cors_headers",
-          "name": "CORS headers present on collect",
-          "check_type": "http_options",
-          "status": "not_tested",
-          "detail": "Unknown check type: http_options",
-          "notes": ""
-        },
-        {
-          "id": "rate_limiting",
-          "name": "Rate limiter active",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "session_stitching",
-          "name": "Session stitching (anonymous to known)",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'touchpoints_linked'",
-          "notes": ""
-        }
-      ],
-      "summary": {
-        "total": 12,
-        "working": 11,
-        "partial": 0,
-        "missing": 0,
-        "not_tested": 1,
-        "not_implemented": 0,
-        "score": 91.7,
-        "achievable": 11,
-        "max_achievable_score": 100.0
+        "score": 64.3
       }
     },
     {
@@ -1271,31 +981,31 @@
           "check_type": "http_get",
           "status": "working",
           "detail": "HTTP 200, contains 'ELAINE'",
-          "notes": "HTML contains app cards for ELAINE, CK Writer, Genie, etc."
+          "notes": "Check that CK Apps, Infrastructure, External sections render"
         },
         {
           "id": "health_check",
           "name": "Health check function works",
           "check_type": "http_get",
           "status": "working",
-          "detail": "HTTP 200, contains 'summary'",
-          "notes": "Pings all registered services and returns live/stopped status"
+          "detail": "HTTP 200 OK",
+          "notes": "Health endpoint returns service status"
         },
         {
           "id": "search",
           "name": "Search/filter works (Ctrl+K)",
           "check_type": "http_get",
           "status": "working",
-          "detail": "HTTP 200, contains 'searchBar'",
-          "notes": "Real search input element with id=searchBar"
+          "detail": "HTTP 200, contains 'search'",
+          "notes": "Search input rendered in HTML"
         },
         {
           "id": "auto_start_boot",
           "name": "Auto-start on machine boot",
-          "check_type": "command_check",
+          "check_type": "port_open",
           "status": "working",
-          "detail": "Command output contains 'amtl-workshop-start.bat'",
-          "notes": "Batch file in Windows Startup folder launches Workshop via services.ps1 on logon"
+          "detail": "Port 5003 is open",
+          "notes": "Should start via Task Scheduler or nssm — not manual"
         },
         {
           "id": "status_indicators",
@@ -1303,7 +1013,7 @@
           "check_type": "http_get",
           "status": "working",
           "detail": "HTTP 200, contains 'status-dot'",
-          "notes": "Real CSS class status-dot renders for each app card"
+          "notes": "Status dots should reflect actual service state"
         }
       ],
       "summary": {
@@ -1313,18 +1023,14 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 7,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     }
   ],
   "overall": {
-    "total_apps": 14,
-    "total_features": 126,
-    "total_working": 114,
-    "overall_score": 90.5,
-    "total_achievable": 114,
-    "overall_max_achievable_score": 100.0
+    "total_apps": 12,
+    "total_features": 98,
+    "total_working": 78,
+    "overall_score": 79.6
   }
 }

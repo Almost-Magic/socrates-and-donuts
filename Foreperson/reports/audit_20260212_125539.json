@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-02-12T01:55:06.319742+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "ELAINE",
+      "port": 5000,
+      "category": "ck",
+      "priority": "critical",
+      "description": "AI Chief of Staff — 16 modules",
+      "url": "http://localhost:5000",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Web UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "powershell_execution",
+          "name": "PowerShell execution module",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'powershell' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "claude_interaction",
+          "name": "Claude/Guruve interaction",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "claude_code_integration",
+          "name": "Claude Code integration",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude_code' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "app_orchestration",
+          "name": "App orchestration via Supervisor",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'orchestrat'",
+          "notes": ""
+        },
+        {
+          "id": "copy_paste_automation",
+          "name": "Copy/paste automation",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'clipboard' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "file_operations",
+          "name": "File operations module",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'file' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "voice_interaction",
+          "name": "Voice interaction (ElevenLabs)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'voice'",
+          "notes": ""
+        },
+        {
+          "id": "multi_step_chains",
+          "name": "Multi-step task chains",
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'chain' not found in response",
+          "notes": ""
+        },
+        {
+          "id": "frustration_logging",
+          "name": "Frustration logging command",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "morning_briefing",
+          "name": "Morning Briefing",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "mobile_access",
+          "name": "Mobile access from anywhere (Tailscale)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Requires Tailscale setup — currently WiFi-only"
+        },
+        {
+          "id": "gatekeeper",
+          "name": "Gatekeeper module",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gatekeeper'",
+          "notes": ""
+        },
+        {
+          "id": "gravity_engine",
+          "name": "Gravity priority engine",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gravity'",
+          "notes": ""
+        },
+        {
+          "id": "constellation",
+          "name": "Constellation people intelligence",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'constellation'",
+          "notes": ""
+        }
+      ],
+      "summary": {
+        "total": 16,
+        "working": 9,
+        "partial": 6,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 56.2
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 16,
+    "total_working": 9,
+    "overall_score": 56.2
+  }
+}

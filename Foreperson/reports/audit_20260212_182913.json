@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-02-12T07:28:49.296916+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "Ollama",
+      "port": 11434,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Local LLM inference server (15 models)",
+      "url": "http://localhost:11434",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "api_running",
+          "name": "Ollama API responding",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "default_model_loaded",
+          "name": "Default model loaded (gemma2:27b)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'gemma'",
+          "notes": ""
+        },
+        {
+          "id": "embeddings_model",
+          "name": "Embeddings model available (nomic-embed-text)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'nomic'",
+          "notes": ""
+        },
+        {
+          "id": "generate_endpoint",
+          "name": "Generate endpoint works",
+          "check_type": "http_post",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "auto_restart",
+          "name": "Auto-restart on crash (Supervisor managed)",
+          "check_type": "command_check",
+          "status": "missing",
+          "detail": "Output missing '\"critical\": true'",
+          "notes": "Supervisor Health Guardian monitors Ollama as critical service with auto-restart (3 retries, exponential backoff)"
+        }
+      ],
+      "summary": {
+        "total": 5,
+        "working": 4,
+        "partial": 0,
+        "missing": 1,
+        "not_tested": 0,
+        "not_implemented": 0,
+        "score": 80.0
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 5,
+    "total_working": 4,
+    "overall_score": 80.0
+  }
+}

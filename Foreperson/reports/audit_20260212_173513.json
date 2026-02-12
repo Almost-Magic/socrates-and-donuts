@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-02-12T06:34:55.118724+00:00",
+  "generated_by": "The Foreperson v2.0",
+  "apps": [
+    {
+      "app": "The Workshop",
+      "port": 5003,
+      "category": "infra",
+      "priority": "critical",
+      "description": "Central app launcher and status dashboard",
+      "url": "http://localhost:5003",
+      "port_alive": true,
+      "features": [
+        {
+          "id": "health_endpoint",
+          "name": "Health endpoint responds",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'healthy'",
+          "notes": ""
+        },
+        {
+          "id": "web_ui",
+          "name": "Workshop UI loads",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200 OK",
+          "notes": ""
+        },
+        {
+          "id": "app_registry",
+          "name": "App registry renders all apps",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'ELAINE'",
+          "notes": "HTML contains app cards for ELAINE, CK Writer, Genie, etc."
+        },
+        {
+          "id": "health_check",
+          "name": "Health check function works",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'summary'",
+          "notes": "Pings all registered services and returns live/stopped status"
+        },
+        {
+          "id": "search",
+          "name": "Search/filter works (Ctrl+K)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'searchBar'",
+          "notes": "Real search input element with id=searchBar"
+        },
+        {
+          "id": "auto_start_boot",
+          "name": "Auto-start on machine boot",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "No Task Scheduler entry or nssm service found — not yet configured"
+        },
+        {
+          "id": "status_indicators",
+          "name": "Live status indicators (green/amber/grey dots)",
+          "check_type": "http_get",
+          "status": "working",
+          "detail": "HTTP 200, contains 'status-dot'",
+          "notes": "Real CSS class status-dot renders for each app card"
+        }
+      ],
+      "summary": {
+        "total": 7,
+        "working": 6,
+        "partial": 0,
+        "missing": 0,
+        "not_tested": 1,
+        "not_implemented": 0,
+        "score": 85.7
+      }
+    }
+  ],
+  "overall": {
+    "total_apps": 1,
+    "total_features": 7,
+    "total_working": 6,
+    "overall_score": 85.7
+  }
+}

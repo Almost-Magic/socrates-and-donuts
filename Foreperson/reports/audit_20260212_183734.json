@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-12T17:20:36.603129+00:00",
+  "timestamp": "2026-02-12T07:33:24.618737+00:00",
   "generated_by": "The Foreperson v2.0",
   "apps": [
     {
@@ -1096,147 +1096,29 @@
         {
           "id": "boot_sequence",
           "name": "Boot sequencer runs on startup",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains '\"status\":\"healthy\"'",
-          "notes": "Verifies Supervisor API shows critical services healthy — proves boot sequence completed (Workshop, ELAINE, Ollama all running)"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "After reboot, Supervisor + Workshop + ELAINE should run without manual intervention"
         },
         {
           "id": "meta_guardian",
           "name": "Meta-Guardian Task Scheduler task",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Ready'",
-          "notes": "Verifies 10-minute Supervisor watchdog is registered and active in Windows Task Scheduler"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Check Task Scheduler for 10-minute Supervisor watchdog"
         }
       ],
       "summary": {
         "total": 14,
-        "working": 11,
+        "working": 9,
         "partial": 0,
         "missing": 0,
-        "not_tested": 3,
+        "not_tested": 5,
         "not_implemented": 0,
-        "score": 78.6,
-        "achievable": 11,
-        "max_achievable_score": 100.0
-      }
-    },
-    {
-      "app": "Touchstone",
-      "port": 8200,
-      "category": "commons",
-      "priority": "high",
-      "description": "Open Source Marketing Attribution Engine",
-      "url": "http://localhost:8200",
-      "port_alive": true,
-      "features": [
-        {
-          "id": "health_endpoint",
-          "name": "Health endpoint responds",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'ok'",
-          "notes": ""
-        },
-        {
-          "id": "root_endpoint",
-          "name": "Root returns service info",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone'",
-          "notes": ""
-        },
-        {
-          "id": "collect_endpoint",
-          "name": "Event collection endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 204 OK",
-          "notes": ""
-        },
-        {
-          "id": "identify_endpoint",
-          "name": "Contact identification endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'contact_id'",
-          "notes": ""
-        },
-        {
-          "id": "campaigns_list",
-          "name": "Campaigns list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "contacts_list",
-          "name": "Contacts list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "webhook_crm",
-          "name": "CRM webhook endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'deal_id'",
-          "notes": ""
-        },
-        {
-          "id": "pixel_serves",
-          "name": "Tracking pixel JavaScript served",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "pixel_test_page",
-          "name": "Pixel test page loads",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone Pixel Test'",
-          "notes": ""
-        },
-        {
-          "id": "cors_headers",
-          "name": "CORS headers present on collect",
-          "check_type": "http_options",
-          "status": "not_tested",
-          "detail": "Unknown check type: http_options",
-          "notes": ""
-        },
-        {
-          "id": "rate_limiting",
-          "name": "Rate limiter active",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "session_stitching",
-          "name": "Session stitching (anonymous to known)",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'touchpoints_linked'",
-          "notes": ""
-        }
-      ],
-      "summary": {
-        "total": 12,
-        "working": 11,
-        "partial": 0,
-        "missing": 0,
-        "not_tested": 1,
-        "not_implemented": 0,
-        "score": 91.7,
-        "achievable": 11,
+        "score": 64.3,
+        "achievable": 9,
         "max_achievable_score": 100.0
       }
     },
@@ -1320,11 +1202,11 @@
     }
   ],
   "overall": {
-    "total_apps": 14,
-    "total_features": 126,
-    "total_working": 114,
-    "overall_score": 90.5,
-    "total_achievable": 114,
+    "total_apps": 13,
+    "total_features": 114,
+    "total_working": 101,
+    "overall_score": 88.6,
+    "total_achievable": 101,
     "overall_max_achievable_score": 100.0
   }
 }

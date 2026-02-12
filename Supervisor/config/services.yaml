@@ -159,6 +159,19 @@ services:
     depends_on: [ripple-crm]
     on_demand: true
 
+  touchstone:
+    name: "Touchstone"
+    port: 8200
+    type: python
+    health_check:
+      type: http
+      url: "http://localhost:8200/api/v1/health"
+      interval_seconds: 60
+    start_command: "python -m uvicorn app.main:app --host 0.0.0.0 --port 8200"
+    cwd: "Touchstone/backend"
+    depends_on: []
+    on_demand: true
+
   foreperson:
     name: "The Foreperson"
     port: 9100

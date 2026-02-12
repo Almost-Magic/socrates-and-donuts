@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-12T17:20:36.603129+00:00",
+  "timestamp": "2026-02-12T06:14:51.714771+00:00",
   "generated_by": "The Foreperson v2.0",
   "apps": [
     {
@@ -67,9 +67,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -161,9 +159,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 88.9,
-        "achievable": 8,
-        "max_achievable_score": 100.0
+        "score": 88.9
       }
     },
     {
@@ -231,9 +227,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -264,26 +258,26 @@
         {
           "id": "powershell_execution",
           "name": "PowerShell execution module",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — not testable via HTTP API"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'powershell' not found in response",
+          "notes": ""
         },
         {
           "id": "claude_interaction",
-          "name": "Claude/Guruve interaction (thinking frameworks)",
+          "name": "Claude/Guruve interaction",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": "Thinking frameworks engine is ELAINE's AI interaction mechanism"
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude' not found in response",
+          "notes": ""
         },
         {
           "id": "claude_code_integration",
           "name": "Claude Code integration",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — ELAINE calls Claude Code via shell"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'claude_code' not found in response",
+          "notes": ""
         },
         {
           "id": "app_orchestration",
@@ -296,18 +290,18 @@
         {
           "id": "copy_paste_automation",
           "name": "Copy/paste automation",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — clipboard access via Node.js"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'clipboard' not found in response",
+          "notes": ""
         },
         {
           "id": "file_operations",
           "name": "File operations module",
-          "check_type": "manual_ui_check",
-          "status": "not_tested",
-          "detail": "Requires manual verification",
-          "notes": "Electron desktop feature — file ops via Node.js fs module"
+          "check_type": "http_get",
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'file' not found in response",
+          "notes": ""
         },
         {
           "id": "voice_interaction",
@@ -319,11 +313,11 @@
         },
         {
           "id": "multi_step_chains",
-          "name": "Multi-step task chains (orchestrator cascades)",
+          "name": "Multi-step task chains",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'orchestrator'",
-          "notes": "Orchestrator module handles cascading multi-step task chains"
+          "status": "partial",
+          "detail": "HTTP 200 OK but 'chain' not found in response",
+          "notes": ""
         },
         {
           "id": "frustration_logging",
@@ -376,14 +370,12 @@
       ],
       "summary": {
         "total": 16,
-        "working": 11,
-        "partial": 0,
+        "working": 9,
+        "partial": 6,
         "missing": 0,
-        "not_tested": 5,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 68.8,
-        "achievable": 11,
-        "max_achievable_score": 100.0
+        "score": 56.2
       }
     },
     {
@@ -422,10 +414,10 @@
         {
           "id": "nav_grouping",
           "name": "Navigation grouped (Overview/Money/Intelligence/Reports/Tools)",
-          "check_type": "command_check",
+          "check_type": "http_get",
           "status": "working",
-          "detail": "Command output contains 'NAV_GROUPS'",
-          "notes": "Verifies NAV_GROUPS constant exists in frontend source — 5 groups rendered in sidebar"
+          "detail": "HTTP 200 OK",
+          "notes": ""
         },
         {
           "id": "mobile_receipt_scanner",
@@ -475,9 +467,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 9,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -545,9 +535,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 83.3,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -615,9 +603,7 @@
         "missing": 0,
         "not_tested": 1,
         "not_implemented": 0,
-        "score": 83.3,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
@@ -627,83 +613,81 @@
       "priority": "high",
       "description": "Workflow automation backbone",
       "url": "http://localhost:5678",
-      "port_alive": true,
+      "port_alive": false,
       "features": [
         {
           "id": "web_ui",
           "name": "n8n UI loads",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
+          "status": "missing",
+          "detail": "Port 5678 not reachable — app appears down",
           "notes": ""
         },
         {
           "id": "health_monitoring",
           "name": "Health monitoring workflow (every 5 min)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Health Monitoring'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "Workflow should ping all services and log results"
         },
         {
           "id": "foreperson_schedule",
           "name": "Foreperson weekly schedule (Sun 6 AM)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Foreperson Weekly'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "Run audit and report to Dropbox"
         },
         {
           "id": "backup_workflow",
           "name": "Backup workflow (Sat 2 AM)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Backup'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "pg_dump, sqlite3, n8n export to Dropbox"
         },
         {
           "id": "vram_monitor",
           "name": "VRAM monitor (every 15 min)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'VRAM Monitor'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "nvidia-smi logging"
         },
         {
           "id": "disk_space_alert",
           "name": "Disk space alert (daily)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Disk Space'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "Alert if <10% free"
         },
         {
           "id": "friction_digest",
           "name": "Friction digest (Fri 5 PM)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Friction Digest'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "Summarise frustration logs weekly"
         },
         {
           "id": "synthetic_test",
           "name": "Synthetic end-to-end test (daily 6 AM)",
           "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Synthetic'",
+          "status": "missing",
+          "detail": "Command failed: Command 'docker exec n8n-n8n-1 n8n list:workflow' returned non-zero exit status 1.",
           "notes": "ELAINE -> CK Writer -> Ollama chain test"
         }
       ],
       "summary": {
         "total": 8,
-        "working": 8,
+        "working": 0,
         "partial": 0,
-        "missing": 0,
+        "missing": 8,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 8,
-        "max_achievable_score": 100.0
+        "score": 0.0
       }
     },
     {
@@ -749,23 +733,21 @@
         },
         {
           "id": "auto_restart",
-          "name": "Auto-restart on crash (Supervisor managed)",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains '\"critical\":true'",
-          "notes": "Supervisor Health Guardian monitors Ollama as critical service with auto-restart (3 retries, exponential backoff)"
+          "name": "Auto-restart on crash (Supervisor)",
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Supervisor should detect and restart within 30 seconds"
         }
       ],
       "summary": {
         "total": 5,
-        "working": 5,
+        "working": 4,
         "partial": 0,
         "missing": 0,
-        "not_tested": 0,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 5,
-        "max_achievable_score": 100.0
+        "score": 80.0
       }
     },
     {
@@ -805,8 +787,8 @@
           "id": "authority_engine",
           "name": "Authority engine",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
+          "status": "missing",
+          "detail": "Expected HTTP 200, got 500",
           "notes": "Functional endpoint — returns authority scan results for brand 1"
         },
         {
@@ -828,23 +810,21 @@
       ],
       "summary": {
         "total": 6,
-        "working": 6,
+        "working": 5,
         "partial": 0,
-        "missing": 0,
+        "missing": 1,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 6,
-        "max_achievable_score": 100.0
+        "score": 83.3
       }
     },
     {
       "app": "Ripple CRM",
-      "port": 8100,
+      "port": 8101,
       "category": "ck",
       "priority": "high",
       "description": "Relationship Intelligence Engine",
-      "url": "http://localhost:8100",
+      "url": "http://localhost:8101",
       "port_alive": true,
       "features": [
         {
@@ -983,9 +963,7 @@
         "missing": 0,
         "not_tested": 0,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 16,
-        "max_achievable_score": 100.0
+        "score": 100.0
       }
     },
     {
@@ -1096,148 +1074,28 @@
         {
           "id": "boot_sequence",
           "name": "Boot sequencer runs on startup",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains '\"status\":\"healthy\"'",
-          "notes": "Verifies Supervisor API shows critical services healthy — proves boot sequence completed (Workshop, ELAINE, Ollama all running)"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "After reboot, Supervisor + Workshop + ELAINE should run without manual intervention"
         },
         {
           "id": "meta_guardian",
           "name": "Meta-Guardian Task Scheduler task",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'Ready'",
-          "notes": "Verifies 10-minute Supervisor watchdog is registered and active in Windows Task Scheduler"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "Check Task Scheduler for 10-minute Supervisor watchdog"
         }
       ],
       "summary": {
         "total": 14,
-        "working": 11,
+        "working": 9,
         "partial": 0,
         "missing": 0,
-        "not_tested": 3,
+        "not_tested": 5,
         "not_implemented": 0,
-        "score": 78.6,
-        "achievable": 11,
-        "max_achievable_score": 100.0
-      }
-    },
-    {
-      "app": "Touchstone",
-      "port": 8200,
-      "category": "commons",
-      "priority": "high",
-      "description": "Open Source Marketing Attribution Engine",
-      "url": "http://localhost:8200",
-      "port_alive": true,
-      "features": [
-        {
-          "id": "health_endpoint",
-          "name": "Health endpoint responds",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'ok'",
-          "notes": ""
-        },
-        {
-          "id": "root_endpoint",
-          "name": "Root returns service info",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone'",
-          "notes": ""
-        },
-        {
-          "id": "collect_endpoint",
-          "name": "Event collection endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 204 OK",
-          "notes": ""
-        },
-        {
-          "id": "identify_endpoint",
-          "name": "Contact identification endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'contact_id'",
-          "notes": ""
-        },
-        {
-          "id": "campaigns_list",
-          "name": "Campaigns list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "contacts_list",
-          "name": "Contacts list endpoint",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'items'",
-          "notes": ""
-        },
-        {
-          "id": "webhook_crm",
-          "name": "CRM webhook endpoint",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'deal_id'",
-          "notes": ""
-        },
-        {
-          "id": "pixel_serves",
-          "name": "Tracking pixel JavaScript served",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "pixel_test_page",
-          "name": "Pixel test page loads",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'Touchstone Pixel Test'",
-          "notes": ""
-        },
-        {
-          "id": "cors_headers",
-          "name": "CORS headers present on collect",
-          "check_type": "http_options",
-          "status": "not_tested",
-          "detail": "Unknown check type: http_options",
-          "notes": ""
-        },
-        {
-          "id": "rate_limiting",
-          "name": "Rate limiter active",
-          "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200 OK",
-          "notes": ""
-        },
-        {
-          "id": "session_stitching",
-          "name": "Session stitching (anonymous to known)",
-          "check_type": "http_post",
-          "status": "working",
-          "detail": "HTTP 200, contains 'touchpoints_linked'",
-          "notes": ""
-        }
-      ],
-      "summary": {
-        "total": 12,
-        "working": 11,
-        "partial": 0,
-        "missing": 0,
-        "not_tested": 1,
-        "not_implemented": 0,
-        "score": 91.7,
-        "achievable": 11,
-        "max_achievable_score": 100.0
+        "score": 64.3
       }
     },
     {
@@ -1277,8 +1135,8 @@
           "id": "health_check",
           "name": "Health check function works",
           "check_type": "http_get",
-          "status": "working",
-          "detail": "HTTP 200, contains 'summary'",
+          "status": "missing",
+          "detail": "Connection failed to http://localhost:5003/api/services/health",
           "notes": "Pings all registered services and returns live/stopped status"
         },
         {
@@ -1292,10 +1150,10 @@
         {
           "id": "auto_start_boot",
           "name": "Auto-start on machine boot",
-          "check_type": "command_check",
-          "status": "working",
-          "detail": "Command output contains 'amtl-workshop-start.bat'",
-          "notes": "Batch file in Windows Startup folder launches Workshop via services.ps1 on logon"
+          "check_type": "manual_ui_check",
+          "status": "not_tested",
+          "detail": "Requires manual verification",
+          "notes": "No Task Scheduler entry or nssm service found — not yet configured"
         },
         {
           "id": "status_indicators",
@@ -1308,23 +1166,19 @@
       ],
       "summary": {
         "total": 7,
-        "working": 7,
+        "working": 5,
         "partial": 0,
-        "missing": 0,
-        "not_tested": 0,
+        "missing": 1,
+        "not_tested": 1,
         "not_implemented": 0,
-        "score": 100.0,
-        "achievable": 7,
-        "max_achievable_score": 100.0
+        "score": 71.4
       }
     }
   ],
   "overall": {
-    "total_apps": 14,
-    "total_features": 126,
-    "total_working": 114,
-    "overall_score": 90.5,
-    "total_achievable": 114,
-    "overall_max_achievable_score": 100.0
+    "total_apps": 13,
+    "total_features": 114,
+    "total_working": 87,
+    "overall_score": 76.3
   }
 }

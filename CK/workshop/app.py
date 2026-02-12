@@ -55,6 +55,7 @@ SERVICES = {
     'genie':              {'name': 'Genie',               'port': 8000,  'url': 'http://localhost:8000',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Finance App', 'Genie', 'backend'), 'cmd': 'python -m uvicorn app:app --host 0.0.0.0 --port 8000', 'health': '/api/health'},
     'ripple':             {'name': 'Ripple CRM',          'port': 3100,  'url': 'http://localhost:3100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3100', 'health': '/'},
     'ripple-api':         {'name': 'Ripple CRM API',      'port': 8100,  'url': 'http://localhost:8100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8100', 'health': '/api/health'},
+    'touchstone':         {'name': 'Touchstone',          'port': 8200,  'url': 'http://localhost:8200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8200', 'health': '/api/v1/health'},
 
     # Infrastructure â€” Docker services (start via docker start)
     'ollama':             {'name': 'Ollama',              'port': 11434, 'url': 'http://localhost:11434', 'type': 'infra', 'health': '/api/tags', 'docker': None, 'cmd': 'ollama serve'},
