@@ -15,6 +15,8 @@ from app.models.audit_log import AuditLog
 from app.models.lead_score import LeadScore
 from app.models.email import Email
 from app.models.scoring_rule import ScoringRule
+from app.models.consent_preference import ConsentPreference
+from app.models.dsar_request import DsarRequest
 
 __all__ = [
     "Base",
@@ -33,4 +35,6 @@ __all__ = [
     "LeadScore",
     "Email",
     "ScoringRule",
+    "ConsentPreference",
+    "DsarRequest",
 ]

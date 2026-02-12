@@ -174,6 +174,10 @@ async def calculate_lead_score(db: AsyncSession, contact_id) -> dict:
     # ── Composite ──────────────────────────────────────────────
     composite = round(fit_score * 0.40 + intent_score * 0.35 + instinct_score * 0.25, 1)
 
+    # MQL threshold (default 70)
+    MQL_THRESHOLD = 70
+    is_mql = composite >= MQL_THRESHOLD
+
     # Upsert lead score
     result = await db.execute(
         select(LeadScore)
@@ -188,6 +192,7 @@ async def calculate_lead_score(db: AsyncSession, contact_id) -> dict:
         existing.intent_score = intent_score
         existing.instinct_score = instinct_score
         existing.composite_score = composite
+        existing.is_mql = is_mql
         existing.fit_breakdown = json.dumps({"score": fit_score, "components": fit_components})
         existing.intent_breakdown = json.dumps({"score": intent_score, "components": intent_components})
         existing.instinct_breakdown = json.dumps({"score": instinct_score, "components": instinct_components})
@@ -200,6 +205,7 @@ async def calculate_lead_score(db: AsyncSession, contact_id) -> dict:
             intent_score=intent_score,
             instinct_score=instinct_score,
             composite_score=composite,
+            is_mql=is_mql,
             fit_breakdown=json.dumps({"score": fit_score, "components": fit_components}),
             intent_breakdown=json.dumps({"score": intent_score, "components": intent_components}),
             instinct_breakdown=json.dumps({"score": instinct_score, "components": instinct_components}),
@@ -220,6 +226,7 @@ async def calculate_lead_score(db: AsyncSession, contact_id) -> dict:
         "fit_breakdown": {"score": fit_score, "components": fit_components},
         "intent_breakdown": {"score": intent_score, "components": intent_components},
         "instinct_breakdown": {"score": instinct_score, "components": instinct_components},
+        "is_mql": is_mql,
         "calculated_at": lead_score.calculated_at,
     }
 

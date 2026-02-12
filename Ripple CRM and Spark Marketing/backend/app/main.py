@@ -19,6 +19,7 @@ from app.routers import (
     dashboard,
     deal_analytics,
     deals,
+    emails,
     health,
     import_export,
     interactions,
@@ -26,6 +27,7 @@ from app.routers import (
     notes,
     privacy,
     relationships,
+    scoring_rules,
     settings as settings_router,
     tags,
     tasks,
@@ -67,6 +69,7 @@ app.include_router(notes.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(relationships.router, prefix="/api")
 app.include_router(privacy.router, prefix="/api")
+app.include_router(privacy.contact_router, prefix="/api")
 app.include_router(import_export.router, prefix="/api")
 app.include_router(settings_router.router, prefix="/api")
 app.include_router(validation.router, prefix="/api")
@@ -80,6 +83,11 @@ app.include_router(channel_dna.contact_router, prefix="/api")
 app.include_router(trust_decay.router, prefix="/api")
 app.include_router(trust_decay.contact_router, prefix="/api")
 app.include_router(deal_analytics.router, prefix="/api")
+# Phase 2b: Email Integration + Scoring Rules
+app.include_router(emails.router, prefix="/api")
+app.include_router(emails.contact_router, prefix="/api")
+app.include_router(emails.deal_router, prefix="/api")
+app.include_router(scoring_rules.router, prefix="/api")
 
 
 @app.get("/")

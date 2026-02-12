@@ -161,3 +161,18 @@ features:
     path: /api/deal-analytics/stalled
     expected_status: 200
     expected_contains: items
+
+  # Phase 2b: Email Integration + Scoring Rules
+  - id: emails_list
+    name: Email list endpoint
+    check: http_get
+    path: /api/emails
+    expected_status: 200
+    expected_contains: items
+
+  - id: scoring_rules_list
+    name: Scoring rules list
+    check: http_get
+    path: /api/scoring/rules
+    expected_status: 200
+    expected_contains: items

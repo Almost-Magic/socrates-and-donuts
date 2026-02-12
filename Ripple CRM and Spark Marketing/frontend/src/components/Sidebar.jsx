@@ -12,6 +12,7 @@ import {
   SparklesIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 
 const navItems = [
@@ -26,6 +27,7 @@ const navItems = [
   { to: '/import-export', label: 'Import/Export', icon: ArrowsRightLeftIcon },
   { to: '/intelligence', label: 'Intelligence', icon: SparklesIcon },
   { to: '/deal-analytics', label: 'Deal Analytics', icon: ChartBarIcon },
+  { to: '/scoring-rules', label: 'Scoring Rules', icon: AdjustmentsHorizontalIcon },
   { to: '/settings', label: 'Settings', icon: Cog6ToothIcon },
 ];
 
