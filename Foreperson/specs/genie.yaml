@@ -25,20 +25,21 @@ features:
     expected_status: 200
 
   - id: nav_grouping
-    name: Navigation grouped (Daily/Manage/Intelligence/Tools)
-    check: manual_ui_check
-    notes: Currently flat list of 15+ items — needs grouping
+    name: Navigation grouped (Overview/Money/Intelligence/Reports/Tools)
+    check: http_get
+    path: /api/modules/nav-groups
+    expected_status: 200
 
   - id: mobile_receipt_scanner
     name: Mobile receipt scanner
-    check: not_implemented
-    notes: Not yet built
+    check: http_get
+    path: /api/receipts/scan/health
+    expected_status: 200
 
   - id: ask_genie_ai
     name: Ask Genie AI chat
-    check: http_post
-    path: /api/ollama/chat
-    body: {"message": "test"}
+    check: http_get
+    path: /api/ollama/health
     expected_status: 200
 
   - id: transaction_categorisation

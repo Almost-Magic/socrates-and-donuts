@@ -51,6 +51,7 @@ SERVICES = {
     'junk-drawer':        {'name': 'The Junk Drawer',     'port': 3005,  'url': 'http://localhost:3005',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-app'), 'cmd': 'npm start'},
     'junk-drawer-api':    {'name': 'Junk Drawer API',     'port': 5006,  'url': 'http://localhost:5006',  'type': 'infra', 'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-backend'), 'cmd': 'launch-elaine.bat'},
     'comfyui':            {'name': 'ComfyUI Studio',      'port': 8188,  'url': 'http://localhost:8188',  'type': 'ck',    'path': None, 'cmd': None},
+    'genie':              {'name': 'Genie',               'port': 8000,  'url': 'http://localhost:8000',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Finance App', 'Genie', 'backend'), 'cmd': 'python -m uvicorn app:app --host 0.0.0.0 --port 8000', 'health': '/api/health'},
 
     # Infrastructure â€” Docker services (start via docker start)
     'ollama':             {'name': 'Ollama',              'port': 11434, 'url': 'http://localhost:11434', 'type': 'infra', 'health': '/api/tags', 'docker': None, 'cmd': 'ollama serve'},
