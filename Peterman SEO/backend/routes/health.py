@@ -15,7 +15,7 @@ _start_time = datetime.now(timezone.utc)
 def health_check():
     """Endpoint 1: Health check."""
     return jsonify({
-        "status": "ok",
+        "status": "healthy",
         "service": "peterman",
         "version": current_app.config.get("APP_VERSION", "4.1.0"),
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -52,6 +52,26 @@ def system_status():
             "snitcher": snitcher_status,
         },
         "port": current_app.config.get("APP_PORT", 5008),
+    })
+
+
+@health_bp.route("/api/chambers", methods=["GET"])
+def list_chambers():
+    """List all 10 analysis chambers."""
+    return jsonify({
+        "chambers": [
+            {"id": "perception", "name": "Perception Chamber", "description": "Brand perception analysis"},
+            {"id": "semantic", "name": "Semantic Chamber", "description": "Semantic content analysis"},
+            {"id": "vectormap", "name": "Vector Map Chamber", "description": "Embedding-based brand mapping"},
+            {"id": "authority", "name": "Authority Chamber", "description": "Authority and credibility scoring"},
+            {"id": "survivability", "name": "Survivability Chamber", "description": "Brand resilience analysis"},
+            {"id": "machine", "name": "Machine Chamber", "description": "Machine-readable presence audit"},
+            {"id": "amplifier", "name": "Amplifier Chamber", "description": "Content amplification engine"},
+            {"id": "proof", "name": "Proof Chamber", "description": "Evidence and claims verification"},
+            {"id": "oracle", "name": "Oracle Chamber", "description": "Predictive brand intelligence"},
+            {"id": "forge", "name": "Forge Chamber", "description": "Brand asset generation"},
+        ],
+        "total": 10,
     })
 
 

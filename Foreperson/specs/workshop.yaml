@@ -6,6 +6,13 @@ category: infra
 priority: critical
 
 features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+    expected_contains: healthy
+
   - id: web_ui
     name: Workshop UI loads
     check: http_get

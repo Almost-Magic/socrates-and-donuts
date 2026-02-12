@@ -77,10 +77,13 @@ def create_app(config_name=None):
     def server_error(e):
         return jsonify({"error": "Internal server error", "status": 500}), 500
 
-    # Create tables
+    # Create tables (graceful if PostgreSQL is down)
     with app.app_context():
-        db.create_all()
-        logger.info("Database tables created/verified")
+        try:
+            db.create_all()
+            logger.info("Database tables created/verified")
+        except Exception as e:
+            logger.warning(f"Database unavailable — Peterman starting in limited mode: {e}")
 
     logger.info(f"Peterman V{app.config['APP_VERSION']} starting on port {app.config['APP_PORT']}")
     return app
