@@ -1,0 +1,42 @@
+app: Author Studio
+description: Book DNA + Amazon Listings + ARIA conversation system
+port: 5007
+url: http://localhost:5007
+category: ck
+priority: medium
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: book_dna
+    name: Book DNA extraction
+    check: http_get
+    path: /api/book-dna
+    expected_status: 200
+
+  - id: amazon_listings
+    name: Amazon listing generator
+    check: http_get
+    path: /api/amazon
+    expected_status: 200
+
+  - id: aria_conversation
+    name: ARIA conversation system
+    check: http_get
+    path: /api/aria
+    expected_status: 200
+
+  - id: manuscript_upload
+    name: Manuscript upload and analysis
+    check: manual_ui_check
+    notes: Upload .docx/.pdf and extract structure

@@ -1,0 +1,103 @@
+app: ELAINE
+description: AI Chief of Staff — 16 modules
+port: 5000
+url: http://localhost:5000
+category: ck
+priority: critical
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: powershell_execution
+    name: PowerShell execution module
+    check: http_get
+    path: /api/modules
+    expected_contains: powershell
+
+  - id: claude_interaction
+    name: Claude/Guruve interaction
+    check: http_get
+    path: /api/modules
+    expected_contains: claude
+
+  - id: claude_code_integration
+    name: Claude Code integration
+    check: http_get
+    path: /api/modules
+    expected_contains: claude_code
+
+  - id: app_orchestration
+    name: App orchestration via Supervisor
+    check: http_get
+    path: /api/modules
+    expected_contains: orchestrat
+
+  - id: copy_paste_automation
+    name: Copy/paste automation
+    check: http_get
+    path: /api/modules
+    expected_contains: clipboard
+
+  - id: file_operations
+    name: File operations module
+    check: http_get
+    path: /api/modules
+    expected_contains: file
+
+  - id: voice_interaction
+    name: Voice interaction (ElevenLabs)
+    check: http_get
+    path: /api/modules
+    expected_contains: voice
+
+  - id: multi_step_chains
+    name: Multi-step task chains
+    check: http_get
+    path: /api/modules
+    expected_contains: chain
+
+  - id: frustration_logging
+    name: Frustration logging command
+    check: http_post
+    path: /api/frustration
+    body: {"text": "test"}
+    expected_status: 200
+
+  - id: morning_briefing
+    name: Morning Briefing
+    check: http_get
+    path: /api/briefing
+    expected_status: 200
+
+  - id: mobile_access
+    name: Mobile access from anywhere (Tailscale)
+    check: manual_ui_check
+    notes: Requires Tailscale setup — currently WiFi-only
+
+  - id: gatekeeper
+    name: Gatekeeper module
+    check: http_get
+    path: /api/modules
+    expected_contains: gatekeeper
+
+  - id: gravity_engine
+    name: Gravity priority engine
+    check: http_get
+    path: /api/modules
+    expected_contains: gravity
+
+  - id: constellation
+    name: Constellation people intelligence
+    check: http_get
+    path: /api/modules
+    expected_contains: constellation

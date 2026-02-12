@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Foreperson — Almost Magic Tech Lab</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a1a2e'/><text x='16' y='22' font-family='serif' font-size='16' fill='%23c9a84c' text-anchor='middle'>FP</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a0e1a;
+            --navy-mid: #111827;
+            --navy-light: #1a2035;
+            --navy-surface: #1e2642;
+            --gold: #c9a84c;
+            --gold-dim: #a08839;
+            --gold-glow: rgba(201, 168, 76, 0.15);
+            --gold-glow-strong: rgba(201, 168, 76, 0.25);
+            --text-primary: #e8e2d6;
+            --text-secondary: #9ca3af;
+            --text-dim: #6b7280;
+            --green: #34d399;
+            --green-dim: rgba(52, 211, 153, 0.15);
+            --red: #f87171;
+            --red-dim: rgba(248, 113, 113, 0.15);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, 0.15);
+            --blue: #60a5fa;
+            --blue-dim: rgba(96, 165, 250, 0.15);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167, 139, 250, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--navy);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(96, 165, 250, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(167, 139, 250, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fp-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+        }
+
+        .header-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header-text span {
+            font-size: 0.8rem;
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            background: transparent;
+            color: var(--gold);
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+
+        .btn:hover {
+            background: var(--gold-glow);
+            border-color: var(--gold);
+            box-shadow: 0 0 16px rgba(201, 168, 76, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: var(--navy);
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Overall Score */
+        .score-banner {
+            background: var(--navy-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .score-ring {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .score-ring svg {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+
+        .score-ring .bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 8;
+        }
+
+        .score-ring .progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease, stroke 0.5s;
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-value .number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-value .label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .score-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+
+        .stat-box .count {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .stat-box .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .score-meta {
+            text-align: right;
+        }
+
+        .score-meta .timestamp {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .score-meta .apps-count {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.72rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+
+        .filter-chip:hover {
+            border-color: rgba(201, 168, 76, 0.3);
+            color: var(--text-primary);
+        }
+
+        .filter-chip.active {
+            background: var(--gold-glow);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Section Headers */
+        .section { margin-bottom: 2rem; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(201, 168, 76, 0.3), transparent);
+        }
+
+        .section-count {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* App audit cards */
+        .app-audit-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .app-audit-card:hover {
+            border-color: rgba(201, 168, 76, 0.15);
+        }
+
+        .app-audit-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-audit-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .app-audit-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-score-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .badge-green { background: var(--green-dim); color: var(--green); }
+        .badge-amber { background: var(--amber-dim); color: var(--amber); }
+        .badge-red { background: var(--red-dim); color: var(--red); }
+        .badge-grey { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+
+        .app-audit-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .app-audit-info .app-meta {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.15rem;
+        }
+
+        .app-meta .port-tag {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        .app-audit-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .mini-bar {
+            display: flex;
+            gap: 2px;
+            height: 24px;
+            align-items: flex-end;
+        }
+
+        .mini-bar-segment {
+            width: 4px;
+            border-radius: 2px;
+            transition: height 0.5s ease;
+        }
+
+        .expand-icon {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+
+        .app-audit-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Feature list */
+        .feature-list {
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .app-audit-card.expanded .feature-list {
+            display: block;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem 1.5rem 0.75rem 5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            gap: 0.75rem;
+        }
+
+        .feature-item:last-child { border-bottom: none; }
+
+        .feature-status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .fi-working { background: var(--green-dim); color: var(--green); }
+        .fi-partial { background: var(--amber-dim); color: var(--amber); }
+        .fi-missing { background: var(--red-dim); color: var(--red); }
+        .fi-not-tested { background: rgba(255,255,255,0.04); color: var(--text-dim); }
+        .fi-not-implemented { background: var(--purple-dim); color: var(--purple); }
+
+        .feature-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .feature-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .feature-detail {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-top: 0.15rem;
+        }
+
+        .feature-notes {
+            font-size: 0.68rem;
+            color: var(--amber);
+            font-style: italic;
+            margin-top: 0.15rem;
+        }
+
+        .feature-status-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        /* Trend chart area */
+        .trend-section {
+            background: var(--navy-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .trend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .trend-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .trend-chart {
+            width: 100%;
+            height: 200px;
+            position: relative;
+        }
+
+        .trend-chart canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .trend-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .trend-item .trend-app {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .trend-item .trend-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .trend-item .trend-direction {
+            font-size: 0.65rem;
+            margin-top: 0.15rem;
+        }
+
+        .trend-up { color: var(--green); }
+        .trend-down { color: var(--red); }
+        .trend-flat { color: var(--text-dim); }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .footer-left .quote {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-link {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover { color: var(--gold); }
+
+        /* Loading state */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 14, 26, 0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loading-overlay.visible { display: flex; }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(201, 168, 76, 0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.5;
+        }
+
+        .empty-state code {
+            background: var(--navy-surface);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--gold);
+        }
+
+        /* Toast */
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container { padding: 1rem; }
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .score-banner { grid-template-columns: 1fr; text-align: center; }
+            .score-stats { grid-template-columns: repeat(3, 1fr); }
+            .score-meta { text-align: center; }
+            .feature-item { padding-left: 1.5rem; }
+            .app-audit-right .mini-bar { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .score-stats { grid-template-columns: repeat(2, 1fr); }
+            .trend-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="fp-logo">FP</div>
+                <div class="header-text">
+                    <h1>The Foreperson</h1>
+                    <span>Almost Magic Tech Lab</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn" onclick="loadReport()" id="btnRefresh">Refresh</button>
+                <button class="btn btn-primary" onclick="runAudit()" id="btnAudit">Run Audit Now</button>
+            </div>
+        </header>
+
+        <!-- Overall Score -->
+        <div class="score-banner" id="scoreBanner">
+            <div class="score-ring">
+                <svg viewBox="0 0 120 120">
+                    <circle class="bg" cx="60" cy="60" r="52"/>
+                    <circle class="progress" id="scoreCircle" cx="60" cy="60" r="52"
+                        stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+                </svg>
+                <div class="score-value">
+                    <div class="number" id="scoreNumber">—</div>
+                    <div class="label">Score</div>
+                </div>
+            </div>
+            <div class="score-stats" id="scoreStats">
+                <div class="stat-box">
+                    <div class="count" style="color:var(--green)" id="statWorking">—</div>
+                    <div class="stat-label">Working</div>
+                </div>
+                <div class="stat-box">
+                    <div class="count" style="color:var(--amber)" id="statPartial">—</div>
+                    <div class="stat-label">Partial</div>
+                </div>
+                <div class="stat-box">
+                    <div class="count" style="color:var(--red)" id="statMissing">—</div>
+                    <div class="stat-label">Missing</div>
+                </div>
+                <div class="stat-box">
+                    <div class="count" style="color:var(--text-dim)" id="statNotTested">—</div>
+                    <div class="stat-label">Not Tested</div>
+                </div>
+                <div class="stat-box">
+                    <div class="count" style="color:var(--purple)" id="statNotImpl">—</div>
+                    <div class="stat-label">Not Built</div>
+                </div>
+            </div>
+            <div class="score-meta">
+                <div class="timestamp" id="reportTimestamp">No report loaded</div>
+                <div class="apps-count" id="appsCount"></div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-chip active" data-filter="all">All Apps</button>
+            <button class="filter-chip" data-filter="critical">Critical</button>
+            <button class="filter-chip" data-filter="high">High Priority</button>
+            <button class="filter-chip" data-filter="ck">CK Apps</button>
+            <button class="filter-chip" data-filter="infra">Infrastructure</button>
+            <button class="filter-chip" data-filter="failing">Failing</button>
+        </div>
+
+        <!-- Trend -->
+        <div class="trend-section" id="trendSection" style="display:none">
+            <div class="trend-header">
+                <h3>Score Trends</h3>
+                <span class="section-count" id="trendCount"></span>
+            </div>
+            <div class="trend-grid" id="trendGrid"></div>
+        </div>
+
+        <!-- App cards -->
+        <div id="appCards"></div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display:none">
+            <div class="empty-icon">&#x2692;&#xFE0F;</div>
+            <h3>No Audit Report Yet</h3>
+            <p>Run your first audit to see how your apps measure up against their promised features.</p>
+            <code>python foreperson.py --all</code>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                The Foreperson v2.0 &middot; &copy; 2026 Almost Magic Tech Lab
+                <div class="quote">"Promised &rarr; spec &rarr; checked &rarr; reported."</div>
+            </div>
+            <div class="footer-right">
+                <a href="/api/report" class="footer-link" target="_blank">Raw JSON</a>
+                <a href="/api/health" class="footer-link" target="_blank">Health</a>
+                <a href="/api/specs" class="footer-link" target="_blank">Specs</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Running audit...</div>
+    </div>
+
+    <script>
+    // ================================================================
+    // STATE
+    // ================================================================
+    let currentReport = null;
+    let currentFilter = 'all';
+
+    // ================================================================
+    // STATUS HELPERS
+    // ================================================================
+    const STATUS = {
+        working:         { icon: '&#x2713;', cls: 'fi-working',         label: 'Working',         color: 'var(--green)'  },
+        partial:         { icon: '!',         cls: 'fi-partial',         label: 'Partial',         color: 'var(--amber)'  },
+        missing:         { icon: '&#x2717;',  cls: 'fi-missing',         label: 'Missing',         color: 'var(--red)'    },
+        not_tested:      { icon: '?',         cls: 'fi-not-tested',      label: 'Not Tested',      color: 'var(--text-dim)'},
+        not_implemented: { icon: '&#x25CB;',  cls: 'fi-not-implemented', label: 'Not Built',       color: 'var(--purple)' },
+    };
+
+    function getScoreColor(score) {
+        if (score >= 80) return 'var(--green)';
+        if (score >= 50) return 'var(--amber)';
+        return 'var(--red)';
+    }
+
+    function getBadgeClass(score) {
+        if (score >= 80) return 'badge-green';
+        if (score >= 50) return 'badge-amber';
+        if (score > 0)   return 'badge-red';
+        return 'badge-grey';
+    }
+
+    // ================================================================
+    // API
+    // ================================================================
+    async function loadReport() {
+        try {
+            const resp = await fetch('/api/report');
+            const data = await resp.json();
+            if (data.error) {
+                showEmpty();
+                return;
+            }
+            currentReport = data;
+            renderReport(data);
+            loadHistory();
+        } catch (e) {
+            showEmpty();
+        }
+    }
+
+    async function runAudit() {
+        const btn = document.getElementById('btnAudit');
+        const overlay = document.getElementById('loadingOverlay');
+        btn.disabled = true;
+        overlay.classList.add('visible');
+
+        try {
+            const resp = await fetch('/api/audit');
+            const data = await resp.json();
+            if (!data.error) {
+                currentReport = data;
+                renderReport(data);
+                loadHistory();
+            }
+        } catch (e) {
+            showToast('Audit failed — check if Foreperson server is running');
+        } finally {
+            btn.disabled = false;
+            overlay.classList.remove('visible');
+        }
+    }
+
+    async function loadHistory() {
+        try {
+            const resp = await fetch('/api/history');
+            const data = await resp.json();
+            if (data.length > 1) {
+                renderTrend(data);
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    // ================================================================
+    // RENDER: Score banner
+    // ================================================================
+    function renderScoreBanner(report) {
+        const o = report.overall || {};
+        const score = o.overall_score || 0;
+        const color = getScoreColor(score);
+
+        // Ring animation
+        const circle = document.getElementById('scoreCircle');
+        const circumference = 2 * Math.PI * 52; // ~326.7
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.stroke = color;
+        circle.style.strokeDashoffset = offset;
+
+        document.getElementById('scoreNumber').textContent = score + '%';
+        document.getElementById('scoreNumber').style.color = color;
+
+        // Stats
+        let totalWorking = 0, totalPartial = 0, totalMissing = 0, totalNT = 0, totalNI = 0;
+        for (const app of (report.apps || [])) {
+            const s = app.summary;
+            totalWorking += s.working || 0;
+            totalPartial += s.partial || 0;
+            totalMissing += s.missing || 0;
+            totalNT += s.not_tested || 0;
+            totalNI += s.not_implemented || 0;
+        }
+
+        document.getElementById('statWorking').textContent = totalWorking;
+        document.getElementById('statPartial').textContent = totalPartial;
+        document.getElementById('statMissing').textContent = totalMissing;
+        document.getElementById('statNotTested').textContent = totalNT;
+        document.getElementById('statNotImpl').textContent = totalNI;
+
+        // Meta
+        const ts = report.timestamp ? new Date(report.timestamp).toLocaleString() : '';
+        document.getElementById('reportTimestamp').textContent = ts ? `Report: ${ts}` : 'No report';
+        document.getElementById('appsCount').textContent = `${o.total_apps || 0} apps, ${o.total_features || 0} features`;
+    }
+
+    // ================================================================
+    // RENDER: App cards
+    // ================================================================
+    function renderAppCards(report) {
+        const container = document.getElementById('appCards');
+        container.innerHTML = '';
+
+        const apps = filterApps(report.apps || []);
+        if (apps.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-dim);">No apps match this filter.</div>';
+            return;
+        }
+
+        // Sort: critical first, then by score ascending (worst first)
+        const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+        apps.sort((a, b) => {
+            const pa = priorityOrder[a.priority] ?? 99;
+            const pb = priorityOrder[b.priority] ?? 99;
+            if (pa !== pb) return pa - pb;
+            return a.summary.score - b.summary.score;
+        });
+
+        for (const app of apps) {
+            container.appendChild(createAppCard(app));
+        }
+    }
+
+    function filterApps(apps) {
+        if (currentFilter === 'all') return apps;
+        if (currentFilter === 'critical') return apps.filter(a => a.priority === 'critical');
+        if (currentFilter === 'high') return apps.filter(a => a.priority === 'high' || a.priority === 'critical');
+        if (currentFilter === 'ck') return apps.filter(a => a.category === 'ck');
+        if (currentFilter === 'infra') return apps.filter(a => a.category === 'infra');
+        if (currentFilter === 'failing') return apps.filter(a => a.summary.score < 50);
+        return apps;
+    }
+
+    function createAppCard(app) {
+        const card = document.createElement('div');
+        card.className = 'app-audit-card';
+        card.dataset.priority = app.priority || '';
+        card.dataset.category = app.category || '';
+
+        const s = app.summary;
+        const score = s.score;
+        const badgeCls = getBadgeClass(score);
+        const alive = app.port_alive ? '<span style="color:var(--green)">&#x25CF;</span>' : '<span style="color:var(--red)">&#x25CF;</span>';
+
+        // Mini bar segments
+        const miniSegments = (app.features || []).map(f => {
+            const st = STATUS[f.status] || STATUS.not_tested;
+            const h = f.status === 'working' ? 20 : (f.status === 'partial' ? 14 : (f.status === 'missing' ? 8 : 4));
+            return `<div class="mini-bar-segment" style="background:${st.color};height:${h}px"></div>`;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="app-audit-header" onclick="this.parentElement.classList.toggle('expanded')">
+                <div class="app-audit-left">
+                    <div class="app-score-badge ${badgeCls}">${score}%</div>
+                    <div class="app-audit-info">
+                        <h3>${app.app}</h3>
+                        <div class="app-meta">
+                            <span>${alive} <span class="port-tag">:${app.port}</span></span>
+                            <span>${app.description || ''}</span>
+                            <span>${s.working}/${s.total} features</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-audit-right">
+                    <div class="mini-bar">${miniSegments}</div>
+                    <div class="expand-icon">&#x25BC;</div>
+                </div>
+            </div>
+            <div class="feature-list">
+                ${(app.features || []).map(f => createFeatureRow(f)).join('')}
+            </div>
+        `;
+
+        return card;
+    }
+
+    function createFeatureRow(f) {
+        const st = STATUS[f.status] || STATUS.not_tested;
+        return `
+            <div class="feature-item">
+                <div class="feature-status-icon ${st.cls}">${st.icon}</div>
+                <div class="feature-info">
+                    <div class="feature-name">${f.name}</div>
+                    ${f.detail ? `<div class="feature-detail">${f.detail}</div>` : ''}
+                    ${f.notes ? `<div class="feature-notes">${f.notes}</div>` : ''}
+                </div>
+                <div class="feature-status-label" style="color:${st.color}">${st.label}</div>
+            </div>
+        `;
+    }
+
+    // ================================================================
+    // RENDER: Trend
+    // ================================================================
+    function renderTrend(history) {
+        const section = document.getElementById('trendSection');
+        const grid = document.getElementById('trendGrid');
+
+        if (history.length < 2) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+        document.getElementById('trendCount').textContent = `${history.length} audits`;
+        grid.innerHTML = '';
+
+        // Get latest and previous
+        const latest = history[history.length - 1];
+        const prev = history[history.length - 2];
+
+        // Create app-level trend items
+        for (const app of latest.apps) {
+            const prevApp = prev.apps.find(a => a.app === app.app);
+            const prevScore = prevApp ? prevApp.score : null;
+            const delta = prevScore !== null ? app.score - prevScore : 0;
+
+            let dirCls = 'trend-flat';
+            let dirText = '&#x2014;';
+            if (delta > 0) { dirCls = 'trend-up'; dirText = `&#x25B2; +${delta.toFixed(1)}%`; }
+            else if (delta < 0) { dirCls = 'trend-down'; dirText = `&#x25BC; ${delta.toFixed(1)}%`; }
+            else { dirText = '&#x2014; No change'; }
+
+            const item = document.createElement('div');
+            item.className = 'trend-item';
+            item.innerHTML = `
+                <div class="trend-app">${app.app}</div>
+                <div class="trend-score" style="color:${getScoreColor(app.score)}">${app.score}%</div>
+                <div class="trend-direction ${dirCls}">${dirText}</div>
+            `;
+            grid.appendChild(item);
+        }
+    }
+
+    // ================================================================
+    // FILTERS
+    // ================================================================
+    document.getElementById('filterBar').addEventListener('click', (e) => {
+        if (!e.target.classList.contains('filter-chip')) return;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.filter;
+        if (currentReport) renderAppCards(currentReport);
+    });
+
+    // ================================================================
+    // RENDER ORCHESTRATOR
+    // ================================================================
+    function renderReport(report) {
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('scoreBanner').style.display = '';
+        document.getElementById('filterBar').style.display = '';
+        renderScoreBanner(report);
+        renderAppCards(report);
+    }
+
+    function showEmpty() {
+        document.getElementById('emptyState').style.display = '';
+        document.getElementById('appCards').innerHTML = '';
+    }
+
+    // ================================================================
+    // TOAST
+    // ================================================================
+    function showToast(message) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: var(--navy-surface); border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 10px; padding: 0.75rem 1.5rem; font-size: 0.82rem;
+            color: var(--text-secondary); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: toastIn 0.3s ease;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 3000);
+        setTimeout(() => toast.remove(), 3300);
+    }
+
+    // ================================================================
+    // INIT
+    // ================================================================
+    loadReport();
+    </script>
+</body>
+</html>

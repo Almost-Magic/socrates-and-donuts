@@ -1,0 +1,39 @@
+app: The Workshop
+description: Central app launcher and status dashboard
+port: 5003
+url: http://localhost:5003
+category: infra
+priority: critical
+
+features:
+  - id: web_ui
+    name: Workshop UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: app_registry
+    name: App registry renders all apps
+    check: manual_ui_check
+    notes: Check that all CK Apps, Infrastructure, External sections render
+
+  - id: health_check
+    name: Health check function works
+    check: manual_ui_check
+    notes: Click Health Check in footer — services should be pinged
+
+  - id: search
+    name: Search/filter works (Ctrl+K)
+    check: manual_ui_check
+    notes: Ctrl+K focuses search, typing filters cards
+
+  - id: auto_start_boot
+    name: Auto-start on machine boot
+    check: process_check
+    process_name: workshop
+    notes: Should start via Task Scheduler or nssm — not manual
+
+  - id: status_indicators
+    name: Live status indicators (green/amber/grey dots)
+    check: manual_ui_check
+    notes: Status dots should reflect actual service state

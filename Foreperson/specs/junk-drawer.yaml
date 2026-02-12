@@ -1,0 +1,44 @@
+app: Junk Drawer
+description: Quick capture, notes, and file management
+port: 5005
+url: http://localhost:5005
+frontend_port: 3005
+frontend_url: http://localhost:3005
+category: ck
+priority: medium
+
+features:
+  - id: health_endpoint
+    name: Backend health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: frontend_ui
+    name: Frontend UI responds (port 3005)
+    check: port_open
+    port: 3005
+
+  - id: quick_capture
+    name: Quick capture notes
+    check: http_post
+    path: /api/notes
+    body: {"content": "test note"}
+    expected_status: 200
+
+  - id: file_management
+    name: File management (sort, organise)
+    check: http_get
+    path: /api/files
+    expected_status: 200
+
+  - id: chat_with_files
+    name: Chat with files (AI-powered)
+    check: manual_ui_check
+    notes: Needs full audit — status unknown
+
+  - id: search
+    name: Search across captures
+    check: http_get
+    path: /api/search?q=test
+    expected_status: 200

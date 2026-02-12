@@ -1,0 +1,60 @@
+app: CK Writer
+description: 8-Mode Writing Studio — Multi-LLM comparison
+port: 5004
+url: http://localhost:5004
+category: ck
+priority: high
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: multi_llm_comparison
+    name: Multi-LLM comparison (side-by-side)
+    check: http_get
+    path: /api/modes
+    expected_contains: compar
+
+  - id: plagiarism_check
+    name: Plagiarism check
+    check: http_get
+    path: /api/modes
+    expected_contains: plagiar
+
+  - id: ai_detection
+    name: AI detection analysis
+    check: http_get
+    path: /api/modes
+    expected_contains: detect
+
+  - id: style_refinement
+    name: Style refinement mode
+    check: http_get
+    path: /api/modes
+    expected_contains: style
+
+  - id: ollama_connection
+    name: Connects to Ollama (via Supervisor)
+    check: http_get
+    path: /api/health
+    expected_contains: ollama
+
+  - id: cloud_fallback
+    name: Cloud API fallback when Ollama fails
+    check: manual_ui_check
+    notes: When Ollama is down, should transparently route to cloud API
+
+  - id: draft_saving
+    name: Draft saving and retrieval
+    check: http_get
+    path: /api/drafts
+    expected_status: 200

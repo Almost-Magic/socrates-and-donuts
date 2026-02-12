@@ -1,0 +1,40 @@
+app: Peterman
+description: Brand Intelligence Engine — Authority & Presence
+port: 5008
+url: http://localhost:5008
+category: ck
+priority: medium
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: brand_analysis
+    name: Brand analysis chambers
+    check: http_get
+    path: /api/chambers
+    expected_status: 200
+
+  - id: authority_engine
+    name: Authority engine
+    check: manual_ui_check
+    notes: All 10 chambers should be functional
+
+  - id: presence_engine
+    name: Presence engine
+    check: manual_ui_check
+    notes: Echo-Authority-Presence pipeline
+
+  - id: linkedin_integration
+    name: LinkedIn content generation
+    check: manual_ui_check
+    notes: Content templates and scheduling

@@ -1,0 +1,48 @@
+app: n8n
+description: Workflow automation backbone
+port: 5678
+url: http://localhost:5678
+category: infra
+priority: high
+
+features:
+  - id: web_ui
+    name: n8n UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: health_monitoring
+    name: Health monitoring workflow (every 5 min)
+    check: manual_ui_check
+    notes: Workflow should ping all services and log results
+
+  - id: foreperson_schedule
+    name: Foreperson weekly schedule (Sun 6 AM)
+    check: manual_ui_check
+    notes: Run audit and report to Dropbox
+
+  - id: backup_workflow
+    name: Backup workflow (Sat 2 AM)
+    check: manual_ui_check
+    notes: pg_dump, sqlite3, n8n export to Dropbox
+
+  - id: vram_monitor
+    name: VRAM monitor (every 15 min)
+    check: manual_ui_check
+    notes: nvidia-smi logging
+
+  - id: disk_space_alert
+    name: Disk space alert (daily)
+    check: manual_ui_check
+    notes: Alert if <10% free
+
+  - id: friction_digest
+    name: Friction digest (Fri 5 PM)
+    check: manual_ui_check
+    notes: Summarise frustration logs weekly
+
+  - id: synthetic_test
+    name: Synthetic end-to-end test (daily 6 AM)
+    check: manual_ui_check
+    notes: ELAINE -> CK Writer -> Ollama chain test

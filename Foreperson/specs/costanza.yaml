@@ -1,0 +1,43 @@
+app: Costanza
+description: Mental Models Engine — 166 models
+port: 5001
+url: http://localhost:5001
+category: ck
+priority: medium
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: model_library
+    name: Mental model library (166 models)
+    check: http_get
+    path: /api/models
+    expected_status: 200
+
+  - id: model_search
+    name: Model search and filter
+    check: http_get
+    path: /api/models?search=test
+    expected_status: 200
+
+  - id: situation_analysis
+    name: Situation analysis (apply models)
+    check: http_post
+    path: /api/analyze
+    body: {"situation": "test scenario"}
+    expected_status: 200
+
+  - id: model_combinations
+    name: Multi-model combinations
+    check: manual_ui_check
+    notes: Combine multiple models for deeper analysis

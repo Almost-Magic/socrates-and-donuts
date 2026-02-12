@@ -1,0 +1,27 @@
+﻿# Credentials - NEVER COMMIT
+*credentials*.txt
+*secrets*.txt
+*.env
+.env*
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build
+dist/
+build/

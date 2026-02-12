@@ -1,0 +1,37 @@
+app: Ollama
+description: Local LLM inference server (15 models)
+port: 11434
+url: http://localhost:11434
+category: infra
+priority: critical
+
+features:
+  - id: api_running
+    name: Ollama API responding
+    check: http_get
+    path: /api/tags
+    expected_status: 200
+
+  - id: default_model_loaded
+    name: Default model loaded (gemma2:27b)
+    check: http_get
+    path: /api/tags
+    expected_contains: gemma
+
+  - id: embeddings_model
+    name: Embeddings model available (nomic-embed-text)
+    check: http_get
+    path: /api/tags
+    expected_contains: nomic
+
+  - id: generate_endpoint
+    name: Generate endpoint works
+    check: http_post
+    path: /api/generate
+    body: {"model": "gemma2:27b", "prompt": "hello", "stream": false}
+    expected_status: 200
+
+  - id: auto_restart
+    name: Auto-restart on crash (Supervisor)
+    check: manual_ui_check
+    notes: Supervisor should detect and restart within 30 seconds

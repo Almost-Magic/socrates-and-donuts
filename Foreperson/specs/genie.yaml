@@ -1,0 +1,60 @@
+app: Genie
+description: AI bookkeeper — categorisation, fraud guard, zombie hunter
+port: 8000
+url: http://localhost:8000
+category: ck
+priority: high
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: module_launcher
+    name: Module launcher (user toggles modules)
+    check: http_get
+    path: /api/settings/modules
+    expected_status: 200
+
+  - id: nav_grouping
+    name: Navigation grouped (Daily/Manage/Intelligence/Tools)
+    check: manual_ui_check
+    notes: Currently flat list of 15+ items — needs grouping
+
+  - id: mobile_receipt_scanner
+    name: Mobile receipt scanner
+    check: not_implemented
+    notes: Not yet built
+
+  - id: ask_genie_ai
+    name: Ask Genie AI chat
+    check: http_post
+    path: /api/ollama/chat
+    body: {"message": "test"}
+    expected_status: 200
+
+  - id: transaction_categorisation
+    name: Transaction categorisation
+    check: http_get
+    path: /api/transactions
+    expected_status: 200
+
+  - id: fraud_guard
+    name: Fraud guard alerts
+    check: http_get
+    path: /api/fraud/alerts
+    expected_status: 200
+
+  - id: zombie_hunter
+    name: Zombie subscription hunter
+    check: http_get
+    path: /api/subscriptions/zombies
+    expected_status: 200

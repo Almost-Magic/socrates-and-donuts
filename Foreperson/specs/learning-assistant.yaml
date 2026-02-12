@@ -1,0 +1,42 @@
+app: Learning Assistant
+description: Skill Augmentation — micro-skill training with local AI
+port: 5002
+url: http://localhost:5002
+category: ck
+priority: medium
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+
+  - id: skill_training
+    name: Micro-skill training sessions
+    check: http_get
+    path: /api/skills
+    expected_status: 200
+
+  - id: local_ai
+    name: Local AI integration (Ollama)
+    check: http_get
+    path: /api/health
+    expected_contains: ollama
+
+  - id: mobile_access
+    name: Mobile app access (Tailscale)
+    check: manual_ui_check
+    notes: Needs Tailscale — currently no mobile outside WiFi
+
+  - id: progress_tracking
+    name: Learning progress tracking
+    check: http_get
+    path: /api/progress
+    expected_status: 200
