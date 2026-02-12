@@ -13,6 +13,7 @@ from app.middleware.rate_limit import RateLimitMiddleware
 from app.routers import (
     audit,
     channel_dna,
+    channel_interactions,
     companies,
     commitments,
     contacts,
@@ -27,6 +28,7 @@ from app.routers import (
     meetings,
     notes,
     privacy,
+    pulse,
     relationships,
     scoring_rules,
     settings as settings_router,
@@ -84,6 +86,9 @@ app.include_router(channel_dna.contact_router, prefix="/api")
 app.include_router(trust_decay.router, prefix="/api")
 app.include_router(trust_decay.contact_router, prefix="/api")
 app.include_router(deal_analytics.router, prefix="/api")
+# Phase 2.2: Channel DNA v1 Enhancement
+app.include_router(channel_interactions.router, prefix="/api")
+app.include_router(channel_interactions.contact_router, prefix="/api")
 # Phase 2b: Email Integration + Scoring Rules
 app.include_router(emails.router, prefix="/api")
 app.include_router(emails.contact_router, prefix="/api")
@@ -93,6 +98,8 @@ app.include_router(scoring_rules.router, prefix="/api")
 app.include_router(meetings.router, prefix="/api")
 app.include_router(meetings.contact_router, prefix="/api")
 app.include_router(meetings.deal_router, prefix="/api")
+# Phase 3: Pulse — Sales Intelligence
+app.include_router(pulse.router, prefix="/api")
 
 
 @app.get("/")

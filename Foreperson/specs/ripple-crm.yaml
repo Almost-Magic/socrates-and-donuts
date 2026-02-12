@@ -199,3 +199,63 @@ features:
     path: /api/meetings/analytics
     expected_status: 200
     expected_contains: total_meetings
+
+  # Phase 2.2: Channel DNA v1 Enhancement
+  - id: channel_interactions_list
+    name: Channel interactions list
+    check: http_get
+    path: /api/channel-interactions
+    expected_status: 200
+    expected_contains: items
+
+  - id: channel_dna_enhanced
+    name: Channel DNA summary (enhanced)
+    check: http_get
+    path: /api/channel-dna/summary
+    expected_status: 200
+    expected_contains: items
+
+  # Phase 3: Pulse — Sales Intelligence
+  - id: pulse_page
+    name: Pulse daily briefing
+    check: http_get
+    path: /api/pulse
+    expected_status: 200
+    expected_contains: snapshot_date
+    timeout: 60
+
+  - id: pulse_targets
+    name: Pulse sales targets
+    check: http_get
+    path: /api/pulse/targets
+    expected_status: 200
+    expected_contains: items
+
+  - id: pulse_actions
+    name: Pulse action items
+    check: http_get
+    path: /api/pulse/actions
+    expected_status: 200
+    expected_contains: items
+
+  - id: pulse_easy_wins
+    name: Pulse easy wins
+    check: http_get
+    path: /api/pulse/easy-wins
+    expected_status: 200
+    expected_contains: items
+
+  - id: pulse_wisdom
+    name: Pulse wisdom quotes
+    check: http_get
+    path: /api/pulse/wisdom
+    expected_status: 200
+    expected_contains: quote
+
+  - id: pulse_elaine
+    name: Pulse ELAINE briefing
+    check: http_get
+    path: /api/pulse/elaine-briefing
+    expected_status: 200
+    expected_contains: snapshot_date
+    timeout: 60

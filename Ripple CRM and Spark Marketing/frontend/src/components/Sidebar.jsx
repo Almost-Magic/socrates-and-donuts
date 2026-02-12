@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import {
+  BoltIcon,
   HomeIcon,
   UserGroupIcon,
   BuildingOfficeIcon,
@@ -16,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const navItems = [
+  { to: '/pulse', label: 'Pulse', icon: BoltIcon },
   { to: '/', label: 'Dashboard', icon: HomeIcon },
   { to: '/contacts', label: 'Contacts', icon: UserGroupIcon },
   { to: '/companies', label: 'Companies', icon: BuildingOfficeIcon },

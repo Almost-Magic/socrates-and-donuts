@@ -43,6 +43,7 @@ class Contact(Base):
     relationship_health_score: Mapped[float | None] = mapped_column(Float)
     trust_decay_days: Mapped[int | None] = mapped_column(Integer)
     channel_dna_json: Mapped[str | None] = mapped_column(Text)
+    preferred_times_json: Mapped[str | None] = mapped_column(Text)
     trust_decay_status: Mapped[str | None] = mapped_column(String(20))
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

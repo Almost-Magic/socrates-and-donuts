@@ -16,6 +16,8 @@ import Intelligence from './pages/Intelligence';
 import DealAnalytics from './pages/DealAnalytics';
 import Settings from './pages/Settings';
 import ScoringRules from './pages/ScoringRules';
+import Pulse from './pages/Pulse';
+import PulseSettings from './pages/PulseSettings';
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
+            <Route path="/pulse" element={<Pulse />} />
+            <Route path="/pulse/settings" element={<PulseSettings />} />
             <Route path="/" element={<Dashboard />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/contacts/:id" element={<ContactDetail />} />
