@@ -75,7 +75,7 @@ BACKEND_SERVICES = [
 SERVICES = {
     # CK Apps â€” launchable
     'Elaine':             {'name': 'Elaine',              'port': 5000,  'url': 'http://192.168.4.55:5000',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Elaine'),           'cmd': 'launch-elaine.bat', 'health': '/api/health'},
-    'costanza':           {'name': 'Costanza',            'port': 5001,  'url': 'http://localhost:5001',  'type': 'ck',    'path': os.path.join(CK_BASE, 'costanza'),          'cmd': 'launch-elaine.bat'},
+    'costanza':           {'name': 'Costanza',            'port': 5001,  'url': 'http://localhost:5001',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Costanza'),      'cmd': 'python app.py', 'health': '/api/health'},
     'learning-assistant': {'name': 'Learning Assistant',  'port': 5002,  'url': 'http://localhost:5002',  'type': 'ck',    'path': os.path.join(CK_BASE, 'learning-assistant'),'cmd': 'launch-elaine.bat'},
     'writer':             {'name': 'CK Writer',           'port': 5004,  'url': 'http://localhost:5004',  'type': 'ck',    'path': os.path.join(CK_BASE, 'ck-writer'),         'cmd': 'launch-elaine.bat'},
     'author-studio':      {'name': 'Author Studio',       'port': 5006,  'url': 'http://localhost:5006',  'type': 'ck',    'path': os.path.join(CK_BASE, 'author-studio'),     'cmd': 'launch-elaine.bat'},

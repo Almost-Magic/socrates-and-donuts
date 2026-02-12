@@ -1,5 +1,5 @@
 app: Costanza
-description: Mental Models Engine — 166 models
+description: Mental Models Engine — 22 frameworks across 3 engines, AI-enhanced via Ollama
 port: 5001
 url: http://localhost:5001
 category: ck
@@ -19,7 +19,7 @@ features:
     expected_status: 200
 
   - id: model_library
-    name: Mental model library (166 models)
+    name: Mental model library (22 frameworks)
     check: http_get
     path: /api/models
     expected_status: 200
@@ -27,14 +27,14 @@ features:
   - id: model_search
     name: Model search and filter
     check: http_get
-    path: /api/models?search=test
+    path: /api/models?search=swot
     expected_status: 200
 
   - id: situation_analysis
     name: Situation analysis (apply models)
     check: http_post
     path: /api/analyze
-    body: {"situation": "test scenario"}
+    body: {"situation": "Should we expand into a new market?"}
     expected_status: 200
 
   - id: model_combinations
@@ -45,3 +45,20 @@ features:
     expected_status: 200
     expected_contains: frameworks_applied
     notes: High-stakes analysis applies multiple frameworks (six_hats, second_order, pre_mortem)
+
+  - id: llm_connection
+    name: LLM connected via Supervisor
+    check: http_get
+    path: /api/health
+    expected_status: 200
+    expected_contains: llm
+    notes: Health endpoint reports LLM connectivity status (Supervisor on port 9000)
+
+  - id: ai_synthesis
+    name: AI-enhanced synthesis in analysis
+    check: http_post
+    path: /api/analyze
+    body: {"situation": "Should we hire a new team member?", "domain": "people", "stakes": "high"}
+    expected_status: 200
+    expected_contains: ai_synthesis
+    notes: Analysis includes AI synthesis from Ollama via Supervisor

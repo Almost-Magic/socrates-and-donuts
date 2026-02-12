@@ -4,12 +4,17 @@ Port: 5001
 Almost Magic Tech Lab
 
 Flask wrapper around the Costanza thinking/communication/strategic engines.
+AI synthesis via Ollama routed through The Supervisor (port 9000).
 """
 
 import sys
 import os
+import json
 import logging
+import threading
 from datetime import datetime, timezone
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 from flask import Flask, jsonify, request
 
 # Add the library to path
@@ -27,7 +32,18 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+# ---------------------------------------------------------------------------
+# LLM Configuration — route through Supervisor, fallback to direct Ollama
+# ---------------------------------------------------------------------------
+SUPERVISOR_URL = os.environ.get("SUPERVISOR_URL", "http://localhost:9000")
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+COSTANZA_MODEL = os.environ.get("COSTANZA_MODEL", "llama3.2:3b")
+LLM_TIMEOUT = 15
+LLM_MAX_TOKENS = 200
+
+# ---------------------------------------------------------------------------
 # Initialise engines
+# ---------------------------------------------------------------------------
 thinking = ThinkingFrameworksEngine()
 communication = CommunicationEngine()
 strategic = StrategicEngine()
@@ -63,18 +79,97 @@ for name in ["mece", "swot", "pestle", "three_cs", "seven_s", "bcg_matrix", "ans
     })
 
 
+# ---------------------------------------------------------------------------
+# LLM Helper — Supervisor first, Ollama fallback
+# ---------------------------------------------------------------------------
+
+def _call_llm(prompt):
+    """Call Ollama via Supervisor for AI-enhanced synthesis. Falls back to direct Ollama."""
+    payload = json.dumps({
+        "model": COSTANZA_MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "options": {"num_predict": LLM_MAX_TOKENS},
+    }).encode("utf-8")
+
+    for base_url in [SUPERVISOR_URL, OLLAMA_URL]:
+        try:
+            req = Request(
+                f"{base_url}/api/generate",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(req, timeout=LLM_TIMEOUT) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                text = data.get("response", "").strip()
+                if text:
+                    return text
+        except Exception as e:
+            logger.warning(f"LLM call to {base_url} failed: {e}")
+            continue
+
+    return ""
+
+
+def prewarm_model():
+    """Prewarm LLM model with a tiny request so first real call is fast."""
+    try:
+        payload = json.dumps({
+            "model": COSTANZA_MODEL,
+            "prompt": "hi",
+            "stream": False,
+            "options": {"num_predict": 5},
+        }).encode("utf-8")
+
+        for base_url in [SUPERVISOR_URL, OLLAMA_URL]:
+            try:
+                req = Request(
+                    f"{base_url}/api/generate",
+                    data=payload,
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urlopen(req, timeout=10) as resp:
+                    json.loads(resp.read())
+                    logger.info(f"Model {COSTANZA_MODEL} pre-warmed via {base_url}")
+                    return
+            except Exception:
+                continue
+        logger.warning("Pre-warm failed — LLM may be unavailable (framework analysis still works)")
+    except Exception as e:
+        logger.warning(f"Pre-warm error: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
+
 @app.route("/api/health", methods=["GET"])
 def health():
+    # Quick LLM connectivity check
+    llm_ok = False
+    for base_url in [SUPERVISOR_URL, OLLAMA_URL]:
+        try:
+            req = Request(f"{base_url}/api/tags", method="GET")
+            with urlopen(req, timeout=3) as resp:
+                if resp.status == 200:
+                    llm_ok = True
+                    break
+        except Exception:
+            continue
+
     return jsonify({
         "status": "healthy",
         "service": "costanza",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "engines": {
             "thinking": thinking.status(),
             "communication": communication.status(),
             "strategic": strategic.status(),
         },
-        "total_models": len(MODELS),
+        "llm": {"connected": llm_ok, "model": COSTANZA_MODEL, "supervisor": SUPERVISOR_URL},
+        "total_frameworks": len(MODELS),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
@@ -83,8 +178,8 @@ def health():
 def root():
     return jsonify({
         "app": "Costanza",
-        "tagline": "Mental Models Engine - 166 models across 3 engines",
-        "version": "2.0.0",
+        "tagline": f"Mental Models Engine — {len(MODELS)} frameworks across 3 engines, AI-enhanced via Ollama",
+        "version": "2.1.0",
         "endpoints": ["/api/health", "/api/models", "/api/analyze"],
         "engines": ["decision_intelligence", "communication", "strategic"],
     })
@@ -124,13 +219,28 @@ def analyze():
     domain = domain_map.get(domain_str, DecisionDomain.STRATEGY)
     stakes = stakes_map.get(stakes_str, StakesLevel.MEDIUM)
 
+    # Step 1: Pure Python framework analysis (always works)
     result = thinking.analyse(situation, domain=domain, stakes=stakes)
 
-    # result.results is a dict: FrameworkType → result object
-    # result.frameworks_applied is a list of FrameworkType enums
     frameworks = [ft.value for ft in getattr(result, "frameworks_applied", [])]
     synthesis = getattr(result, "synthesis", "")
     action = getattr(result, "recommended_action", "")
+    confidence = getattr(result, "confidence", 0)
+
+    # Step 2: AI-enhanced synthesis via Ollama/Supervisor
+    ai_synthesis = ""
+    if synthesis or frameworks:
+        prompt = (
+            f"You are Costanza, an AI mental models analyst. "
+            f"Situation: \"{situation}\"\n"
+            f"Domain: {domain.value}, Stakes: {stakes.value}\n"
+            f"Frameworks applied: {', '.join(frameworks) if frameworks else 'none'}\n"
+            f"Framework synthesis: {synthesis}\n"
+            f"Recommended action: {action}\n\n"
+            f"Enhance this analysis in 2-3 concise sentences. "
+            f"Add practical insight the frameworks might miss. Be direct."
+        )
+        ai_synthesis = _call_llm(prompt)
 
     return jsonify({
         "situation": situation,
@@ -138,11 +248,19 @@ def analyze():
         "stakes": stakes.value,
         "frameworks_applied": frameworks,
         "synthesis": synthesis,
+        "ai_synthesis": ai_synthesis,
         "recommended_action": action,
-        "confidence": getattr(result, "confidence", 0),
+        "confidence": confidence,
+        "ai_enhanced": bool(ai_synthesis),
     })
 
 
+# ---------------------------------------------------------------------------
+# Startup
+# ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
-    logger.info(f"Costanza v2.0 starting on port 5001 | {len(MODELS)} models")
+    logger.info(f"Costanza v2.1 starting on port 5001 | {len(MODELS)} frameworks | LLM: {COSTANZA_MODEL}")
+    # Prewarm LLM in background so it doesn't block startup
+    threading.Thread(target=prewarm_model, daemon=True).start()
     app.run(host="0.0.0.0", port=5001, debug=False)
