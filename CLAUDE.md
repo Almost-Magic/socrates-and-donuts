@@ -266,7 +266,9 @@ A PowerShell service manager script exists at `Source and Brand/services.ps1`:
 .\services.ps1 restart supervisor  # Restart Supervisor
 ```
 
-Service keys: `genie`, `genie-fe`, `supervisor`, `workshop`, `elaine`, `costanza`, `learning`, `writer`, `junk-be`, `junk-api`, `author`, `peterman`, `ripple`, `ripple-fe`
+Service keys: `supervisor`, `workshop`, `elaine`, `costanza`, `learning`, `writer`, `junkdrawer`, `authorstudio`, `peterman`, `genie`, `ripple`, `geniefe`, `ripplefe`
+
+Aliases: `ck-writer`/`ck_writer` → writer, `author-studio`/`author` → authorstudio, `junk-drawer`/`junk` → junkdrawer, `genie-fe` → geniefe, `ripple-fe`/`ripple-crm` → ripple, `suze` → elaine, `supe` → supervisor
 
 **Use this script instead of manual process killing.** It handles port detection, process cleanup, health verification, and minimised window launching.
 
