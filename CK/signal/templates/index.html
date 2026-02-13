@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Hunter - LinkedIn Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e14;--bg-card:#111820;--bg-input:#161d28;
+  --text:#e2e8f0;--text-dim:#8892a4;--text-bright:#f8fafc;
+  --accent:#5bb9a5;--accent-dim:#3d9a86;--accent-glow:rgba(91,185,165,.15);
+  --border:rgba(255,255,255,.06);--border-hover:rgba(91,185,165,.3);
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;--purple:#a78bfa;
+  --radius:12px;--font:'Sora',system-ui,sans-serif;
+}
+.light{
+  --bg:#f1f5f9;--bg-card:#ffffff;--bg-input:#e2e8f0;
+  --text:#1e293b;--text-dim:#64748b;--text-bright:#0f172a;
+  --border:rgba(0,0,0,.08);--border-hover:rgba(91,185,165,.4);
+  --accent-glow:rgba(91,185,165,.08);
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+button{font-family:var(--font);cursor:pointer;border:none;border-radius:var(--radius);font-size:.85rem;font-weight:500;padding:.5rem 1rem;transition:all .2s}
+input,textarea,select{font-family:var(--font);background:var(--bg-input);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .75rem;font-size:.85rem;width:100%;outline:none;transition:border .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:60px}
+
+/* Layout */
+.header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--bg-card)}
+.header h1{font-size:1.1rem;font-weight:600;color:var(--text-bright)}
+.header h1 span{color:var(--accent)}
+.header-right{display:flex;gap:.5rem;align-items:center}
+.pill{font-size:.7rem;padding:.2rem .6rem;border-radius:99px;background:var(--accent-glow);color:var(--accent);border:1px solid var(--border)}
+.theme-btn{background:none;color:var(--text-dim);font-size:1.1rem;padding:.3rem .5rem}
+.theme-btn:hover{color:var(--accent)}
+
+.main{display:flex;height:calc(100vh - 56px)}
+.sidebar{width:280px;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--bg-card)}
+.content{flex:1;overflow-y:auto;padding:1.5rem}
+
+/* Sidebar */
+.sb-section{padding:.75rem}
+.sb-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:.5rem;font-weight:600}
+.sb-search{margin-bottom:.5rem}
+.add-btn{width:100%;background:var(--accent);color:#fff;padding:.5rem;font-weight:600}
+.add-btn:hover{background:var(--accent-dim)}
+.profile-list{flex:1;overflow-y:auto;padding:0 .75rem}
+.profile-item{padding:.6rem .75rem;border-radius:var(--radius);cursor:pointer;border:1px solid transparent;margin-bottom:.3rem;transition:all .15s}
+.profile-item:hover{border-color:var(--border-hover);background:var(--accent-glow)}
+.profile-item.active{border-color:var(--accent);background:var(--accent-glow)}
+.profile-item .pi-name{font-weight:500;font-size:.85rem;color:var(--text-bright)}
+.profile-item .pi-sub{font-size:.72rem;color:var(--text-dim);margin-top:.15rem}
+.profile-item .pi-tags{font-size:.65rem;color:var(--accent);margin-top:.2rem}
+
+/* Cards */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.card:hover{border-color:var(--border-hover)}
+.card-title{font-size:.9rem;font-weight:600;color:var(--text-bright);margin-bottom:.75rem}
+
+/* Dashboard Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
+.stat{text-align:center;padding:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)}
+.stat-num{font-size:1.6rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;margin-top:.2rem}
+
+/* Form */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.form-group{margin-bottom:.75rem}
+.form-group label{display:block;font-size:.72rem;color:var(--text-dim);margin-bottom:.3rem;font-weight:500}
+.btn-row{display:flex;gap:.5rem;margin-top:.75rem}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dim)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Engagements */
+.eng-item{padding:.6rem;border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;font-size:.8rem}
+.eng-item .eng-type{font-weight:600;color:var(--accent);text-transform:capitalize}
+.eng-item .eng-stats{color:var(--text-dim);font-size:.72rem;margin-top:.2rem}
+.eng-item .eng-content{margin-top:.3rem;color:var(--text);font-size:.78rem}
+
+/* Analysis */
+.analysis-box{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:.75rem;font-size:.82rem;line-height:1.6;white-space:pre-wrap}
+.analysis-meta{font-size:.68rem;color:var(--text-dim);margin-top:.4rem}
+.analyze-btn{background:var(--purple);color:#fff;padding:.6rem 1.2rem;font-weight:600}
+.analyze-btn:hover{opacity:.85}
+.analyze-btn:disabled{opacity:.5;cursor:wait}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg-card);border:1px solid var(--accent);color:var(--text-bright);padding:.75rem 1.25rem;border-radius:var(--radius);font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+
+/* Views */
+.view{display:none}.view.active{display:block}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{width:100%;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}
+  .main{flex-direction:column}
+  .stats{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Signal</span> Hunter</h1>
+  <div class="header-right">
+    <span class="pill" id="statusPill">--</span>
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9681;</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">Profiles</div>
+      <input class="sb-search" id="searchInput" placeholder="Search profiles..." oninput="loadProfiles()">
+      <button class="add-btn" onclick="showAddForm()">+ Add Profile</button>
+    </div>
+    <div class="profile-list" id="profileList"></div>
+  </div>
+
+  <div class="content">
+    <!-- Dashboard View -->
+    <div class="view active" id="dashView">
+      <div class="stats" id="dashStats">
+        <div class="stat"><div class="stat-num" id="statProfiles">0</div><div class="stat-label">Profiles</div></div>
+        <div class="stat"><div class="stat-num" id="statEngagements">0</div><div class="stat-label">Engagements</div></div>
+        <div class="stat"><div class="stat-num" id="statAnalyses">0</div><div class="stat-label">Analyses</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recent Analyses</div>
+        <div id="recentAnalyses"><span style="color:var(--text-dim);font-size:.82rem">No analyses yet. Add a profile and run intelligence analysis.</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Top Engaged Profiles</div>
+        <div id="topEngaged"><span style="color:var(--text-dim);font-size:.82rem">No profiles tracked yet.</span></div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Profile -->
+    <div class="view" id="formView">
+      <div class="card">
+        <div class="card-title" id="formTitle">Add Profile</div>
+        <input type="hidden" id="formId">
+        <div class="form-row">
+          <div class="form-group"><label>Name *</label><input id="fName" placeholder="Jane Smith"></div>
+          <div class="form-group"><label>Company</label><input id="fCompany" placeholder="Acme Corp"></div>
+        </div>
+        <div class="form-group"><label>Headline</label><input id="fHeadline" placeholder="VP of Engineering at Acme"></div>
+        <div class="form-group"><label>LinkedIn URL</label><input id="fUrl" placeholder="https://linkedin.com/in/janesmith"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Tags</label><input id="fTags" placeholder="ai, enterprise, saas"></div>
+          <div class="form-group"><label>Notes</label><textarea id="fNotes" placeholder="Met at conference..."></textarea></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="saveProfile()">Save</button>
+          <button class="btn-ghost" onclick="showDashboard()">Cancel</button>
+          <button class="btn-danger" id="deleteBtn" style="display:none" onclick="deleteProfile()">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Detail -->
+    <div class="view" id="detailView">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:start">
+          <div>
+            <div class="card-title" id="detailName">--</div>
+            <div style="font-size:.78rem;color:var(--text-dim)" id="detailHeadline">--</div>
+            <div style="font-size:.78rem;color:var(--text-dim);margin-top:.2rem" id="detailCompany">--</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-ghost" onclick="editProfile()">Edit</button>
+            <a id="detailLink" href="#" target="_blank" style="font-size:.78rem">LinkedIn</a>
+          </div>
+        </div>
+        <div style="margin-top:.5rem;font-size:.72rem;color:var(--accent)" id="detailTags"></div>
+        <div style="margin-top:.5rem;font-size:.78rem;color:var(--text-dim)" id="detailNotes"></div>
+      </div>
+
+      <!-- Intelligence -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="card-title" style="margin-bottom:0">Intelligence Brief</div>
+          <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">Analyse via Ollama</button>
+        </div>
+        <div id="analysisResult"></div>
+      </div>
+
+      <!-- Engagements -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <div class="card-title" style="margin-bottom:0">Engagements</div>
+          <button class="btn-ghost" onclick="showEngForm()">+ Add</button>
+        </div>
+        <div id="engForm" style="display:none;margin-bottom:.75rem;padding:.75rem;border:1px solid var(--border);border-radius:var(--radius)">
+          <div class="form-row">
+            <div class="form-group"><label>Type</label>
+              <select id="eType"><option value="post">Post</option><option value="article">Article</option><option value="comment">Comment</option><option value="share">Share</option><option value="event">Event</option></select>
+            </div>
+            <div class="form-group"><label>Post URL</label><input id="eUrl" placeholder="https://linkedin.com/..."></div>
+          </div>
+          <div class="form-group"><label>Content</label><textarea id="eContent" placeholder="Post excerpt or summary..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Reactions</label><input id="eReactions" type="number" value="0"></div>
+            <div class="form-group"><label>Comments</label><input id="eComments" type="number" value="0"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Shares</label><input id="eShares" type="number" value="0"></div>
+            <div class="form-group"><label>Post Date</label><input id="eDate" type="date"></div>
+          </div>
+          <div class="form-group"><label>Notes</label><input id="eNotes" placeholder="Engagement notes..."></div>
+          <div class="btn-row">
+            <button class="btn-primary" onclick="saveEngagement()">Save Engagement</button>
+            <button class="btn-ghost" onclick="hideEngForm()">Cancel</button>
+          </div>
+        </div>
+        <div id="engList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var currentProfile=null;
+var profiles=[];
+
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+
+function toggleTheme(){document.body.classList.toggle('light')}
+
+function switchView(id){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});document.getElementById(id).classList.add('active')}
+
+function showDashboard(){currentProfile=null;switchView('dashView');loadDashboard();document.querySelectorAll('.profile-item').forEach(function(el){el.classList.remove('active')})}
+
+// ── API helpers ──
+async function api(path,opts){
+  var resp=await fetch(path,opts||{});
+  var data=await resp.json();
+  if(!resp.ok&&data.error)toast('Error: '+data.error);
+  return {ok:resp.ok,status:resp.status,data:data};
+}
+
+// ── Profiles ──
+async function loadProfiles(){
+  var q=document.getElementById('searchInput').value;
+  var url='/api/profiles'+(q?'?search='+encodeURIComponent(q):'');
+  var r=await api(url);
+  if(!r.ok)return;
+  profiles=r.data.profiles||[];
+  var list=document.getElementById('profileList');
+  if(!profiles.length){list.innerHTML='<div style="padding:1rem;color:var(--text-dim);font-size:.8rem;text-align:center">No profiles yet</div>';return}
+  list.innerHTML=profiles.map(function(p){
+    var active=currentProfile&&currentProfile.id===p.id?' active':'';
+    return '<div class="profile-item'+active+'" onclick="selectProfile('+p.id+')">'
+      +'<div class="pi-name">'+esc(p.name)+'</div>'
+      +'<div class="pi-sub">'+esc(p.company||p.headline||'')+'</div>'
+      +(p.tags?'<div class="pi-tags">'+esc(p.tags)+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+async function selectProfile(id){
+  var r=await api('/api/profiles/'+id);
+  if(!r.ok)return;
+  currentProfile=r.data;
+  switchView('detailView');
+  renderDetail();
+  loadEngagements();
+  loadLatestAnalysis();
+  loadProfiles();
+}
+
+function renderDetail(){
+  var p=currentProfile;
+  document.getElementById('detailName').textContent=p.name;
+  document.getElementById('detailHeadline').textContent=p.headline||'';
+  document.getElementById('detailCompany').textContent=p.company||'';
+  document.getElementById('detailTags').textContent=p.tags||'';
+  document.getElementById('detailNotes').textContent=p.notes||'';
+  var link=document.getElementById('detailLink');
+  if(p.linkedin_url){link.href=p.linkedin_url;link.style.display=''}else{link.style.display='none'}
+}
+
+function showAddForm(){
+  document.getElementById('formTitle').textContent='Add Profile';
+  document.getElementById('formId').value='';
+  document.getElementById('fName').value='';
+  document.getElementById('fCompany').value='';
+  document.getElementById('fHeadline').value='';
+  document.getElementById('fUrl').value='';
+  document.getElementById('fTags').value='';
+  document.getElementById('fNotes').value='';
+  document.getElementById('deleteBtn').style.display='none';
+  switchView('formView');
+}
+
+function editProfile(){
+  if(!currentProfile)return;
+  var p=currentProfile;
+  document.getElementById('formTitle').textContent='Edit Profile';
+  document.getElementById('formId').value=p.id;
+  document.getElementById('fName').value=p.name;
+  document.getElementById('fCompany').value=p.company||'';
+  document.getElementById('fHeadline').value=p.headline||'';
+  document.getElementById('fUrl').value=p.linkedin_url||'';
+  document.getElementById('fTags').value=p.tags||'';
+  document.getElementById('fNotes').value=p.notes||'';
+  document.getElementById('deleteBtn').style.display='';
+  switchView('formView');
+}
+
+async function saveProfile(){
+  var id=document.getElementById('formId').value;
+  var body={name:document.getElementById('fName').value,company:document.getElementById('fCompany').value,headline:document.getElementById('fHeadline').value,linkedin_url:document.getElementById('fUrl').value,tags:document.getElementById('fTags').value,notes:document.getElementById('fNotes').value};
+  if(!body.name.trim()){toast('Name is required');return}
+  var r;
+  if(id){r=await api('/api/profiles/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
+  else{r=await api('/api/profiles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
+  if(r.ok){toast(id?'Profile updated':'Profile created');selectProfile(r.data.id)}
+}
+
+async function deleteProfile(){
+  if(!currentProfile)return;
+  if(!confirm('Delete '+currentProfile.name+'?'))return;
+  var r=await api('/api/profiles/'+currentProfile.id,{method:'DELETE'});
+  if(r.ok){toast('Profile deleted');currentProfile=null;showDashboard();loadProfiles()}
+}
+
+// ── Engagements ──
+async function loadEngagements(){
+  if(!currentProfile)return;
+  var r=await api('/api/profiles/'+currentProfile.id+'/engagements');
+  if(!r.ok)return;
+  var engs=r.data.engagements||[];
+  var el=document.getElementById('engList');
+  if(!engs.length){el.innerHTML='<div style="color:var(--text-dim);font-size:.8rem">No engagements tracked yet.</div>';return}
+  el.innerHTML=engs.map(function(e){
+    return '<div class="eng-item">'
+      +'<div style="display:flex;justify-content:space-between"><span class="eng-type">'+esc(e.engagement_type)+'</span>'
+      +'<button class="btn-ghost" style="padding:.2rem .5rem;font-size:.68rem" onclick="deleteEngagement('+e.id+')">x</button></div>'
+      +(e.post_content?'<div class="eng-content">'+esc(e.post_content.substring(0,200))+'</div>':'')
+      +'<div class="eng-stats">'+e.reactions+' reactions, '+e.comments+' comments, '+e.shares+' shares'
+      +(e.post_date?' | '+e.post_date:'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function showEngForm(){document.getElementById('engForm').style.display=''}
+function hideEngForm(){document.getElementById('engForm').style.display='none'}
+
+async function saveEngagement(){
+  if(!currentProfile)return;
+  var body={
+    engagement_type:document.getElementById('eType').value,
+    post_url:document.getElementById('eUrl').value,
+    post_content:document.getElementById('eContent').value,
+    reactions:parseInt(document.getElementById('eReactions').value)||0,
+    comments:parseInt(document.getElementById('eComments').value)||0,
+    shares:parseInt(document.getElementById('eShares').value)||0,
+    post_date:document.getElementById('eDate').value,
+    notes:document.getElementById('eNotes').value
+  };
+  var r=await api('/api/profiles/'+currentProfile.id+'/engagements',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(r.ok){toast('Engagement saved');hideEngForm();loadEngagements();
+    document.getElementById('eUrl').value='';document.getElementById('eContent').value='';
+    document.getElementById('eReactions').value='0';document.getElementById('eComments').value='0';
+    document.getElementById('eShares').value='0';document.getElementById('eDate').value='';document.getElementById('eNotes').value=''}
+}
+
+async function deleteEngagement(eid){
+  if(!confirm('Delete this engagement?'))return;
+  var r=await api('/api/engagements/'+eid,{method:'DELETE'});
+  if(r.ok){toast('Engagement deleted');loadEngagements()}
+}
+
+// ── Analysis ──
+async function runAnalysis(){
+  if(!currentProfile)return;
+  var btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;btn.textContent='Analysing...';
+  var r=await api('/api/profiles/'+currentProfile.id+'/analyze',{method:'POST'});
+  btn.disabled=false;btn.textContent='Analyse via Ollama';
+  if(r.ok){
+    var d=r.data;
+    document.getElementById('analysisResult').innerHTML=
+      '<div class="analysis-box">'+esc(d.analysis)+'</div>'
+      +'<div class="analysis-meta">Model: '+esc(d.model)+' | Via: '+esc(d.via)+' | '+d.elapsed_s+'s'
+      +(d.ollama_ok?'':' | Ollama offline')+'</div>';
+    toast('Analysis complete');
+  }
+}
+
+async function loadLatestAnalysis(){
+  if(!currentProfile)return;
+  var r=await api('/api/profiles/'+currentProfile.id+'/analyses');
+  if(!r.ok)return;
+  var list=r.data.analyses||[];
+  if(!list.length){document.getElementById('analysisResult').innerHTML='<div style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">No analysis yet. Click Analyse to generate one.</div>';return}
+  var a=list[0];
+  document.getElementById('analysisResult').innerHTML=
+    '<div class="analysis-box">'+esc(a.analysis_text)+'</div>'
+    +'<div class="analysis-meta">Model: '+esc(a.model_used)+' | Via: '+esc(a.via)+' | '+a.created_at+'</div>';
+}
+
+// ── Dashboard ──
+async function loadDashboard(){
+  var r=await api('/api/dashboard');
+  if(!r.ok)return;
+  var d=r.data;
+  document.getElementById('statProfiles').textContent=d.total_profiles;
+  document.getElementById('statEngagements').textContent=d.total_engagements;
+  document.getElementById('statAnalyses').textContent=d.total_analyses;
+
+  var ra=d.recent_analyses||[];
+  if(ra.length){
+    document.getElementById('recentAnalyses').innerHTML=ra.map(function(a){
+      return '<div style="padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.8rem">'
+        +'<strong>'+esc(a.name)+'</strong> <span style="color:var(--text-dim);font-size:.7rem">via '+esc(a.via)+'</span>'
+        +'<div style="color:var(--text-dim);margin-top:.2rem">'+esc(a.text)+'</div></div>';
+    }).join('');
+  }
+
+  var te=d.top_engaged||[];
+  if(te.length){
+    document.getElementById('topEngaged').innerHTML=te.map(function(t){
+      return '<div style="padding:.4rem 0;font-size:.82rem;cursor:pointer" onclick="selectProfile('+t.id+')">'
+        +'<span style="color:var(--accent);font-weight:600">'+t.engagement_count+'</span> '
+        +esc(t.name)+(t.company?' <span style="color:var(--text-dim);font-size:.72rem">'+esc(t.company)+'</span>':'')
+        +'</div>';
+    }).join('');
+  }
+}
+
+// ── Health ──
+async function checkHealth(){
+  try{
+    var r=await api('/api/health');
+    if(r.ok){
+      var d=r.data;
+      var pill=document.getElementById('statusPill');
+      pill.textContent=d.profiles+' profiles';
+      pill.style.borderColor=d.llm.connected?'var(--green)':'var(--amber)';
+    }
+  }catch(e){}
+}
+
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+// ── Init ──
+loadProfiles();
+loadDashboard();
+checkHealth();
+setInterval(checkHealth,30000);
+</script>
+</body>
+</html>

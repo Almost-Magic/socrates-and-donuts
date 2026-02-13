@@ -72,46 +72,89 @@ BACKEND_SERVICES = [
 # Service Registry â€” Single source of truth
 # ============================================================
 
-SERVICES = {
-    # CK Apps â€” launchable
-    'Elaine':             {'name': 'Elaine',              'port': 5000,  'url': 'http://192.168.4.55:5000',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Elaine'),           'cmd': 'launch-elaine.bat', 'health': '/api/health'},
-    'costanza':           {'name': 'Costanza',            'port': 5001,  'url': 'http://localhost:5001',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Costanza'),      'cmd': 'python app.py', 'health': '/api/health'},
-    'learning-assistant': {'name': 'Learning Assistant',  'port': 5002,  'url': 'http://localhost:5002',  'type': 'ck',    'path': os.path.join(CK_BASE, 'learning-assistant'),'cmd': 'launch-elaine.bat'},
-    'writer':             {'name': 'CK Writer',           'port': 5004,  'url': 'http://localhost:5004',  'type': 'ck',    'path': os.path.join(CK_BASE, 'ck-writer'),         'cmd': 'launch-elaine.bat'},
-    'author-studio':      {'name': 'Author Studio',       'port': 5006,  'url': 'http://localhost:5006',  'type': 'ck',    'path': os.path.join(CK_BASE, 'author-studio'),     'cmd': 'launch-elaine.bat'},
-    'peterman':           {'name': 'Peterman',            'port': 5008,  'url': 'http://localhost:5008',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Peterman SEO'),  'cmd': 'launch-elaine.bat', 'env': {'FLASK_DEBUG': '0', 'OLLAMA_TIMEOUT': '600'}},
-    'dhamma':             {'name': 'Dhamma Mirror',       'port': 5020,  'url': 'http://localhost:5020',  'type': 'ck',    'path': os.path.join(CK_BASE, 'dhamma-mirror'),     'cmd': 'launch-elaine.bat'},
-    'signal':             {'name': 'Signal',              'port': 8420,  'url': 'http://localhost:8420',  'type': 'ck',    'path': os.path.join(CK_BASE, 'signal'),            'cmd': 'launch-elaine.bat'},
-    'junk-drawer':        {'name': 'The Junk Drawer',     'port': 3005,  'url': 'http://192.168.4.55:3005',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-app'), 'cmd': 'npm start'},
-    'junk-drawer-api':    {'name': 'Junk Drawer API',     'port': 5005,  'url': 'http://192.168.4.55:5005',  'type': 'infra', 'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-backend'), 'cmd': 'launch-elaine.bat', 'health': '/api/health'},
-    'comfyui':            {'name': 'ComfyUI Studio',      'port': 8188,  'url': 'http://localhost:8188',  'type': 'ck',    'path': None, 'cmd': None},
-    'genie':              {'name': 'Genie',               'port': 8000,  'url': 'http://localhost:8000',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Finance App', 'Genie', 'backend'), 'cmd': 'python -m uvicorn app:app --host 0.0.0.0 --port 8000', 'health': '/api/health'},
-    'ripple':             {'name': 'Ripple CRM',          'port': 3100,  'url': 'http://localhost:3100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3100', 'health': '/'},
-    'ripple-api':         {'name': 'Ripple CRM API',      'port': 8100,  'url': 'http://localhost:8100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8100', 'health': '/api/health'},
-    'touchstone':         {'name': 'Touchstone',          'port': 8200,  'url': 'http://localhost:8200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8200', 'health': '/api/v1/health'},
-    'touchstone-dash':    {'name': 'Touchstone Dashboard', 'port': 3200,  'url': 'http://localhost:3200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'dashboard'), 'cmd': 'npx vite --host 0.0.0.0 --port 3200', 'health': '/'},
-    'knowyourself':       {'name': 'KnowYourself',        'port': 8300,  'url': 'http://localhost:8300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8300', 'health': '/api/health'},
-    'knowyourself-dash':  {'name': 'KnowYourself UI',     'port': 3300,  'url': 'http://localhost:3300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3300', 'health': '/'},
+LAN = '192.168.4.55'
 
-    # Infrastructure â€” Docker services (start via docker start)
-    'ollama':             {'name': 'Ollama',              'port': 11434, 'url': 'http://localhost:11434', 'type': 'infra', 'health': '/api/tags', 'docker': None, 'cmd': 'ollama serve'},
-    'postgres':           {'name': 'PostgreSQL',          'port': 5433,  'url': None,                     'type': 'infra', 'docker': 'pgvector'},
-    'redis':              {'name': 'Redis',               'port': 6379,  'url': None,                     'type': 'infra', 'docker': 'redis'},
-    'searxng':            {'name': 'SearXNG',             'port': 8888,  'url': 'http://localhost:8888',  'type': 'infra', 'docker': 'searxng'},
-    'n8n':                {'name': 'n8n',                 'port': 5678,  'url': 'http://localhost:5678',  'type': 'infra', 'docker': 'n8n'},
-    'listmonk':           {'name': 'Listmonk',            'port': 9001,  'url': 'http://localhost:9001',  'type': 'infra', 'docker': 'listmonk'},
-    'proof':              {'name': 'Proof',               'port': 8000,  'url': 'http://localhost:8000',  'type': 'infra', 'path': os.path.join(CK_BASE, '..', '..', '..', '..', '..', 'projects', 'proof'), 'cmd': 'python -m uvicorn main:app --host 0.0.0.0 --port 8000'},
-    'supervisor':         {'name': 'The Supervisor',      'port': 9000,  'url': 'http://localhost:9000',  'type': 'infra', 'health': '/api/health', 'path': os.path.join(SOURCE_BASE, 'Supervisor'), 'cmd': 'python supervisor.py'},
+SERVICES = {
+    # CK Apps -- launchable
+    'elaine':             {'name': 'Elaine',              'port': 5000,  'url': f'http://{LAN}:5000',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Elaine'),           'cmd': 'launch-elaine.bat', 'health': '/api/health'},
+    'costanza':           {'name': 'Costanza',            'port': 5001,  'url': f'http://{LAN}:5001',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Costanza'),      'cmd': 'python app.py', 'health': '/api/health'},
+    'learning-assistant': {'name': 'Learning Assistant',  'port': 5002,  'url': f'http://{LAN}:5002',  'type': 'ck',    'path': os.path.join(CK_BASE, 'learning-assistant'),'cmd': 'launch-elaine.bat'},
+    'writer':             {'name': 'CK Writer',           'port': 5004,  'url': f'http://{LAN}:5004',  'type': 'ck',    'path': os.path.join(CK_BASE, 'ck-writer'),         'cmd': 'launch-elaine.bat'},
+    'author-studio':      {'name': 'Author Studio',       'port': 5007,  'url': f'http://{LAN}:5007',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Author Studio'),     'cmd': 'python main_flask.py'},
+    'peterman':           {'name': 'Peterman',            'port': 5008,  'url': f'http://{LAN}:5008',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Peterman SEO'),  'cmd': 'python app.py', 'health': '/api/health', 'env': {'FLASK_DEBUG': '0', 'OLLAMA_TIMEOUT': '600'}},
+    'dhamma':             {'name': 'Dhamma Mirror',       'port': 5020,  'url': f'http://{LAN}:5020',  'type': 'ck',    'path': os.path.join(CK_BASE, 'dhamma-mirror'),     'cmd': 'launch-elaine.bat'},
+    'signal':             {'name': 'Signal Hunter',        'port': 8420,  'url': f'http://{LAN}:8420',  'type': 'ck',    'path': os.path.join(CK_BASE, 'signal'),            'cmd': 'python -B app.py', 'health': '/api/health'},
+    'junk-drawer':        {'name': 'The Junk Drawer',     'port': 3005,  'url': f'http://{LAN}:3005',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-app'), 'cmd': 'npm start'},
+    'junk-drawer-api':    {'name': 'Junk Drawer API',     'port': 5005,  'url': f'http://{LAN}:5005',  'type': 'infra', 'path': os.path.join(CK_BASE, 'Junk Drawer file management system', 'junk-drawer-backend'), 'cmd': 'launch-elaine.bat', 'health': '/api/health'},
+    'comfyui':            {'name': 'ComfyUI Studio',      'port': 8188,  'url': f'http://{LAN}:8188',  'type': 'ck',    'path': None, 'cmd': None},
+    'genie':              {'name': 'Genie',               'port': 8000,  'url': f'http://{LAN}:8000',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Finance App', 'Genie', 'backend'), 'cmd': 'python -m uvicorn app:app --host 0.0.0.0 --port 8000', 'health': '/api/health'},
+    'genie-fe':           {'name': 'Genie Frontend',      'port': 3000,  'url': f'http://{LAN}:3000',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Finance App', 'Genie', 'frontend'), 'cmd': 'npm run dev'},
+    'ripple':             {'name': 'Ripple CRM',          'port': 3100,  'url': f'http://{LAN}:3100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3100', 'health': '/'},
+    'ripple-api':         {'name': 'Ripple CRM API',      'port': 8100,  'url': f'http://{LAN}:8100',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Ripple CRM and Spark Marketing', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8100', 'health': '/api/health'},
+    'touchstone':         {'name': 'Touchstone',          'port': 8200,  'url': f'http://{LAN}:8200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8200', 'health': '/api/v1/health'},
+    'touchstone-dash':    {'name': 'Touchstone Dashboard','port': 3200,  'url': f'http://{LAN}:3200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'dashboard'), 'cmd': 'npx vite --host 0.0.0.0 --port 3200', 'health': '/'},
+    'knowyourself':       {'name': 'KnowYourself',        'port': 8300,  'url': f'http://{LAN}:8300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8300', 'health': '/api/health'},
+    'knowyourself-dash':  {'name': 'KnowYourself UI',     'port': 3300,  'url': f'http://{LAN}:3300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3300', 'health': '/'},
+
+    # Infrastructure -- core services
+    'supervisor':         {'name': 'The Supervisor',      'port': 9000,  'url': f'http://{LAN}:9000',  'type': 'infra', 'health': '/api/health', 'path': os.path.join(SOURCE_BASE, 'Supervisor'), 'cmd': 'python supervisor.py'},
+    'ollama':             {'name': 'Ollama',              'port': 11434, 'url': f'http://{LAN}:11434', 'type': 'infra', 'health': '/api/tags', 'docker': None, 'cmd': 'ollama serve'},
+    'postgres':           {'name': 'PostgreSQL',          'port': 5433,  'url': None,                   'type': 'infra', 'docker': 'pgvector'},
+    'redis':              {'name': 'Redis',               'port': 6379,  'url': None,                   'type': 'infra', 'docker': 'redis'},
+    'n8n':                {'name': 'n8n',                 'port': 5678,  'url': f'http://{LAN}:5678',  'type': 'infra', 'docker': 'n8n'},
+    'searxng':            {'name': 'SearXNG',             'port': 8888,  'url': f'http://{LAN}:8888',  'type': 'infra', 'docker': 'searxng'},
+    'listmonk':           {'name': 'Listmonk',            'port': 9001,  'url': f'http://{LAN}:9001',  'type': 'infra', 'docker': 'listmonk'},
+    'mailpit':            {'name': 'MailPit',             'port': 8025,  'url': f'http://{LAN}:8025',  'type': 'infra', 'docker': 'mailpit'},
+
+    # Open Source Tools -- Tier 1 (Docker)
+    'open-webui':         {'name': 'Open WebUI',          'port': 3080,  'url': f'http://{LAN}:3080',  'type': 'infra', 'docker': 'open-webui'},
+    'vaultwarden':        {'name': 'Vaultwarden',         'port': 8222,  'url': f'http://{LAN}:8222',  'type': 'infra', 'docker': 'vaultwarden'},
+    'formbricks':         {'name': 'Formbricks',          'port': 3015,  'url': f'http://{LAN}:3015',  'type': 'infra', 'docker': 'formbricks'},
+    'matomo':             {'name': 'Matomo',              'port': 8084,  'url': f'http://{LAN}:8084',  'type': 'infra', 'docker': 'matomo'},
+    'penpot':             {'name': 'Penpot',              'port': 9002,  'url': f'http://{LAN}:9002',  'type': 'infra', 'docker': 'penpot-frontend'},
+    'superset':           {'name': 'Apache Superset',     'port': 8088,  'url': f'http://{LAN}:8088',  'type': 'infra', 'docker': 'superset_app'},
+    'postiz':             {'name': 'Postiz',              'port': 4200,  'url': f'http://{LAN}:4200',  'type': 'infra', 'docker': 'postiz'},
+    'wisdom-quotes':      {'name': 'Wisdom Quotes',       'port': 3350,  'url': f'http://{LAN}:3350',  'type': 'infra', 'health': '/api/quote/random', 'docker': 'wisdom-quotes'},
+
+    # Linux tools (WSL2 / Docker)
+    'uptime-kuma':        {'name': 'Uptime Kuma',         'port': 3001,  'url': f'http://{LAN}:3001',  'type': 'infra', 'docker': 'uptime-kuma'},
+    'outline':            {'name': 'Outline',             'port': 3006,  'url': f'http://{LAN}:3006',  'type': 'infra', 'docker': 'outline'},
+    'langfuse':           {'name': 'LangFuse',            'port': 3007,  'url': f'http://{LAN}:3007',  'type': 'infra', 'docker': 'langfuse-web'},
+    'spiderfoot':         {'name': 'SpiderFoot',          'port': 5009,  'url': f'http://{LAN}:5009',  'type': 'infra', 'docker': 'spiderfoot'},
+    'openvas':            {'name': 'OpenVAS',             'port': 9392,  'url': 'https://localhost:9392','type': 'infra', 'docker': 'greenbone-community-edition'},
+    'wazuh':              {'name': 'Wazuh',               'port': 4443,  'url': 'https://localhost:4443','type': 'infra', 'docker': 'single-node-wazuh.dashboard-1'},
+    'netdata':            {'name': 'Netdata',             'port': 19999, 'url': f'http://{LAN}:19999', 'type': 'infra'},
+
+    # New tools (Docker)
+    'paperless':          {'name': 'Paperless-ngx',       'port': 8010,  'url': f'http://{LAN}:8010',  'type': 'infra', 'docker': 'paperless-webserver'},
+    'perplexica':         {'name': 'Perplexica',          'port': 3008,  'url': f'http://{LAN}:3008',  'type': 'infra', 'docker': 'perplexica-app'},
+    'karakeep':           {'name': 'Karakeep',            'port': 3009,  'url': f'http://{LAN}:3009',  'type': 'infra', 'docker': 'karakeep'},
+    'docuseal':           {'name': 'DocuSeal',            'port': 3010,  'url': f'http://{LAN}:3010',  'type': 'infra', 'docker': 'docuseal'},
+    'homepage':           {'name': 'Homepage',            'port': 3011,  'url': f'http://{LAN}:3011',  'type': 'infra', 'docker': 'homepage'},
+    'memos':              {'name': 'Memos',               'port': 5230,  'url': f'http://{LAN}:5230',  'type': 'infra', 'docker': 'memos'},
 
     # Finance & Market Data
-    'fincept':            {'name': 'FinceptTerminal',     'port': None,  'url': None,                     'type': 'ck',    'path': None, 'cmd': None},
-    'ghostfolio':         {'name': 'Ghostfolio',          'port': 3333,  'url': 'http://localhost:3333',  'type': 'infra', 'health': '/api/v1/health', 'docker': 'ghostfolio'},
+    'fincept':            {'name': 'FinceptTerminal',     'port': None,  'url': None,                   'type': 'ck',    'path': None, 'cmd': None},
+    'ghostfolio':         {'name': 'Ghostfolio',          'port': 3333,  'url': f'http://{LAN}:3333',  'type': 'infra', 'health': '/api/v1/health', 'docker': 'ghostfolio'},
+
+    # AI Advisors — Isolated Claude AI windows
+    'talaiva':            {'name': 'Talaiva',             'port': None,  'url': None,                   'type': 'advisor', 'launch': 'bat', 'bat_path': os.path.join(CK_BASE, 'ai-advisors', 'launch-talaiva.bat')},
+    'guruve':             {'name': 'Guruve',              'port': None,  'url': None,                   'type': 'advisor', 'launch': 'bat', 'bat_path': os.path.join(CK_BASE, 'ai-advisors', 'launch-guruve.bat')},
 
     # Security & OSINT
-    'tor-proxy':          {'name': 'Tor Proxy',           'port': 9050,  'url': None,                     'type': 'infra', 'docker': 'tor-socks-proxy'},
-    'privoxy':            {'name': 'Privoxy',             'port': 8118,  'url': None,                     'type': 'infra', 'docker': 'privoxy'},
-    'ivre':               {'name': 'IVRE',                'port': 8282,  'url': 'http://localhost:8282',  'type': 'infra', 'docker': 'ivreweb'},
-    'hibp-checker':       {'name': 'HIBP Checker',        'port': 8284,  'url': 'http://localhost:8284',  'type': 'infra', 'health': '/api/health', 'docker': 'hibp-checker'},
+    'tor-proxy':          {'name': 'Tor Proxy',           'port': 9050,  'url': None,                   'type': 'infra', 'docker': 'tor-socks-proxy'},
+    'privoxy':            {'name': 'Privoxy',             'port': 8118,  'url': None,                   'type': 'infra', 'docker': 'privoxy'},
+    'ivre':               {'name': 'IVRE',                'port': 8282,  'url': f'http://{LAN}:8282',  'type': 'infra', 'docker': 'ivreweb'},
+    'hibp-checker':       {'name': 'HIBP Checker',        'port': 8284,  'url': f'http://{LAN}:8284',  'type': 'infra', 'health': '/api/health', 'docker': 'hibp-checker'},
+
+    # OSINT CLI Tools (WSL2 — no ports, invoked via CLI)
+    'amass':              {'name': 'Amass',               'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
+    'subfinder':          {'name': 'Subfinder',           'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
+    'httpx-pd':           {'name': 'httpx (ProjectDiscovery)', 'port': None, 'url': None,               'type': 'infra', 'path': None, 'cmd': None},
+    'nuclei':             {'name': 'Nuclei',              'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
+    'theharvester':       {'name': 'theHarvester',        'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
+    'nmap':               {'name': 'Nmap',                'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
+    'shodan':             {'name': 'Shodan CLI',          'port': None,  'url': None,                   'type': 'infra', 'path': None, 'cmd': None},
 }
 
 # Track launched processes
@@ -123,24 +166,33 @@ launched_processes = {}
 # ============================================================
 
 def check_service(service_id, service):
-    """Ping a service and return status."""
+    """Ping a service and return status.
+    Always probes localhost for health (apps may bind to 127.0.0.1 only).
+    The service 'url' field is the LAN-accessible URL for users to click.
+    """
+    port = service.get('port')
+    if port is None:
+        return False  # CLI-only tools (no port)
     if service.get('url') is None:
-        # TCP-only services (PostgreSQL, Redis) â€” check port
+        # TCP-only services (PostgreSQL, Redis)
         import socket
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(2)
-            result = sock.connect_ex(('localhost', service['port']))
+            result = sock.connect_ex(('localhost', port))
             sock.close()
             return result == 0
         except Exception:
             return False
     else:
-        # HTTP services â€” check endpoint
+        # HTTP services -- always check via localhost
         try:
             health_path = service.get('health', '/')
-            url = f"{service['url']}{health_path}"
-            resp = httpx.get(url, timeout=3.0)
+            if service['url'].startswith('https://'):
+                probe_url = f"https://localhost:{port}{health_path}"
+            else:
+                probe_url = f"http://localhost:{port}{health_path}"
+            resp = httpx.get(probe_url, timeout=3.0, verify=False)
             return resp.status_code < 500
         except Exception:
             return False
@@ -338,6 +390,45 @@ def launch_service(service_id):
             'status': 'error',
             'message': str(e)
         }), 500
+
+
+@app.route('/api/launch/<name>', methods=['POST'])
+def launch_bat(name):
+    """Launch a bat-based advisor window by name."""
+    for sid, svc in SERVICES.items():
+        if svc['name'].lower() == name.lower() and svc.get('launch') == 'bat':
+            bat_path = svc.get('bat_path')
+            if not bat_path or not os.path.isfile(bat_path):
+                return jsonify({
+                    'status': 'error',
+                    'name': svc['name'],
+                    'message': f"Bat file not found: {bat_path}"
+                }), 404
+
+            try:
+                subprocess.Popen(
+                    [bat_path],
+                    cwd=os.path.dirname(bat_path),
+                    shell=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
+                )
+                logger.info(f"Launched advisor: {svc['name']} via {bat_path}")
+                return jsonify({
+                    'status': 'launched',
+                    'name': svc['name'],
+                    'message': f"{svc['name']} window opening..."
+                })
+            except Exception as e:
+                logger.error(f"Failed to launch {svc['name']}: {e}")
+                return jsonify({
+                    'status': 'error',
+                    'name': svc['name'],
+                    'message': str(e)
+                }), 500
+
+    return jsonify({'status': 'error', 'message': f'Unknown advisor: {name}'}), 404
 
 
 @app.route('/api/services/launch-all', methods=['POST'])

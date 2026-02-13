@@ -100,6 +100,13 @@ $Services = [ordered]@{
         Cmd    = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8100"
         Health = "/api/health"
     }
+    signal = @{
+        Name   = "Signal Hunter"
+        Port   = 8420
+        Dir    = "$BASE\CK\signal"
+        Cmd    = "python -B app.py"
+        Health = "/api/health"
+    }
     touchstone = @{
         Name   = "Touchstone"
         Port   = 8200
@@ -152,6 +159,8 @@ $Aliases = @{
     "ripple-crm"          = "ripple"
     "ripple-frontend"     = "ripplefe"
     "ripple-fe"           = "ripplefe"
+    "signal-hunter"       = "signal"
+    "signalhunter"        = "signal"
     "supe"                = "supervisor"
     "suze"                = "elaine"
 }

@@ -1,0 +1,111 @@
+# Signal Hunter -- Foreperson Spec
+# Almost Magic Tech Lab
+# Port: 8420
+
+app: signal
+description: LinkedIn Intelligence Engine -- profile tracking, engagement analysis
+port: 8420
+url: http://localhost:8420
+category: ck
+priority: normal
+
+features:
+  - id: health_endpoint
+    name: Health endpoint responds
+    check: http_get
+    path: /api/health
+    expected_status: 200
+    expected_contains: healthy
+
+  - id: web_ui
+    name: Web UI loads
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_contains: Signal
+
+  - id: theme_toggle
+    name: Dark/light theme toggle
+    check: http_get
+    path: /
+    expected_contains: toggleTheme
+
+  - id: profiles_list
+    name: List profiles endpoint
+    check: http_get
+    path: /api/profiles
+    expected_status: 200
+    expected_contains: profiles
+
+  - id: profiles_create
+    name: Create profile endpoint
+    check: http_post
+    path: /api/profiles
+    body:
+      name: "Foreperson Test"
+      company: "AMTL QA"
+    expected_status: 201
+
+  - id: profiles_validation
+    name: Create profile validates name required
+    check: http_post
+    path: /api/profiles
+    body: {}
+    expected_status: 400
+
+  - id: engagements_endpoint
+    name: Engagements endpoint exists
+    check: http_get
+    path: /api/profiles/1/engagements
+    expected_status: 200
+    expected_contains: engagements
+    notes: Returns 200 with engagements list (or 404 if profile 1 missing)
+
+  - id: analyze_endpoint
+    name: Analyse profile via Ollama
+    check: http_post
+    path: /api/profiles/1/analyze
+    expected_status: 200
+    expected_contains: analysis
+    timeout: 35
+    notes: Returns analysis text (AI or offline fallback). Needs profile 1 to exist.
+
+  - id: analyses_list
+    name: Analyses history endpoint
+    check: http_get
+    path: /api/profiles/1/analyses
+    expected_status: 200
+    expected_contains: analyses
+    notes: Returns list of past analyses for profile 1
+
+  - id: dashboard
+    name: Dashboard stats endpoint
+    check: http_get
+    path: /api/dashboard
+    expected_status: 200
+    expected_contains: total_profiles
+
+  - id: search
+    name: Profile search works
+    check: http_get
+    path: /api/profiles?search=test
+    expected_status: 200
+    expected_contains: profiles
+
+  - id: llm_config
+    name: Health reports LLM config
+    check: http_get
+    path: /api/health
+    expected_contains: llm
+
+  - id: sidebar_profiles
+    name: Web UI has profile sidebar
+    check: http_get
+    path: /
+    expected_contains: profileList
+
+  - id: analysis_ui
+    name: Web UI has analysis panel
+    check: http_get
+    path: /
+    expected_contains: analyzeBtn
