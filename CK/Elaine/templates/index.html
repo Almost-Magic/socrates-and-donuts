@@ -229,6 +229,9 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
 .chat-btn.mic{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted)}
 .chat-btn.mic:hover{color:var(--text);border-color:var(--accent)}
 .chat-btn.mic.recording{background:var(--error);color:#fff;border-color:var(--error);animation:pulse 1s infinite}
+.chat-btn.speaker{background:var(--surface-2);border:2px solid var(--accent);color:var(--accent);font-size:18px;min-width:42px}
+.chat-btn.speaker:hover{background:rgba(201,168,76,0.2);color:var(--accent);border-color:var(--accent)}
+.chat-btn.speaker.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 12px rgba(201,168,76,0.4)}
 
 /* Voice Mode Toggle (gold pencil) */
 .voice-mode-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .25s;color:var(--text-muted);position:relative}
@@ -420,6 +423,7 @@ body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--te
           <button class="voice-mode-btn" id="voiceModeBtn" onclick="toggleVoiceMode()" title="Toggle Voice Mode (ElevenLabs + mic)">&#9998;<span class="voice-mode-indicator"></span></button>
           <button class="chat-btn mic" id="micBtn" onclick="toggleMic()" title="Click to speak (Chrome/Edge)">&#127908;</button>
           <input class="chat-input" id="chatIn" placeholder="Talk to Elaine..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
+          <button class="chat-btn speaker" id="speakerBtn" onclick="toggleSpeaker()" title="Toggle voice output">&#128264;</button>
           <button class="chat-btn" id="sendBtn" onclick="sendChat()" title="Send">&rarr;</button>
         </div>
       </div>
@@ -857,33 +861,58 @@ async function transcribeAudio(blob,mime){
   else btn.title='Voice input unavailable';
 })()
 
-/* === Voice Output (ElevenLabs TTS + browser fallback) === */
-var voiceEnabled=false;
+/* === Voice Output (Browser TTS default, ElevenLabs if key set) === */
+/* Restore voice preference from localStorage */
+var _savedVoice=(function(){try{return localStorage.getItem('elaine-voice')==='on'}catch(e){return false}})();
+var voiceEnabled=_savedVoice;
 var voiceModeActive=false; /* master voice mode toggle */
-var voiceBackend='unknown'; /* 'elevenlabs', 'browser', 'none' */
+var voiceBackend='browser'; /* 'elevenlabs', 'browser', 'none' — browser is default */
 var currentAudio=null;
 var speechSynth=window.speechSynthesis||null;
 var elaineVoice=null;
 var continuousListen=false; /* auto-restart mic after TTS finishes */
+var ttsUnlocked=false; /* Chrome requires user gesture to unlock speechSynthesis */
+var ttsPending=null; /* queue text to speak after unlock */
+function _saveVoicePref(){try{localStorage.setItem('elaine-voice',voiceEnabled?'on':'off')}catch(e){}}
 
-/* Browser TTS fallback setup */
+/* Strip ALL parenthetical stage directions from AI replies */
+function stripStageDirections(text){
+  return text.replace(/\([^)]{2,80}\)/g,'').replace(/\s{2,}/g,' ').trim();
+}
+
+/* Browser TTS setup — prefer Australian English voice */
 function findAusVoice(){
   if(!speechSynth)return;
   var voices=speechSynth.getVoices();
+  if(!voices.length)return;
+  /* Priority: en-AU female > en-AU any > en-GB female > en-* female > en-* any */
   elaineVoice=voices.find(function(v){return v.lang==='en-AU'&&/female/i.test(v.name)})
     ||voices.find(function(v){return v.lang==='en-AU'})
+    ||voices.find(function(v){return v.lang==='en-GB'&&/female/i.test(v.name)})
     ||voices.find(function(v){return v.lang.startsWith('en')&&/female/i.test(v.name)})
     ||voices.find(function(v){return v.lang.startsWith('en')})
     ||null;
+  if(elaineVoice)logger.info('Voice selected: '+elaineVoice.name+' ('+elaineVoice.lang+')');
 }
 if(speechSynth){findAusVoice();if(speechSynth.onvoiceschanged!==undefined)speechSynth.onvoiceschanged=findAusVoice}
+
+/* Unlock speechSynthesis with a silent utterance (Chrome requires user gesture) */
+function unlockTTS(){
+  if(ttsUnlocked||!speechSynth)return;
+  speechSynth.cancel();
+  var silent=new SpeechSynthesisUtterance('');
+  silent.volume=0;
+  speechSynth.speak(silent);
+  ttsUnlocked=true;
+  logger.info('Browser TTS unlocked');
+}
 
 /* Check voice capability on load */
 async function checkVoiceStatus(){
   try{
     var r=await api('GET','/api/tts/status');
     voiceBackend=r.elevenlabs?'elevenlabs':'browser';
-    if(r.setup)logger.info('Voice setup needed: '+r.setup);
+    if(r.setup)logger.info('Voice setup: '+r.setup);
   }catch(e){voiceBackend=speechSynth?'browser':'none'}
   updateVoiceModeUI();
 }
@@ -891,20 +920,30 @@ var logger={info:function(m){console.log('[ELAINE]',m)}};
 checkVoiceStatus();
 
 function speakBrowser(text){
-  if(!speechSynth)return;
+  if(!speechSynth){logger.info('speechSynthesis not available');return}
   speechSynth.cancel();
   var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
-  if(clean.length>500)clean=clean.substring(0,500)+'... that is the summary.';
+  clean=stripStageDirections(clean);
+  if(!clean.trim())return;
+  if(clean.length>800)clean=clean.substring(0,800)+'... that is the summary.';
   var utt=new SpeechSynthesisUtterance(clean);
   utt.lang='en-AU';utt.rate=1.0;utt.pitch=1.0;
   if(elaineVoice)utt.voice=elaineVoice;
   utt.onend=function(){if(continuousListen)startListeningAfterReply()};
+  utt.onerror=function(e){logger.info('TTS error: '+e.error)};
+  /* Chrome bug: long utterances get stuck. Split at sentence boundaries if needed. */
   speechSynth.speak(utt);
+  /* Chrome pauses speechSynth if tab loses focus; resume periodically */
+  var resumeInterval=setInterval(function(){
+    if(!speechSynth.speaking){clearInterval(resumeInterval);return}
+    speechSynth.resume();
+  },5000);
 }
 
-async function speakText(text){
+function speakText(text){
   if(!voiceEnabled)return;
   var clean=text.replace(/<[^>]+>/g,'').replace(/\*\*/g,'');
+  clean=stripStageDirections(clean);
   if(!clean.trim())return;
 
   /* Stop any currently playing audio */
@@ -912,23 +951,21 @@ async function speakText(text){
   if(speechSynth)speechSynth.cancel();
 
   if(voiceBackend==='elevenlabs'){
-    try{
-      var resp=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
-      if(!resp.ok){throw new Error('HTTP '+resp.status)}
-      var blob=await resp.blob();
-      var url=URL.createObjectURL(blob);
-      currentAudio=new Audio(url);
-      currentAudio.onended=function(){
-        URL.revokeObjectURL(url);currentAudio=null;
-        if(continuousListen)startListeningAfterReply();
-      };
-      currentAudio.play();
-      return;
-    }catch(e){
-      logger.info('ElevenLabs TTS failed, falling back to browser: '+e.message);
-    }
+    fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean.substring(0,500)})})
+      .then(function(resp){if(!resp.ok)throw new Error('HTTP '+resp.status);return resp.blob()})
+      .then(function(blob){
+        var url=URL.createObjectURL(blob);
+        currentAudio=new Audio(url);
+        currentAudio.onended=function(){URL.revokeObjectURL(url);currentAudio=null;if(continuousListen)startListeningAfterReply()};
+        currentAudio.play();
+      })
+      .catch(function(e){
+        logger.info('ElevenLabs TTS failed, using browser: '+e.message);
+        speakBrowser(clean);
+      });
+    return;
   }
-  /* Browser TTS fallback */
+  /* Browser TTS — always available */
   speakBrowser(clean);
 }
 
@@ -945,6 +982,7 @@ function startListeningAfterReply(){
 function updateVoiceModeUI(){
   var btn=document.getElementById('voiceModeBtn');
   var bar=document.getElementById('voiceBar');
+  var spkBtn=document.getElementById('speakerBtn');
   if(voiceModeActive){
     btn.classList.add('active');
     bar.classList.add('active');
@@ -954,22 +992,52 @@ function updateVoiceModeUI(){
     btn.classList.remove('active');
     bar.classList.remove('active');
   }
+  /* Update speaker button state */
+  if(spkBtn){
+    if(voiceEnabled){spkBtn.classList.add('active');spkBtn.innerHTML='&#128266;';spkBtn.title='Voice output ON (click to mute)'}
+    else{spkBtn.classList.remove('active');spkBtn.innerHTML='&#128264;';spkBtn.title='Voice output OFF (click to enable)'}
+  }
+}
+
+/* Toggle speaker only (voice output without mic/continuous listen) */
+function toggleSpeaker(){
+  voiceEnabled=!voiceEnabled;
+  _saveVoicePref();
+  if(voiceEnabled){
+    /* Unlock browser TTS on this user gesture (Chrome requirement) */
+    unlockTTS();
+    findAusVoice();
+    var vname=elaineVoice?(elaineVoice.name+' / '+elaineVoice.lang):'default';
+    addMsg('Speaker ON \u2014 '+(voiceBackend==='elevenlabs'?'ElevenLabs':'browser voice ('+vname+')')+'. Every reply will be spoken aloud.','elaine','local');
+  }else{
+    /* Stop any playing audio */
+    if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
+    if(speechSynth)speechSynth.cancel();
+    addMsg('Speaker OFF \u2014 text only.','elaine','local');
+  }
+  updateVoiceModeUI();
 }
 
 function toggleVoiceMode(){
   voiceModeActive=!voiceModeActive;
   voiceEnabled=voiceModeActive;
+  _saveVoicePref();
   continuousListen=voiceModeActive;
 
   if(voiceModeActive){
-    /* Activate voice mode */
-    var modeLabel=voiceBackend==='elevenlabs'?'ElevenLabs (cloned voice)':voiceBackend==='browser'?'browser voice (set ELEVENLABS_API_KEY for cloned voice)':'unavailable';
-    addMsg('Voice Mode ON \u2014 using '+modeLabel+'. I\'ll speak replies and listen after each one. Click the gold button or type normally to disable.','elaine','local');
+    /* Unlock browser TTS on this user gesture (Chrome requirement) */
+    unlockTTS();
+    findAusVoice();
+    /* Activate voice mode (speaker + mic + continuous listen) */
+    var modeLabel=voiceBackend==='elevenlabs'?'ElevenLabs (cloned voice)':voiceBackend==='browser'?'browser voice':'unavailable';
+    addMsg('Voice Mode ON \u2014 using '+modeLabel+'. Speaking replies and listening after each one.','elaine','local');
     /* Auto-start listening */
     if(!isRec)toggleMic();
   }else{
     /* Deactivate voice mode */
     continuousListen=false;
+    voiceEnabled=false;
+    _saveVoicePref();
     if(currentAudio){try{currentAudio.pause();currentAudio=null}catch(e){}}
     if(speechSynth)speechSynth.cancel();
     /* Stop mic if recording */
@@ -1060,6 +1128,7 @@ async function runCheck(){
 loadAll();
 loadToolsHealth();
 loadBriefing();
+updateVoiceModeUI(); /* restore speaker button visual state from localStorage */
 setInterval(loadAll,30000);
 setInterval(loadToolsHealth,60000);
 </script>
