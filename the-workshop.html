@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Workshop — Almost Magic Tech Lab</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a1a2e'/><text x='16' y='22' font-family='serif' font-size='18' fill='%23c9a84c' text-anchor='middle'>W</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a0e1a;
+            --navy-mid: #111827;
+            --navy-light: #1a2035;
+            --navy-surface: #1e2642;
+            --gold: #c9a84c;
+            --gold-dim: #a08839;
+            --gold-glow: rgba(201, 168, 76, 0.15);
+            --gold-glow-strong: rgba(201, 168, 76, 0.25);
+            --text-primary: #e8e2d6;
+            --text-secondary: #9ca3af;
+            --text-dim: #6b7280;
+            --green: #34d399;
+            --green-dim: rgba(52, 211, 153, 0.15);
+            --red: #f87171;
+            --red-dim: rgba(248, 113, 113, 0.15);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, 0.15);
+            --blue: #60a5fa;
+            --blue-dim: rgba(96, 165, 250, 0.15);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167, 139, 250, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--navy);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(96, 165, 250, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(167, 139, 250, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .workshop-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+        }
+
+        .header-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header-text span {
+            font-size: 0.8rem;
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(201, 168, 76, 0.3), transparent);
+        }
+
+        .section-count {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        /* App Card */
+        .app-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--card-accent, var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .app-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(201, 168, 76, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(201, 168, 76, 0.1);
+            background: var(--navy-surface);
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .app-card:active {
+            transform: translateY(-1px);
+        }
+
+        .app-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .app-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .app-desc {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        .app-port {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            font-size: 0.6rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px 6px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .app-card:hover .app-port {
+            opacity: 1;
+        }
+
+        .app-status-indicator {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-live { background: var(--green); box-shadow: 0 0 6px rgba(52, 211, 153, 0.5); }
+        .status-stopped { background: var(--text-dim); }
+        .status-building { background: var(--amber); animation: pulse 1.5s infinite; }
+
+        /* Favicon SVG styles */
+        .favicon-svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-link {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover { color: var(--gold); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .app-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+
+        /* Keyboard shortcut hint */
+        .shortcut-hint {
+            display: none;
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--navy-surface);
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            z-index: 100;
+        }
+
+        kbd {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.7rem;
+        }
+
+        /* Search */
+        .search-bar {
+            background: var(--navy-light);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.85rem;
+            width: 260px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar::placeholder { color: var(--text-dim); }
+        .search-bar:focus {
+            border-color: rgba(201, 168, 76, 0.3);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="workshop-logo">W</div>
+                <div class="header-text">
+                    <h1>The Workshop</h1>
+                    <span>Almost Magic Tech Lab</span>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <input type="text" class="search-bar" placeholder="Search apps… (Ctrl+K)" id="searchBar">
+                <div class="header-status">
+                    <div class="status-dot"></div>
+                    <span id="statusText">All systems operational</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CK Apps — Internal -->
+        <div class="section" id="section-ck">
+            <div class="section-header">
+                <h2>🎩 CK Apps</h2>
+                <div class="section-line"></div>
+                <span class="section-count">Internal Products</span>
+            </div>
+            <div class="app-grid" id="grid-ck"></div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="section" id="section-infra">
+            <div class="section-header">
+                <h2>⚙️ Infrastructure</h2>
+                <div class="section-line"></div>
+                <span class="section-count">Services & Databases</span>
+            </div>
+            <div class="app-grid" id="grid-infra"></div>
+        </div>
+
+        <!-- External Services -->
+        <div class="section" id="section-external">
+            <div class="section-header">
+                <h2>🌐 External Services</h2>
+                <div class="section-line"></div>
+                <span class="section-count">Paid APIs & SaaS</span>
+            </div>
+            <div class="app-grid" id="grid-external"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                The Workshop v1.0 · © 2026 Almost Magic Tech Lab · Where Almost Magic Meets Real Results
+            </div>
+            <div class="footer-right">
+                <a href="#" class="footer-link" onclick="checkAllHealth()">Health Check</a>
+                <a href="#" class="footer-link" onclick="document.getElementById('searchBar').focus()">Search (Ctrl+K)</a>
+            </div>
+        </footer>
+    </div>
+
+    <div class="shortcut-hint" id="shortcutHint">
+        Press <kbd>Ctrl</kbd>+<kbd>K</kbd> to search · <kbd>Enter</kbd> to open first result
+    </div>
+
+    <script>
+        // ================================================================
+        // APP REGISTRY — The single source of truth
+        // ================================================================
+        const apps = {
+            ck: [
+                // --- Core Ecosystem ---
+                {
+                    id: 'elaine',
+                    name: 'Elaine',
+                    desc: 'AI Chief of Staff — 16 modules',
+                    url: 'http://localhost:5000',
+                    port: '5000',
+                    status: 'live',
+                    accent: '#c9a84c',
+                    favicon: { type: 'text', bg: '#c9a84c', fg: '#0a0e1a', letter: 'E', font: 'serif' }
+                },
+                {
+                    id: 'costanza',
+                    name: 'Costanza',
+                    desc: 'Mental Models Engine — 166 models',
+                    url: 'http://localhost:5001',
+                    port: '5001',
+                    status: 'building',
+                    accent: '#a78bfa',
+                    favicon: { type: 'text', bg: '#2d1f5e', fg: '#a78bfa', letter: 'C', font: 'serif' }
+                },
+                {
+                    id: 'peterman',
+                    name: 'Peterman',
+                    desc: 'Brand Intelligence Engine',
+                    url: 'http://localhost:5008',
+                    port: '5008',
+                    status: 'live',
+                    accent: '#60a5fa',
+                    favicon: { type: 'text', bg: '#1e3a5f', fg: '#60a5fa', letter: 'P', font: 'serif' }
+                },
+                {
+                    id: 'beast',
+                    name: 'The Beast',
+                    desc: 'Autonomous Product Dev System',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#f87171',
+                    favicon: { type: 'text', bg: '#3d1515', fg: '#f87171', letter: 'B', font: 'sans-serif' }
+                },
+                {
+                    id: 'ripple',
+                    name: 'Ripple CRM',
+                    desc: 'Relationship Intelligence Engine',
+                    url: 'http://localhost:3100',
+                    port: '3100',
+                    status: 'live',
+                    accent: '#38bdf8',
+                    favicon: { type: 'symbol', bg: '#0c2d48', fg: '#38bdf8', symbol: '🌊' }
+                },
+                {
+                    id: 'touchstone',
+                    name: 'Touchstone',
+                    desc: 'Marketing Attribution Engine — 5 models',
+                    url: 'http://localhost:8200',
+                    port: '8200',
+                    status: 'live',
+                    accent: '#f59e0b',
+                    favicon: { type: 'text', bg: '#451a03', fg: '#f59e0b', letter: 'T', font: 'sans-serif' }
+                },
+                {
+                    id: 'touchstone-dashboard',
+                    name: 'Touchstone Dashboard',
+                    desc: 'Attribution Analytics — React + Recharts',
+                    url: 'http://localhost:3200',
+                    port: '3200',
+                    status: 'live',
+                    accent: '#f59e0b',
+                    favicon: { type: 'text', bg: '#451a03', fg: '#f59e0b', letter: 'T', font: 'serif' }
+                },
+                // --- Writing & Publishing ---
+                {
+                    id: 'writer',
+                    name: 'CK Writer',
+                    desc: '8-Mode Writing Studio — 193 endpoints',
+                    url: 'http://localhost:5004',
+                    port: '5004',
+                    status: 'live',
+                    accent: '#34d399',
+                    favicon: { type: 'text', bg: '#0f3d2e', fg: '#34d399', letter: 'W', font: 'serif' }
+                },
+                {
+                    id: 'author-studio',
+                    name: 'Author Studio',
+                    desc: 'Book DNA + Amazon Listings + ARIA',
+                    url: 'http://localhost:5005',
+                    port: '5005',
+                    status: 'live',
+                    accent: '#e879f9',
+                    favicon: { type: 'text', bg: '#3d1545', fg: '#e879f9', letter: 'A', font: 'serif' }
+                },
+                {
+                    id: 'creative-studio',
+                    name: 'CK Creative Studio',
+                    desc: 'Image & Video Generation',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#f472b6',
+                    favicon: { type: 'symbol', bg: '#3d1530', fg: '#f472b6', symbol: '🎨' }
+                },
+                {
+                    id: 'comfyui',
+                    name: 'ComfyUI Studio',
+                    desc: 'Local Image Generation',
+                    url: 'http://localhost:8188',
+                    port: '8188',
+                    status: 'stopped',
+                    accent: '#fb923c',
+                    favicon: { type: 'symbol', bg: '#3d2510', fg: '#fb923c', symbol: '🖼' }
+                },
+                // --- Learning & Knowledge ---
+                {
+                    id: 'learning-assistant',
+                    name: 'Learning Assistant',
+                    desc: 'Skill Augmentation — 190 routes',
+                    url: 'http://localhost:5002',
+                    port: '5002',
+                    status: 'live',
+                    accent: '#38bdf8',
+                    favicon: { type: 'text', bg: '#0c2d4a', fg: '#38bdf8', letter: 'L', font: 'serif' }
+                },
+                {
+                    id: 'fletch',
+                    name: 'Fletch',
+                    desc: "Practitioner's Library",
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#2dd4bf',
+                    favicon: { type: 'text', bg: '#0f3d38', fg: '#2dd4bf', letter: 'F', font: 'serif' }
+                },
+                {
+                    id: 'oracle',
+                    name: 'Oracle / DRA',
+                    desc: 'Deep Research Agent',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#818cf8',
+                    favicon: { type: 'symbol', bg: '#1e1f5e', fg: '#818cf8', symbol: '🔮' }
+                },
+                // --- Intelligence & Security ---
+                {
+                    id: 'signal',
+                    name: 'Signal',
+                    desc: 'LinkedIn Intelligence',
+                    url: 'http://localhost:8420',
+                    port: '8420',
+                    status: 'live',
+                    accent: '#5bb9a5',
+                    favicon: { type: 'symbol', bg: '#0f3d2e', fg: '#5bb9a5', symbol: '📡' }
+                },
+                {
+                    id: 'identity-atlas',
+                    name: 'Identity Atlas',
+                    desc: 'OSINT Intelligence Analysis',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#38bdf8',
+                    favicon: { type: 'symbol', bg: '#0c2d4a', fg: '#38bdf8', symbol: '🔍' }
+                },
+                {
+                    id: 'digital-sentinel',
+                    name: 'Digital Sentinel',
+                    desc: 'Cybersecurity Assessment',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#fb923c',
+                    favicon: { type: 'symbol', bg: '#3d2510', fg: '#fb923c', symbol: '🛡' }
+                },
+                {
+                    id: 'opportunity-hunter',
+                    name: 'Opportunity Hunter',
+                    desc: 'Career Intelligence',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#4ade80',
+                    favicon: { type: 'text', bg: '#0f3d1f', fg: '#4ade80', letter: 'O', font: 'sans-serif' }
+                },
+                // --- Agents ---
+                {
+                    id: 'cia',
+                    name: 'CIA',
+                    desc: 'Content Intelligence Agent',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#64748b',
+                    favicon: { type: 'text', bg: '#1e2433', fg: '#64748b', letter: 'CI', font: 'sans-serif' }
+                },
+                {
+                    id: 'ksa',
+                    name: 'KSA',
+                    desc: 'Kayfabe Strategy Agent',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#ef4444',
+                    favicon: { type: 'text', bg: '#3d1515', fg: '#ef4444', letter: 'K', font: 'sans-serif' }
+                },
+                {
+                    id: 'sma',
+                    name: 'SMA',
+                    desc: 'Social Mastermind Agent',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#ec4899',
+                    favicon: { type: 'text', bg: '#3d1530', fg: '#ec4899', letter: 'S', font: 'sans-serif' }
+                },
+                // --- Personal & Spiritual ---
+                {
+                    id: 'dhamma',
+                    name: 'Dhamma Mirror',
+                    desc: 'Vipassana Companion',
+                    url: null,
+                    port: '5020',
+                    status: 'building',
+                    accent: '#fbbf24',
+                    favicon: { type: 'symbol', bg: '#3d2f0a', fg: '#fbbf24', symbol: '☸' }
+                },
+                {
+                    id: 'junk-drawer',
+                    name: 'The Junk Drawer',
+                    desc: 'Quick Capture & Notes',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#94a3b8',
+                    favicon: { type: 'text', bg: '#1e2433', fg: '#94a3b8', letter: 'J', font: 'sans-serif' }
+                },
+                // --- Shared Modules ---
+                {
+                    id: 'ck-translate',
+                    name: 'CK Translate',
+                    desc: 'NLLB-200 — 200 languages',
+                    url: null,
+                    port: '—',
+                    status: 'live',
+                    accent: '#06b6d4',
+                    favicon: { type: 'symbol', bg: '#0a2d3d', fg: '#06b6d4', symbol: '🌐' }
+                },
+                {
+                    id: 'ck-vision',
+                    name: 'CK Vision',
+                    desc: 'qwen3-vl — OCR & Image Analysis',
+                    url: null,
+                    port: '—',
+                    status: 'live',
+                    accent: '#8b5cf6',
+                    favicon: { type: 'symbol', bg: '#1e0a3d', fg: '#8b5cf6', symbol: '👁' }
+                },
+                // --- Free Tools ---
+                {
+                    id: 'ai-safety-net',
+                    name: 'AI Safety Net',
+                    desc: 'Free AI Governance — 32 docs',
+                    url: 'https://almostmagic.github.io/ai-safety-net',
+                    port: 'web',
+                    status: 'live',
+                    accent: '#10b981',
+                    favicon: { type: 'symbol', bg: '#0a2d1a', fg: '#10b981', symbol: '🛟' }
+                },
+                // --- Energy Platform ---
+                {
+                    id: 'eip',
+                    name: 'Energy Intelligence',
+                    desc: 'AU SMB Energy Advisory',
+                    url: null,
+                    port: '—',
+                    status: 'building',
+                    accent: '#eab308',
+                    favicon: { type: 'symbol', bg: '#3d3508', fg: '#eab308', symbol: '⚡' }
+                }
+            ],
+            infra: [
+                {
+                    id: 'ollama',
+                    name: 'Ollama',
+                    desc: 'Local LLMs (15 models)',
+                    url: 'http://localhost:11434',
+                    port: '11434',
+                    status: 'live',
+                    accent: '#f9fafb',
+                    favicon: { type: 'text', bg: '#1a1a1a', fg: '#f9fafb', letter: '🦙', font: 'sans-serif' }
+                },
+                {
+                    id: 'postgres',
+                    name: 'PostgreSQL',
+                    desc: 'Database + pgvector',
+                    url: null,
+                    port: '5433',
+                    status: 'live',
+                    accent: '#336791',
+                    favicon: { type: 'text', bg: '#0a1929', fg: '#336791', letter: '🐘', font: 'sans-serif' }
+                },
+                {
+                    id: 'redis',
+                    name: 'Redis',
+                    desc: 'Cache & Message Broker',
+                    url: null,
+                    port: '6379',
+                    status: 'live',
+                    accent: '#dc382d',
+                    favicon: { type: 'text', bg: '#2d0a0a', fg: '#dc382d', letter: 'R', font: 'sans-serif' }
+                },
+                {
+                    id: 'searxng',
+                    name: 'SearXNG',
+                    desc: 'Self-Hosted Search',
+                    url: 'http://localhost:8888',
+                    port: '8888',
+                    status: 'live',
+                    accent: '#60a5fa',
+                    favicon: { type: 'symbol', bg: '#0c2d4a', fg: '#60a5fa', symbol: '🔎' }
+                },
+                {
+                    id: 'n8n',
+                    name: 'n8n',
+                    desc: 'Workflow Automation',
+                    url: 'http://localhost:5678',
+                    port: '5678',
+                    status: 'live',
+                    accent: '#ff6d5a',
+                    favicon: { type: 'text', bg: '#2d1510', fg: '#ff6d5a', letter: 'n', font: 'sans-serif' }
+                },
+                {
+                    id: 'listmonk',
+                    name: 'Listmonk',
+                    desc: 'Email & Newsletter',
+                    url: 'http://localhost:9000',
+                    port: '9000',
+                    status: 'live',
+                    accent: '#7c3aed',
+                    favicon: { type: 'symbol', bg: '#1e0a3d', fg: '#7c3aed', symbol: '✉' }
+                },
+                {
+                    id: 'proof',
+                    name: 'Proof',
+                    desc: 'Deploy → Test → Fix Pipeline',
+                    url: 'http://localhost:8000',
+                    port: '8000',
+                    status: 'live',
+                    accent: '#fbbf24',
+                    favicon: { type: 'text', bg: '#3d2f0a', fg: '#fbbf24', letter: '✓', font: 'sans-serif' }
+                },
+                {
+                    id: 'vps',
+                    name: 'VPS (Digital Pacific)',
+                    desc: 'Production Server — AU hosted',
+                    url: null,
+                    port: 'SSH:22',
+                    status: 'live',
+                    accent: '#14b8a6',
+                    favicon: { type: 'symbol', bg: '#0a2d2d', fg: '#14b8a6', symbol: '🖥' }
+                }
+            ],
+            external: [
+                {
+                    id: 'openai',
+                    name: 'OpenAI',
+                    desc: 'GPT-4 Content Ceiling',
+                    url: 'https://platform.openai.com',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#10a37f',
+                    favicon: { type: 'text', bg: '#0a2d22', fg: '#10a37f', letter: '◐', font: 'sans-serif' }
+                },
+                {
+                    id: 'anthropic',
+                    name: 'Anthropic',
+                    desc: 'Claude Cross-Verification',
+                    url: 'https://console.anthropic.com',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#d4a27f',
+                    favicon: { type: 'text', bg: '#2d1a0a', fg: '#d4a27f', letter: 'A', font: 'serif' }
+                },
+                {
+                    id: 'perplexity',
+                    name: 'Perplexity',
+                    desc: 'Citation Tracking',
+                    url: 'https://www.perplexity.ai',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#22c55e',
+                    favicon: { type: 'text', bg: '#0a2d15', fg: '#22c55e', letter: 'P', font: 'sans-serif' }
+                },
+                {
+                    id: 'snitcher',
+                    name: 'Snitcher',
+                    desc: 'Visitor Intelligence',
+                    url: 'https://www.snitcher.com',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#3b82f6',
+                    favicon: { type: 'symbol', bg: '#0a1a3d', fg: '#3b82f6', symbol: '👁' }
+                },
+                {
+                    id: 'github',
+                    name: 'GitHub',
+                    desc: 'Almost-Magic Org',
+                    url: 'https://github.com/Almost-Magic',
+                    port: '—',
+                    status: 'live',
+                    accent: '#f9fafb',
+                    favicon: { type: 'text', bg: '#1a1a1a', fg: '#f9fafb', letter: '⌥', font: 'sans-serif' }
+                },
+                {
+                    id: 'elevenlabs',
+                    name: 'ElevenLabs',
+                    desc: "Elaine's Voice",
+                    url: 'https://elevenlabs.io',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#a78bfa',
+                    favicon: { type: 'text', bg: '#1e0a3d', fg: '#a78bfa', letter: '🔊', font: 'sans-serif' }
+                },
+                {
+                    id: 'textbee',
+                    name: 'TextBee',
+                    desc: 'SMS Integration',
+                    url: 'https://textbee.dev',
+                    port: 'API',
+                    status: 'live',
+                    accent: '#f59e0b',
+                    favicon: { type: 'symbol', bg: '#3d2f0a', fg: '#f59e0b', symbol: '🐝' }
+                }
+            ]
+        };
+
+        // ================================================================
+        // FAVICON GENERATOR — Creates SVG favicons for each app
+        // ================================================================
+        function generateFaviconSVG(favicon, size = 44) {
+            const r = size * 0.25; // border radius
+            if (favicon.type === 'symbol') {
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="favicon-svg">
+                    <rect width="${size}" height="${size}" rx="${r}" fill="${favicon.bg}"/>
+                    <text x="${size/2}" y="${size * 0.68}" font-size="${size * 0.5}" text-anchor="middle" dominant-baseline="central">${favicon.symbol}</text>
+                </svg>`;
+            }
+            // Check if letter is an emoji
+            const isEmoji = /[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27FF}]/u.test(favicon.letter);
+            if (isEmoji) {
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="favicon-svg">
+                    <rect width="${size}" height="${size}" rx="${r}" fill="${favicon.bg}"/>
+                    <text x="${size/2}" y="${size * 0.68}" font-size="${size * 0.45}" text-anchor="middle" dominant-baseline="central">${favicon.letter}</text>
+                </svg>`;
+            }
+            const fontFamily = favicon.font === 'serif' ? "'Playfair Display', serif" : "'Source Sans 3', sans-serif";
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="favicon-svg">
+                <rect width="${size}" height="${size}" rx="${r}" fill="${favicon.bg}"/>
+                <text x="${size/2}" y="${size * 0.62}" font-family="${fontFamily}" font-size="${size * 0.52}" font-weight="700" fill="${favicon.fg}" text-anchor="middle" dominant-baseline="central">${favicon.letter}</text>
+            </svg>`;
+        }
+
+        // Generate standalone favicon files (32x32) for browser tabs
+        function generateBrowserFavicon(favicon) {
+            return generateFaviconSVG(favicon, 32);
+        }
+
+        // ================================================================
+        // CARD RENDERER
+        // ================================================================
+        function renderCard(app) {
+            const card = document.createElement('a');
+            card.className = 'app-card';
+            card.style.setProperty('--card-accent', app.accent);
+            card.dataset.name = app.name.toLowerCase();
+            card.dataset.desc = app.desc.toLowerCase();
+            card.dataset.id = app.id;
+
+            if (app.url) {
+                card.href = app.url;
+                card.target = '_blank';
+                card.rel = 'noopener';
+            } else {
+                card.href = '#';
+                card.onclick = (e) => {
+                    e.preventDefault();
+                    showToast(`${app.name} — Coming soon. Port ${app.port} reserved.`);
+                };
+            }
+
+            const statusClass = app.status === 'live' ? 'status-live' : 
+                               app.status === 'building' ? 'status-building' : 'status-stopped';
+
+            card.innerHTML = `
+                <span class="app-port">:${app.port}</span>
+                <div class="app-icon">${generateFaviconSVG(app.favicon)}</div>
+                <div class="app-name">${app.name}</div>
+                <div class="app-desc">${app.desc}</div>
+                <div class="app-status-indicator ${statusClass}"></div>
+            `;
+
+            return card;
+        }
+
+        // ================================================================
+        // RENDER ALL GRIDS
+        // ================================================================
+        function renderAll() {
+            ['ck', 'infra', 'external'].forEach(section => {
+                const grid = document.getElementById(`grid-${section}`);
+                grid.innerHTML = '';
+                apps[section].forEach(app => grid.appendChild(renderCard(app)));
+            });
+        }
+
+        // ================================================================
+        // SEARCH
+        // ================================================================
+        const searchBar = document.getElementById('searchBar');
+        searchBar.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            document.querySelectorAll('.app-card').forEach(card => {
+                const match = !query || 
+                    card.dataset.name.includes(query) || 
+                    card.dataset.desc.includes(query) ||
+                    card.dataset.id.includes(query);
+                card.style.display = match ? '' : 'none';
+            });
+
+            // Hide empty sections
+            document.querySelectorAll('.section').forEach(section => {
+                const grid = section.querySelector('.app-grid');
+                if (!grid) return;
+                const visibleCards = grid.querySelectorAll('.app-card:not([style*="display: none"])');
+                section.style.display = visibleCards.length ? '' : 'none';
+            });
+        });
+
+        // Ctrl+K to focus search
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchBar.focus();
+                searchBar.select();
+            }
+            if (e.key === 'Escape') {
+                searchBar.value = '';
+                searchBar.dispatchEvent(new Event('input'));
+                searchBar.blur();
+            }
+            // Enter to open first visible result
+            if (e.key === 'Enter' && document.activeElement === searchBar) {
+                const firstVisible = document.querySelector('.app-card:not([style*="display: none"])');
+                if (firstVisible && firstVisible.href && firstVisible.href !== '#') {
+                    window.open(firstVisible.href, '_blank');
+                }
+            }
+        });
+
+        // ================================================================
+        // TOAST NOTIFICATION
+        // ================================================================
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+                background: var(--navy-surface); border: 1px solid rgba(201,168,76,0.2);
+                border-radius: 10px; padding: 0.75rem 1.5rem; font-size: 0.82rem;
+                color: var(--text-secondary); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                animation: toastIn 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 2500);
+            setTimeout(() => toast.remove(), 2800);
+        }
+
+        // ================================================================
+        // HEALTH CHECK — Ping live services
+        // ================================================================
+        async function checkAllHealth() {
+            let live = 0, total = 0;
+            
+            for (const app of [...apps.infra, ...apps.ck]) {
+                if (app.url && app.url.startsWith('http://localhost')) {
+                    total++;
+                    try {
+                        const controller = new AbortController();
+                        setTimeout(() => controller.abort(), 3000);
+                        const resp = await fetch(app.url, { 
+                            mode: 'no-cors', 
+                            signal: controller.signal 
+                        });
+                        live++;
+                    } catch (e) {
+                        // Service not reachable
+                        const card = document.querySelector(`[data-id="${app.id}"]`);
+                        if (card) {
+                            const indicator = card.querySelector('.app-status-indicator');
+                            if (indicator) {
+                                indicator.classList.remove('status-live');
+                                indicator.classList.add('status-stopped');
+                            }
+                        }
+                    }
+                }
+            }
+            
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = `${live}/${total} local services reachable`;
+            showToast(`Health check: ${live}/${total} services responding`);
+        }
+
+        // ================================================================
+        // EXPORT FAVICONS — Generate downloadable SVGs for each app
+        // ================================================================
+        function exportFavicons() {
+            const allApps = [...apps.ck, ...apps.infra, ...apps.external];
+            allApps.forEach(app => {
+                const svg = generateBrowserFavicon(app.favicon);
+                const blob = new Blob([svg], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `favicon-${app.id}.svg`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // ================================================================
+        // INIT
+        // ================================================================
+        renderAll();
+
+        // Add toast animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }`;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

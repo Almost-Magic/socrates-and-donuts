@@ -209,9 +209,12 @@ def run_check(feature, base_url):
             result["detail"] = f"Command failed: {e}"
         return result
 
-    # HTTP checks
-    path = feature.get("path", "/")
-    url = f"{base_url.rstrip('/')}{path}"
+    # HTTP checks — feature-level url overrides base_url + path
+    if "url" in feature:
+        url = feature["url"]
+    else:
+        path = feature.get("path", "/")
+        url = f"{base_url.rstrip('/')}{path}"
     timeout = feature.get("timeout", 5)
 
     if check_type == "http_get":
