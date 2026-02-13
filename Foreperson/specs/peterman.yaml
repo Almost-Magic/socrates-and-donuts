@@ -18,29 +18,73 @@ features:
     path: /
     expected_status: 200
 
+  - id: system_status
+    name: System status with dependencies
+    check: http_get
+    path: /api/status
+    expected_status: 200
+    timeout: 15
+    notes: Returns Ollama, SearXNG, PostgreSQL, Snitcher dependency status
+
   - id: brand_analysis
-    name: Brand analysis chambers
+    name: Brand analysis chambers (10 chambers)
     check: http_get
     path: /api/chambers
     expected_status: 200
 
+  - id: brand_crud
+    name: Brand CRUD operations
+    check: http_get
+    path: /api/brands
+    expected_status: 200
+
   - id: authority_engine
-    name: Authority engine
+    name: Authority engine (Ch4 — SERP via SearXNG)
     check: http_get
     path: /api/authority/1
     expected_status: 200
-    notes: Functional endpoint — returns authority scan results for brand 1
+    notes: Keyword research via SearXNG on port 8888
 
   - id: presence_engine
-    name: Presence engine (Technical SEO)
+    name: Presence engine (Ch6 — Technical SEO)
     check: http_get
     path: /api/technical/1
     expected_status: 200
-    notes: Machine Chamber — returns technical audit results for brand 1
+    notes: Meta tag generation, JSON-LD, OpenGraph, sitemap audit
 
-  - id: linkedin_integration
-    name: Content amplification engine
+  - id: content_amplifier
+    name: Content amplification engine (Ch7)
     check: http_get
     path: /api/amplifier/1
     expected_status: 200
-    notes: Amplifier Chamber — returns citation results for brand 1
+    notes: Citation analysis and content scoring
+
+  - id: seo_ask
+    name: SEO Ask endpoint (simple query interface)
+    check: http_get
+    path: /api/seo/ask
+    expected_status: 200
+    notes: GET returns usage info, POST processes SEO query. Mani types what he wants, gets SEO output.
+
+  - id: elaine_briefing
+    name: ELAINE briefing endpoint
+    check: http_get
+    path: /api/elaine-briefing
+    expected_status: 200
+    timeout: 15
+    notes: Returns brand health, hallucinations, authority gaps, recommendations for ELAINE morning briefing
+
+  - id: supervisor_routing
+    name: AI routes through Supervisor (port 9000)
+    check: http_get
+    path: /api/config
+    expected_status: 200
+    notes: Ollama calls route through Supervisor on port 9000, not directly to port 11434
+
+  - id: seo_ask_ui
+    name: SEO Ask page in UI
+    check: http_get
+    path: /
+    expected_status: 200
+    expected_content: SEO Ask
+    notes: Frontend has SEO Ask page where Mani types and gets SEO output

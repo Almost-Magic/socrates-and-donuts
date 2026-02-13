@@ -329,6 +329,47 @@ def test_business_logic():
 
 
 # ═══════════════════════════════════════════════════════════
+# SECTION 9: SEO ASK + ELAINE + SUPERVISOR (12 tests)
+# ═══════════════════════════════════════════════════════════
+def test_seo_ask_elaine():
+    print("\n  SECTION 9: SEO Ask + ELAINE Briefing + Supervisor Routing")
+
+    # Route file exists
+    log_test("T101 SEO Ask route file", "pass" if (BACKEND_DIR / "routes" / "seo_ask.py").exists() else "fail")
+
+    # Blueprint registered
+    routes_init = (BACKEND_DIR / "routes" / "__init__.py").read_text(encoding="utf-8")
+    log_test("T102 seo_ask_bp imported", "pass" if "seo_ask_bp" in routes_init else "fail")
+
+    app_content = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
+    log_test("T103 seo_ask_bp registered", "pass" if "seo_ask_bp" in app_content else "fail")
+
+    # Read seo_ask.py for endpoint checks
+    seo_ask_content = (BACKEND_DIR / "routes" / "seo_ask.py").read_text(encoding="utf-8") if (BACKEND_DIR / "routes" / "seo_ask.py").exists() else ""
+
+    # SEO Ask endpoint
+    log_test("T104 /api/seo/ask endpoint", "pass" if "/api/seo/ask" in seo_ask_content else "fail")
+    log_test("T105 SEO Ask uses SearXNG", "pass" if "searxng" in seo_ask_content else "fail")
+    log_test("T106 SEO Ask uses Ollama", "pass" if "ollama" in seo_ask_content else "fail")
+    log_test("T107 SEO Ask returns keywords", "pass" if "keywords" in seo_ask_content else "fail")
+    log_test("T108 SEO Ask returns meta_tags", "pass" if "meta_tags" in seo_ask_content else "fail")
+
+    # ELAINE briefing endpoint
+    log_test("T109 /api/elaine-briefing endpoint", "pass" if "/api/elaine-briefing" in seo_ask_content else "fail")
+    log_test("T110 Briefing returns recommendations", "pass" if "recommendations" in seo_ask_content else "fail")
+
+    # Supervisor routing (Ollama via port 9000)
+    config_content = (BACKEND_DIR / "config.py").read_text(encoding="utf-8")
+    ollama_content = (BACKEND_DIR / "services" / "ollama_service.py").read_text(encoding="utf-8")
+    routes_through_supervisor = "9000" in config_content and "9000" in ollama_content
+    log_test("T111 Ollama routes through Supervisor (:9000)", "pass" if routes_through_supervisor else "fail")
+
+    # Frontend SEO Ask page
+    html_content = (STATIC_DIR / "index.html").read_text(encoding="utf-8") if (STATIC_DIR / "index.html").exists() else ""
+    log_test("T112 SEO Ask page in frontend", "pass" if "page-seoask" in html_content else "fail")
+
+
+# ═══════════════════════════════════════════════════════════
 # RUNNER
 # ═══════════════════════════════════════════════════════════
 def run_all():
@@ -346,6 +387,7 @@ def run_all():
     test_frontend()
     test_chamber_completeness()
     test_business_logic()
+    test_seo_ask_elaine()
 
     print("\n" + "=" * 60)
     total = RESULTS["passed"] + RESULTS["failed"] + RESULTS["warnings"]

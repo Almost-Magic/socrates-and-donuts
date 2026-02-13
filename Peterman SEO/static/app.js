@@ -42,6 +42,7 @@ function navigateTo(page) {
         hallucinations: "Hallucination Tracker",
         sov: "Share of Voice",
         browser: "Browser LLM Sessions",
+        seoask: "SEO Ask",
     };
     document.getElementById("pageTitle").textContent = titles[page] || page;
 
@@ -350,6 +351,7 @@ function populateBrandSelects() {
         "semanticBrandSelect", "vectorBrandSelect", "authBrandSelect",
         "survBrandSelect", "techBrandSelect", "ampBrandSelect",
         "proofBrandSelect", "oracleBrandSelect", "forgeBrandSelect",
+        "seoBrandSelect",
     ];
     selects.forEach(id => {
         const el = document.getElementById(id);
@@ -1010,4 +1012,123 @@ function formatDate(iso) {
     if (!iso) return "--";
     const d = new Date(iso);
     return d.toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+// ── SEO Ask ─────────────────────────────────────────────
+async function runSeoAsk() {
+    const query = document.getElementById("seoQuery").value.trim();
+    if (!query) { toast("Type your SEO question first", "warning"); return; }
+
+    const brandId = document.getElementById("seoBrandSelect").value || undefined;
+    const btn = document.getElementById("seoAskBtn");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Analysing...';
+
+    const result = await apiPost("/api/seo/ask", { query, brand_id: brandId ? parseInt(brandId) : null });
+
+    btn.disabled = false;
+    btn.textContent = "Ask Peterman";
+
+    if (!result) return;
+
+    document.getElementById("seoResultPanel").style.display = "";
+
+    if (result.llm_status === "unavailable") {
+        // Fallback: show raw SERP data
+        document.getElementById("seoResultBody").innerHTML = `
+            <div style="padding:12px; background:var(--surface); border-radius:var(--radius); border-left:3px solid var(--warning); margin-bottom:12px;">
+                <strong>AI unavailable</strong> — ${esc(result.message)}
+            </div>
+            ${result.keywords?.from_serp?.length ? `
+                <h4 style="font-size:13px; margin-bottom:8px;">Keywords from SERP</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                    ${result.keywords.from_serp.map(k => `<span class="tag tag-gold">${esc(k)}</span>`).join("")}
+                </div>
+            ` : ""}
+        `;
+    } else {
+        const a = result.analysis || {};
+        document.getElementById("seoResultBody").innerHTML = `
+            ${a.summary ? `<p style="font-size:14px; margin-bottom:16px; line-height:1.6;">${esc(a.summary)}</p>` : ""}
+
+            ${a.keywords ? `
+            <div style="margin-bottom:16px;">
+                <h4 style="font-size:13px; margin-bottom:8px;">Keywords</h4>
+                ${a.keywords.primary ? `<div style="margin-bottom:6px;"><strong style="font-size:12px;">Primary:</strong> ${a.keywords.primary.map(k => `<span class="tag tag-gold">${esc(k)}</span>`).join(" ")}</div>` : ""}
+                ${a.keywords.long_tail ? `<div style="margin-bottom:6px;"><strong style="font-size:12px;">Long-tail:</strong> ${a.keywords.long_tail.map(k => `<span class="tag tag-info">${esc(k)}</span>`).join(" ")}</div>` : ""}
+                ${a.keywords.questions ? `<div><strong style="font-size:12px;">Questions:</strong> ${a.keywords.questions.map(k => `<span class="tag tag-muted">${esc(k)}</span>`).join(" ")}</div>` : ""}
+            </div>` : ""}
+
+            ${a.meta_tags ? `
+            <div style="margin-bottom:16px;">
+                <h4 style="font-size:13px; margin-bottom:8px;">Recommended Meta Tags</h4>
+                <div style="background:var(--surface); padding:12px; border-radius:var(--radius); font-family:var(--font-mono, monospace); font-size:12px;">
+                    <div style="margin-bottom:4px;"><span style="color:var(--gold);">title:</span> ${esc(a.meta_tags.title || "")}</div>
+                    <div style="margin-bottom:4px;"><span style="color:var(--gold);">description:</span> ${esc(a.meta_tags.description || "")}</div>
+                    <div style="margin-bottom:4px;"><span style="color:var(--gold);">h1:</span> ${esc(a.meta_tags.h1 || "")}</div>
+                    <div style="margin-bottom:4px;"><span style="color:var(--gold);">og:title:</span> ${esc(a.meta_tags.og_title || "")}</div>
+                    <div><span style="color:var(--gold);">og:description:</span> ${esc(a.meta_tags.og_description || "")}</div>
+                </div>
+            </div>` : ""}
+
+            ${a.content_score ? `
+            <div style="margin-bottom:16px;">
+                <h4 style="font-size:13px; margin-bottom:8px;">Content Score</h4>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Opportunity</div>
+                        <div class="stat-value" style="color:${a.content_score.opportunity_score >= 70 ? 'var(--success)' : a.content_score.opportunity_score >= 40 ? 'var(--warning)' : 'var(--error)'};">${a.content_score.opportunity_score || 0}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Competition</div>
+                        <div class="stat-value">${esc(a.content_score.competition_level || "--")}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Difficulty</div>
+                        <div class="stat-value">${esc(a.content_score.estimated_difficulty || "--")}</div>
+                    </div>
+                </div>
+                ${a.content_score.recommendation ? `<p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">${esc(a.content_score.recommendation)}</p>` : ""}
+            </div>` : ""}
+
+            ${a.content_analysis ? `
+            <div style="margin-bottom:16px;">
+                <h4 style="font-size:13px; margin-bottom:8px;">Content Analysis</h4>
+                ${a.content_analysis.content_gaps ? `<div style="margin-bottom:6px;"><strong style="font-size:12px;">Gaps:</strong><ul style="font-size:12px; padding-left:16px;">${a.content_analysis.content_gaps.map(g => `<li>${esc(g)}</li>`).join("")}</ul></div>` : ""}
+                ${a.content_analysis.recommended_topics ? `<div><strong style="font-size:12px;">Recommended topics:</strong><ul style="font-size:12px; padding-left:16px;">${a.content_analysis.recommended_topics.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>` : ""}
+            </div>` : ""}
+
+            ${a.action_items ? `
+            <div>
+                <h4 style="font-size:13px; margin-bottom:8px;">Action Items</h4>
+                <ol style="font-size:13px; padding-left:16px;">
+                    ${a.action_items.map(i => `<li style="margin-bottom:4px;">${esc(i)}</li>`).join("")}
+                </ol>
+            </div>` : ""}
+
+            <p style="font-size:11px; color:var(--text-muted); margin-top:16px;">
+                Model: ${esc(result.model || "")} | Tokens: ${result.tokens_used || 0} | Cost: $0.00 (local)
+            </p>
+        `;
+        toast("SEO analysis complete", "success");
+    }
+
+    // Show SERP results
+    if (result.serp_results && result.serp_results.length > 0) {
+        document.getElementById("seoSerpPanel").style.display = "";
+        document.getElementById("seoSerpBody").innerHTML = `
+            <table class="data-table">
+                <thead><tr><th>Title</th><th>URL</th><th>Engine</th></tr></thead>
+                <tbody>
+                    ${result.serp_results.map(r => `
+                        <tr>
+                            <td>${esc(r.title)}</td>
+                            <td style="font-size:11px; max-width:300px; overflow:hidden; text-overflow:ellipsis;"><a href="${esc(r.url)}" target="_blank" style="color:var(--info);">${esc(r.url)}</a></td>
+                            <td>${esc(r.engine || "")}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        `;
+    }
 }

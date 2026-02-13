@@ -11,3 +11,4 @@ from .amplifier import amplifier_bp
 from .proof import proof_bp
 from .oracle import oracle_bp
 from .forge import forge_bp
+from .seo_ask import seo_ask_bp

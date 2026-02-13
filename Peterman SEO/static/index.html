@@ -29,6 +29,10 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>Brands</span>
             </button>
+            <button class="nav-item" data-page="seoask" onclick="navigateTo('seoask')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>SEO Ask</span>
+            </button>
             <div class="nav-section">10 Chambers</div>
             <button class="nav-item" data-page="perception" onclick="navigateTo('perception')">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -547,6 +551,36 @@
                 <div class="panel">
                     <div class="panel-header"><h3>Content Pipeline</h3></div>
                     <div class="panel-body" id="forgePanel"><p class="empty-state">Select a brand to generate content briefs from perception and authority gaps.</p></div>
+                </div>
+            </section>
+
+            <!-- SEO ASK PAGE -->
+            <section class="page" id="page-seoask">
+                <div class="panel">
+                    <div class="panel-header"><h3>Ask Peterman</h3></div>
+                    <div class="panel-body">
+                        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">
+                            Type what you want — keyword research, content analysis, meta tags, SEO scoring. Peterman analyses via SearXNG + AI and returns actionable output.
+                        </p>
+                        <div class="form-group">
+                            <label for="seoQuery">What do you need?</label>
+                            <textarea id="seoQuery" rows="3" placeholder="e.g. Analyse keywords for AI consulting Sydney, or Generate meta tags for our governance page, or Score this content topic: responsible AI frameworks"></textarea>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <select id="seoBrandSelect" class="select-input" style="max-width:200px;">
+                                <option value="">No brand context</option>
+                            </select>
+                            <button class="btn btn-gold" onclick="runSeoAsk()" id="seoAskBtn">Ask Peterman</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel" id="seoResultPanel" style="display:none;">
+                    <div class="panel-header"><h3>SEO Analysis</h3></div>
+                    <div class="panel-body" id="seoResultBody"></div>
+                </div>
+                <div class="panel" id="seoSerpPanel" style="display:none;">
+                    <div class="panel-header"><h3>SERP Landscape</h3></div>
+                    <div class="panel-body" id="seoSerpBody"></div>
                 </div>
             </section>
 

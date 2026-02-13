@@ -2,9 +2,9 @@
 Peterman V4.1 — Ollama Service
 Almost Magic Tech Lab
 
-Handles all local LLM calls via Ollama.
-Primary model: llama3.1:70b (heavy analysis)
-Fast model: gemma2:27b (quick tasks)
+Handles all local LLM calls via Supervisor → Ollama.
+Routes through Supervisor on port 9000 (GPU scheduling, model management).
+Primary model: gemma2:27b (reasoning)
 Embed model: nomic-embed-text (embeddings)
 """
 import httpx
@@ -19,7 +19,7 @@ class OllamaService:
     """Interface to Ollama for local LLM inference."""
 
     def __init__(self, base_url=None):
-        self.base_url = base_url or "http://localhost:11434"
+        self.base_url = base_url or "http://localhost:9000"
 
     def _get_url(self, endpoint):
         return f"{self.base_url}{endpoint}"

@@ -90,7 +90,7 @@ def run_proof():
 
             # E06: All 10 chamber nav items
             nav_items = page.query_selector_all(".nav-item")
-            log_test("E06 Navigation items (15+)", "pass" if len(nav_items) >= 15 else "fail",
+            log_test("E06 Navigation items (16+)", "pass" if len(nav_items) >= 16 else "fail",
                      f"Found {len(nav_items)}")
 
             print("\n  SECTION 2: Chamber Navigation")
@@ -192,6 +192,31 @@ def run_proof():
                 } catch(e) { return null; }
             }""")
             log_test("E25 /api/status responds", "pass" if status_resp else "fail")
+
+            print("\n  SECTION 6: SEO Ask + ELAINE Briefing")
+
+            # E26: SEO Ask page navigable
+            seo_nav = page.query_selector('[data-page="seoask"]')
+            if seo_nav:
+                seo_nav.click()
+                page.wait_for_timeout(300)
+                seo_page = page.query_selector("#page-seoask.active")
+                log_test("E26 SEO Ask page loads", "pass" if seo_page else "fail")
+            else:
+                log_test("E26 SEO Ask page loads", "fail", "No nav button for seoask")
+
+            # E27: SEO Ask has input textarea
+            seo_input = page.query_selector("#seoQuery")
+            log_test("E27 SEO Ask has query input", "pass" if seo_input else "fail")
+
+            # E28: ELAINE briefing endpoint
+            briefing_resp = page.evaluate("""async () => {
+                try {
+                    const r = await fetch('/api/elaine-briefing');
+                    return await r.json();
+                } catch(e) { return null; }
+            }""")
+            log_test("E28 /api/elaine-briefing responds", "pass" if briefing_resp and briefing_resp.get("service") == "peterman" else "fail")
 
             # Take screenshot
             screenshots_dir = PROJECT_ROOT / "tests" / "screenshots"

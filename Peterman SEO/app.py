@@ -42,6 +42,7 @@ def create_app(config_name=None):
         health_bp, brands_bp, perception_bp, browser_bp,
         semantic_bp, vectormap_bp, authority_bp, survivability_bp,
         machine_bp, amplifier_bp, proof_bp, oracle_bp, forge_bp,
+        seo_ask_bp,
     )
     app.register_blueprint(health_bp)
     app.register_blueprint(brands_bp)
@@ -56,6 +57,7 @@ def create_app(config_name=None):
     app.register_blueprint(proof_bp)           # Chamber 8
     app.register_blueprint(oracle_bp)          # Chamber 9
     app.register_blueprint(forge_bp)           # Chamber 10
+    app.register_blueprint(seo_ask_bp)         # SEO Ask + ELAINE Briefing
 
     # Serve frontend
     @app.route("/")
