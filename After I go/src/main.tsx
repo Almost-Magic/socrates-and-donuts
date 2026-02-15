@@ -14,7 +14,7 @@ if (navigator.storage && navigator.storage.persist) {
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/after-i-go/sw.js').catch(error => {
+    navigator.serviceWorker.register('/afterigo/sw.js').catch(error => {
       console.log('Service worker registration failed:', error)
     })
   })
@@ -22,7 +22,7 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename="/after-i-go">
+    <BrowserRouter basename="/afterigo">
       <App />
     </BrowserRouter>
   </React.StrictMode>
