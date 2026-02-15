@@ -4,10 +4,10 @@ export default function Landing() {
   const navigate = useNavigate()
   
   const features = [
-    { title: 'Messages', desc: 'Letters to loved ones, delivered when the time comes' },
-    { title: 'Wishes', desc: 'Your preferences for care, ceremonies, and remembrance' },
-    { title: 'Vault', desc: 'Important documents, passwords, and digital accounts' },
-    { title: 'Financial Map', desc: 'Assets, accounts, and instructions all in one place' },
+    { title: 'Messages', desc: 'Letters to loved ones, delivered when the time comes', path: '/messages' },
+    { title: 'Wishes', desc: 'Your preferences for care, ceremonies, and remembrance', path: '/wishes' },
+    { title: 'Vault', desc: 'Important documents, passwords, and digital accounts', path: '/vault' },
+    { title: 'Financial Map', desc: 'Assets, accounts, and instructions all in one place', path: '/financial' },
   ]
 
   return (
@@ -38,14 +38,16 @@ export default function Landing() {
         
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
           {features.map((feature) => (
-            <div 
+            <button
               key={feature.title}
-              className="bg-white/5 rounded-2xl p-6 border border-white/10 
-                         hover:bg-white/10 hover:border-white/20 transition-all duration-200"
+              onClick={() => navigate(feature.path)}
+              className="bg-white/5 rounded-2xl p-6 border border-white/10 text-left
+                         hover:bg-white/10 hover:border-white/20 hover:scale-[1.02] 
+                         transition-all duration-200 cursor-pointer w-full"
             >
               <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
               <p className="text-sm opacity-60 leading-relaxed">{feature.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         
