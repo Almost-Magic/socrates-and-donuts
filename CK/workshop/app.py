@@ -76,7 +76,7 @@ LAN = '192.168.4.55'
 
 SERVICES = {
     # CK Apps -- launchable
-    'elaine':             {'name': 'Elaine',              'port': 5000,  'url': f'http://{LAN}:5000',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Elaine'),           'cmd': 'launch-elaine.bat', 'health': '/api/health'},
+    'elaine':             {'name': 'Elaine',              'port': 5000,  'url': f'http://{LAN}:5000',  'type': 'ck',    'path': os.path.join(CK_BASE, 'Elaine'),           'cmd': 'python app.py', 'health': '/api/health'},
     'costanza':           {'name': 'Costanza',            'port': 5001,  'url': f'http://{LAN}:5001',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Costanza'),      'cmd': 'python app.py', 'health': '/api/health'},
     'learning-assistant': {'name': 'Learning Assistant',  'port': 5002,  'url': f'http://{LAN}:5002',  'type': 'ck',    'path': os.path.join(CK_BASE, 'learning-assistant'),'cmd': 'python app.py', 'health': '/api/health'},
     'writer':             {'name': 'CK Writer',           'port': 5004,  'url': f'http://{LAN}:5004',  'type': 'ck',    'path': os.path.join(CK_BASE, 'CK-Writer'),         'cmd': 'node server.js', 'health': '/'},
@@ -97,6 +97,7 @@ SERVICES = {
     'touchstone-dash':    {'name': 'Touchstone Dashboard','port': 3200,  'url': f'http://{LAN}:3200',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'Touchstone', 'dashboard'), 'cmd': 'npx vite --host 0.0.0.0 --port 3200', 'health': '/'},
     'knowyourself':       {'name': 'KnowYourself',        'port': 8300,  'url': f'http://{LAN}:8300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'backend'), 'cmd': 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8300', 'health': '/api/health'},
     'knowyourself-dash':  {'name': 'KnowYourself UI',     'port': 3300,  'url': f'http://{LAN}:3300',  'type': 'ck',    'path': os.path.join(SOURCE_BASE, 'KnowYourself', 'frontend'), 'cmd': 'npx vite --host 0.0.0.0 --port 3300', 'health': '/'},
+    'proof':              {'name': 'Proof',               'port': 8001,  'url': f'http://{LAN}:8001',  'type': 'ck',    'path': os.path.join(CK_BASE, 'proof'),             'cmd': 'python -m uvicorn main:app --host 0.0.0.0 --port 8001', 'health': '/'},
 
     # Infrastructure -- core services
     'supervisor':         {'name': 'The Supervisor',      'port': 9000,  'url': f'http://{LAN}:9000',  'type': 'infra', 'health': '/api/health', 'path': os.path.join(SOURCE_BASE, 'Supervisor'), 'cmd': 'python supervisor.py'},
