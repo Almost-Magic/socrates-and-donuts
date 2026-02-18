@@ -44,7 +44,7 @@ def _is_ollama_available() -> bool:
         return False
     for url in [f"{SUPERVISOR_URL}/api/tags", "http://localhost:11434/api/tags"]:
         try:
-            resp = _requests.get(url, timeout=3)
+            resp = _requests.get(url, timeout=2)
             if resp.status_code == 200:
                 return True
         except Exception:

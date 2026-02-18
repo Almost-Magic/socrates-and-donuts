@@ -1,0 +1,30 @@
+# ELAINE — AI Chief of Staff for Almost Magic Tech Lab
+# AMTL-ELA-BLD-1.0 — Pinned dependencies
+
+# Core framework
+flask==3.0.2
+flask-cors==4.0.0
+
+# Scheduling
+apscheduler==3.10.4
+
+# HTTP client
+requests==2.31.0
+
+# Environment
+python-dotenv==1.0.1
+
+# Voice — ElevenLabs (primary)
+elevenlabs==1.0.0
+
+# Voice — pyttsx3 (tertiary fallback)
+pyttsx3==2.90
+
+# Production server
+gunicorn==21.2.0
+
+# Testing
+pytest==8.0.0
+
+# Linting
+flake8==7.0.0

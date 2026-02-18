@@ -140,7 +140,7 @@ def get_voice_status() -> dict:
             resp = _requests.get(
                 f"https://api.elevenlabs.io/v1/voices/{ELAINE_VOICE_ID}",
                 headers={"xi-api-key": ELEVENLABS_API_KEY},
-                timeout=5,
+                timeout=2,
             )
             status["elevenlabs_connected"] = resp.status_code == 200
             if resp.status_code == 200:

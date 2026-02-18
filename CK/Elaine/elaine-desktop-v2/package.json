@@ -1,0 +1,24 @@
+{
+  "name": "elaine-desktop",
+  "version": "2.0.0",
+  "description": "ELAINE Desktop — Almost Magic Tech Lab",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "electron": "^28.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "net.almostmagic.elaine",
+    "productName": "ELAINE",
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": "portable"
+    }
+  }
+}

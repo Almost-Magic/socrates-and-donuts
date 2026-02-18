@@ -229,7 +229,7 @@ def _ping_service(tool):
         req = urllib.request.Request(url, method="GET")
         import time
         start = time.time()
-        with urllib.request.urlopen(req, timeout=3) as resp:
+        with urllib.request.urlopen(req, timeout=2) as resp:
             latency = int((time.time() - start) * 1000)
             if resp.status < 400:
                 return (tool["id"], "running", latency)

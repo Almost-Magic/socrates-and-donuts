@@ -1,0 +1,65 @@
+# ELAINE — AI Chief of Staff
+# .gitignore
+
+# Environment
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/*.jsonl
+logs/*.log
+*.log
+
+# Database
+data/*.db
+*.db
+
+# Audio output
+*.wav
+*.mp3
+*.ogg
+
+# Electron build
+electron/node_modules/
+electron/dist/
+electron/out/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# pytest
+.pytest_cache/
+
+# Proof screenshots
+tests/proof/*.png
+tests/proof/*.jpg

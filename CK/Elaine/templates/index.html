@@ -874,6 +874,7 @@ var continuousListen=false; /* auto-restart mic after TTS finishes */
 var ttsUnlocked=false; /* Chrome requires user gesture to unlock speechSynthesis */
 var ttsPending=null; /* queue text to speak after unlock */
 function _saveVoicePref(){try{localStorage.setItem('elaine-voice',voiceEnabled?'on':'off')}catch(e){}}
+var logger={info:function(m){console.log('[ELAINE]',m)}};
 
 /* Strip ALL parenthetical stage directions from AI replies */
 function stripStageDirections(text){
@@ -916,7 +917,6 @@ async function checkVoiceStatus(){
   }catch(e){voiceBackend=speechSynth?'browser':'none'}
   updateVoiceModeUI();
 }
-var logger={info:function(m){console.log('[ELAINE]',m)}};
 checkVoiceStatus();
 
 function speakBrowser(text){
