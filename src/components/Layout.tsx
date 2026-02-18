@@ -8,7 +8,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-midnight-900 text-gray-100 dark:bg-midnight-900 bg-midnight-100">
+    <div className="min-h-screen bg-midnight-900 text-gray-100">
       <div className="flex min-h-screen">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:flex flex-col w-64 border-r border-midnight-700 bg-midnight-800/50">
