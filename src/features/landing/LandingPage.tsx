@@ -206,6 +206,7 @@ export default function LandingPage() {
           </motion.p>
           <motion.button
             variants={fadeIn}
+            onClick={() => navigate('/mirror')}
             className="mt-8 text-gold hover:text-gold-hover transition-colors"
           >
             Enter the Practice Space →

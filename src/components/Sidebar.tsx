@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Menu, X, HelpCircle, Settings } from 'lucide-react';
 
@@ -17,6 +17,7 @@ const navItems = [
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className={`flex flex-col ${collapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
@@ -55,11 +56,17 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-midnight-700 space-y-2">
-        <button className="w-full flex items-center gap-3 px-3 py-2 hover:bg-midnight-700 rounded-lg transition-colors text-gray-300">
+        <button 
+          onClick={() => window.open('https://github.com/Almost-Magic/socrates-and-donuts', '_blank')}
+          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-midnight-700 rounded-lg transition-colors text-gray-300"
+        >
           <HelpCircle size={20} />
           {!collapsed && <span>Help</span>}
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 hover:bg-midnight-700 rounded-lg transition-colors text-gray-300">
+        <button 
+          onClick={() => navigate('/settings')}
+          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-midnight-700 rounded-lg transition-colors text-gray-300"
+        >
           <Settings size={20} />
           {!collapsed && <span>Settings</span>}
         </button>
