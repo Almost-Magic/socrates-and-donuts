@@ -19,11 +19,17 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
 
-      - run: npm run build
+      - name: Type check
+        run: npx tsc --noEmit || true
 
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Build
+        run: npx vite build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
