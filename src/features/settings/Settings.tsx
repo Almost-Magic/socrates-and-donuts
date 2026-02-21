@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getSettings, saveSettings, testAIConnection } from '../../lib/api';
+import { getSettings, saveSettings, testAIConnection, exportVault, importVault } from '../../lib/api';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { Download, Upload } from 'lucide-react';
 
 type Intensity = 'gentle' | 'reflective' | 'deep' | 'confronting';
 
@@ -284,6 +285,61 @@ export default function Settings() {
           <span className="text-gray-400">{saveMessage}</span>
         )}
       </div>
+
+      {/* Export / Import */}
+      <section className="mt-16 pt-10 border-t border-midnight-700">
+        <h2 className="text-xl text-gray-200 mb-4">Your data</h2>
+        <p className="text-gray-400 mb-6 text-sm">
+          Everything you write in Socrates & Donuts stays on your device. You can export a backup anytime, or import a previous backup.
+        </p>
+        
+        <div className="flex gap-4">
+          <button
+            onClick={async () => {
+              try {
+                const data = await exportVault();
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `socrates-donuts-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              } catch (e) {
+                console.error('Export failed:', e);
+              }
+            }}
+            className="flex items-center gap-2 bg-midnight-800 border border-midnight-700 text-gray-300 px-4 py-2 rounded-lg hover:border-gold/50 transition-colors"
+          >
+            <Download size={18} />
+            Export backup
+          </button>
+          
+          <label className="flex items-center gap-2 bg-midnight-800 border border-midnight-700 text-gray-300 px-4 py-2 rounded-lg hover:border-gold/50 transition-colors cursor-pointer">
+            <Upload size={18} />
+            Import backup
+            <input
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                
+                try {
+                  const text = await file.text();
+                  const data = JSON.parse(text);
+                  await importVault(data);
+                  alert('Import successful. Some features may require a refresh.');
+                } catch (err) {
+                  console.error('Import failed:', err);
+                  alert('Import failed. Please check the file format.');
+                }
+              }}
+            />
+          </label>
+        </div>
+      </section>
     </div>
   );
 }
