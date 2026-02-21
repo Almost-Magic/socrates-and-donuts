@@ -17,8 +17,8 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm install
-      - run: npx tsc --noEmit || true
-      - run: npx vite build
+      - run: npm run build
+        working-directory: .
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
