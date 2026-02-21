@@ -45,15 +45,25 @@ test.describe('Socrates & Donuts - Theme Toggle & Buttons', () => {
 
     let clickableCount = 0;
     let failedButtons: string[] = [];
+    let skippedButtons: string[] = [];
 
     for (let i = 0; i < buttonCount; i++) {
       const button = buttons.nth(i);
-      const text = (await button.textContent()) || '';
-      const ariaLabel = await button.getAttribute('aria-label').catch(() => '');
 
-      // Skip hidden or disabled buttons
+      // Skip hidden or detached buttons
       const isHidden = await button.isHidden().catch(() => true);
       if (isHidden) continue;
+
+      // Skip disabled buttons
+      const isDisabled = await button.isDisabled().catch(() => false);
+      if (isDisabled) {
+        const ariaLabel = await button.getAttribute('aria-label').catch(() => '');
+        skippedButtons.push(ariaLabel || `Button ${i}`);
+        continue;
+      }
+
+      const text = (await button.textContent({ timeout: 500 }))?.trim() || '';
+      const ariaLabel = await button.getAttribute('aria-label').catch(() => '');
 
       // Skip buttons that trigger alerts (like copy button)
       if (ariaLabel === 'Toggle theme' || text.includes('Copied')) {
@@ -62,7 +72,7 @@ test.describe('Socrates & Donuts - Theme Toggle & Buttons', () => {
 
       try {
         // Click each button and verify no errors
-        await button.click({ timeout: 1000 });
+        await button.click({ timeout: 500 });
         clickableCount++;
       } catch (e: any) {
         failedButtons.push(`${text || ariaLabel || `Button ${i}`}: ${e.message}`);
@@ -70,6 +80,7 @@ test.describe('Socrates & Donuts - Theme Toggle & Buttons', () => {
     }
 
     console.log('Successfully clicked', clickableCount, 'buttons');
+    console.log('Skipped', skippedButtons.length, 'disabled buttons');
     if (failedButtons.length > 0) {
       console.log('Failed buttons:', failedButtons);
     }

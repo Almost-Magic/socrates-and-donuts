@@ -18,9 +18,11 @@ export default {
           DEFAULT: '#C9944A',
           hover: '#D4A55B',
         },
+        'silence-blue': '#1A2A3A',
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif'],
       },
     },
   },

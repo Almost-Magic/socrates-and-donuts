@@ -10,6 +10,7 @@ import DecisionJournal from './features/decisions/DecisionJournal';
 import Rewriter from './features/rewriter/Rewriter';
 import WisdomFeed from './features/wisdom-feed/WisdomFeed';
 import QuickCapture from './features/capture/QuickCapture';
+import Settings from './features/settings/Settings';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/rewriter" element={<Rewriter />} />
         <Route path="/wisdom" element={<WisdomFeed />} />
         <Route path="/capture" element={<QuickCapture />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Layout>
   );
