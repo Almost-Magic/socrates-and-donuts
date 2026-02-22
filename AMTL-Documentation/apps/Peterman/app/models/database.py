@@ -18,13 +18,20 @@ metadata = MetaData()
 # Single shared Base - CRITICAL: all models must use this
 Base = declarative_base(metadata=metadata)
 
-# Create engine
-engine = create_engine(
-    config['DB_URL'],
-    pool_size=5,
-    max_overflow=10,
-    pool_pre_ping=True
-)
+# Create engine - SQLite doesn't use pool_size/max_overflow
+# For SQLite, we use check_same_thread=False for Flask compatibility
+if config['DB_URL'].startswith('sqlite'):
+    engine = create_engine(
+        config['DB_URL'],
+        connect_args={"check_same_thread": False}
+    )
+else:
+    engine = create_engine(
+        config['DB_URL'],
+        pool_size=5,
+        max_overflow=10,
+        pool_pre_ping=True
+    )
 
 # Session factory
 session_factory = sessionmaker(bind=engine)

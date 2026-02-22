@@ -168,14 +168,38 @@ function updateTrayMenu() {
 function startFlask() {
     console.log('[Peterman] Starting Flask backend...');
     
-    // Find Python and Flask
-    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+    // Use start.bat on Windows for proper environment setup
+    const isWindows = process.platform === 'win32';
+    const appPath = path.join(__dirname, '..');
     
-    flaskProcess = spawn(pythonCmd, ['run.py'], {
-        cwd: path.join(__dirname, '..'),
-        stdio: ['ignore', 'pipe', 'pipe'],
-        detached: false
-    });
+    if (isWindows) {
+        // Try to use start.bat first, fallback to python
+        const startBatPath = path.join(appPath, 'start.bat');
+        const fs = require('fs');
+        
+        if (fs.existsSync(startBatPath)) {
+            console.log('[Peterman] Using start.bat for Flask...');
+            flaskProcess = spawn('cmd', ['/c', 'start.bat'], {
+                cwd: appPath,
+                stdio: ['ignore', 'pipe', 'pipe'],
+                detached: false,
+                shell: true
+            });
+        } else {
+            console.log('[Peterman] Using python directly...');
+            flaskProcess = spawn('python', ['run.py'], {
+                cwd: appPath,
+                stdio: ['ignore', 'pipe', 'pipe'],
+                detached: false
+            });
+        }
+    } else {
+        flaskProcess = spawn('python3', ['run.py'], {
+            cwd: appPath,
+            stdio: ['ignore', 'pipe', 'pipe'],
+            detached: false
+        });
+    }
 
     // Log Flask output
     flaskProcess.stdout.on('data', (data) => {

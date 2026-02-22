@@ -52,9 +52,9 @@ config = {
     'DEBUG': get('DEBUG', 'False').lower() == 'true',
     'LOG_LEVEL': get('LOG_LEVEL', 'INFO'),
     
-    # Database
-    'DB_URL': get('DB_URL', 'postgresql://postgres:postgres@host.docker.internal:5433/peterman_flask'),
-    'REDIS_URL': get('REDIS_URL', 'redis://localhost:6379/0'),
+    # Database (SQLite for zero-dependency startup)
+    'DB_URL': get('DB_URL', 'sqlite:///peterman.db'),
+    # Redis removed - using in-memory cache for simplicity
     
     # AI Engines
     'OLLAMA_URL': get('OLLAMA_URL', 'http://localhost:9000'),

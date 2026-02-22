@@ -6,7 +6,7 @@ Jira-style hallucination tracking per AMTL-PETERMAN-SPC-2.0-PART1 Section 6.1.
 
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, Text, UUID, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -15,7 +15,7 @@ class Hallucination(Base, TimestampMixin):
     """Hallucination record per AMTL-PETERMAN-SPC-2.0-PART1 Section 6.1.
     
     Attributes:
-        hallucination_id: Primary key UUID.
+        hallucination_id: Primary key UUID (stored as string for SQLite).
         domain_id: Reference to the domain.
         detected_at: When the hallucination was detected.
         llm_source: Which LLM produced the hallucination.
@@ -30,15 +30,15 @@ class Hallucination(Base, TimestampMixin):
     
     __tablename__ = 'hallucinations'
     
-    hallucination_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    domain_id = Column(UUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    hallucination_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     detected_at = Column(DateTime, default=datetime.utcnow)
     llm_source = Column(String(50), nullable=False)
     query_triggered = Column(String(500), nullable=False)
     false_claim = Column(Text, nullable=False)
     severity_score = Column(Integer, default=5)
     status = Column(String(30), default='open')
-    assigned_brief_id = Column(UUID)
+    assigned_brief_id = Column(String(36))
     closed_at = Column(DateTime)
     resolution_evidence = Column(Text)
     

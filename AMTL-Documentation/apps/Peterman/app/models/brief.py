@@ -6,8 +6,7 @@ Content brief tracking per AMTL-PETERMAN-SPC-2.0-PART2 Chamber 10.
 
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Float, DateTime, Text, JSON, UUID, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import Column, String, Float, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -16,16 +15,16 @@ class ContentBrief(Base, TimestampMixin):
     """Content Brief record per AMTL-PETERMAN-SPC-2.0-PART2 Section (Chamber 10).
     
     Attributes:
-        brief_id: Primary key UUID.
+        brief_id: Primary key UUID (stored as string for SQLite).
         domain_id: Reference to the domain.
         source: What triggered the brief (hallucination_autopilot, oracle, shadow_mode, manual).
         trigger_id: UUID of the trigger event.
         target_query: The query this content should answer.
-        target_llms: JSON array of target LLM providers.
+        target_llms: JSON array of target LLM providers (stored as JSON text).
         target_cluster: SGS cluster this targets.
         channel_intent: Channel type (web_page, rag_document, linkedin_article, faq_block).
-        key_facts: JSON array of required facts.
-        key_headings: JSON array of suggested headings.
+        key_facts: JSON array of required facts (stored as JSON text).
+        key_headings: JSON array of suggested headings (stored as JSON text).
         word_count_range: Target word count range.
         schema_type: Schema type to implement.
         lcri_target: Target LCRI score.
@@ -38,16 +37,16 @@ class ContentBrief(Base, TimestampMixin):
     
     __tablename__ = 'content_briefs'
     
-    brief_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    domain_id = Column(UUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    brief_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     source = Column(String(50), nullable=False)
-    trigger_id = Column(UUID)
+    trigger_id = Column(String(36))
     target_query = Column(String(500))
-    target_llms = Column(JSONB)
+    target_llms = Column(Text)  # JSON stored as text
     target_cluster = Column(String(255))
     channel_intent = Column(String(50))
-    key_facts = Column(JSONB)
-    key_headings = Column(JSONB)
+    key_facts = Column(Text)  # JSON stored as text
+    key_headings = Column(Text)  # JSON stored as text
     word_count_range = Column(String(20))
     schema_type = Column(String(100))
     lcri_target = Column(Float)

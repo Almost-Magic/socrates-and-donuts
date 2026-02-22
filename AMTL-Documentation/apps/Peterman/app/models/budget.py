@@ -6,7 +6,7 @@ Per-domain cost tracking with 80%/100% thresholds per KNW-002.
 
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Float, DateTime, Text, UUID, ForeignKey
+from sqlalchemy import Column, String, Float, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -15,7 +15,7 @@ class BudgetTracking(Base, TimestampMixin):
     """Budget tracking entry per AMTL-PTR-TDD-1.0 Section 10.4.
     
     Attributes:
-        tracking_id: Primary key UUID.
+        tracking_id: Primary key UUID (stored as string for SQLite).
         domain_id: Reference to the domain.
         api_provider: Which API provider was used (openai, anthropic).
         cost_aud: Cost incurred in AUD.
@@ -24,8 +24,8 @@ class BudgetTracking(Base, TimestampMixin):
     
     __tablename__ = 'budget_tracking'
     
-    tracking_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    domain_id = Column(UUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    tracking_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     api_provider = Column(String(50), nullable=False)
     cost_aud = Column(Float, nullable=False)
     description = Column(String(255))

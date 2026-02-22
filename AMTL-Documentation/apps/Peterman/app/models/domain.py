@@ -6,10 +6,9 @@ Per DEC-001: multi-domain architecture from day one.
 """
 
 import uuid
+import json
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Text, JSON, UUID
-from sqlalchemy.dialects.postgresql import JSONB
-
+from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Text, JSON
 from app.models.database import Base, TimestampMixin
 
 
@@ -17,7 +16,7 @@ class Domain(Base, TimestampMixin):
     """Domain Object model per AMTL-PTR-TDD-1.0 Section 3.1.
     
     Attributes:
-        domain_id: Primary key UUID.
+        domain_id: Primary key UUID (stored as string for SQLite).
         domain_name: The domain name (e.g., 'almostmagic.net.au').
         display_name: Human-readable display name.
         owner_label: Label for the domain owner (e.g., 'AMTL Internal', 'Client: Name').
@@ -33,7 +32,7 @@ class Domain(Base, TimestampMixin):
     
     __tablename__ = 'domains'
     
-    domain_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    domain_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     domain_name = Column(String(255), unique=True, nullable=False)
     display_name = Column(String(255), nullable=False)
     owner_label = Column(String(255))
@@ -41,12 +40,12 @@ class Domain(Base, TimestampMixin):
     cms_url = Column(String(500))  # URL for the CMS (WP site, Webflow site, etc.)
     cms_api_key = Column(Text)  # Encrypted API key/token
     cms_username = Column(String(255))  # Username for CMS (for Basic Auth)
-    target_llms = Column(JSONB, default=lambda: ['openai', 'anthropic', 'ollama'])
+    target_llms = Column(Text, default=lambda: json.dumps(['openai', 'anthropic', 'ollama']))
     probe_cadence = Column(String(20), default='weekly')
     budget_weekly_aud = Column(Float, default=50.00)
     status = Column(String(20), default='onboarding')
     tier = Column(String(20), default='owner')
-    crawl_data = Column(JSONB)  # Store crawl results
+    crawl_data = Column(Text)  # Store crawl results as JSON string
     
     def to_dict(self) -> dict:
         """Convert domain to dictionary representation.

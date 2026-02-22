@@ -4,7 +4,7 @@ Target Query model for keyword engine.
 
 import logging
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, UUID as SQLUUID, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 
 from app.models.database import Base, get_session
 
@@ -17,7 +17,7 @@ class TargetQuery(Base):
     __tablename__ = 'target_queries'
     
     id = Column(Integer, primary_key=True)
-    domain_id = Column(SQLUUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     query = Column(String(1000), nullable=False)
     category = Column(String(50))
     priority = Column(String(20), default='medium')

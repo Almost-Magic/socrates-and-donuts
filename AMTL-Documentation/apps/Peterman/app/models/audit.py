@@ -5,9 +5,9 @@ Immutable append-only audit trail per DEC-008.
 """
 
 import uuid
+import json
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Text, JSON, UUID, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import Column, String, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -18,7 +18,7 @@ class AuditLog(Base, TimestampMixin):
     Per DEC-008: INSERT-only permissions for application role.
     
     Attributes:
-        entry_id: Primary key UUID.
+        entry_id: Primary key UUID (stored as string for SQLite).
         domain_id: Reference to the domain.
         timestamp: When the action occurred.
         action_type: Type of action (e.g., 'domain_created', 'deployment_executed').
@@ -34,17 +34,17 @@ class AuditLog(Base, TimestampMixin):
     
     __tablename__ = 'audit_log'
     
-    entry_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    domain_id = Column(UUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    entry_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
     action_type = Column(String(100), nullable=False)
-    action_detail = Column(JSONB, nullable=False)
+    action_detail = Column(Text, nullable=False)  # JSON stored as text
     initiated_by = Column(String(50), nullable=False)
     approval_gate = Column(String(20))
     approved_by = Column(String(100))
     approved_at = Column(DateTime)
     outcome = Column(String(20), default='pending')
-    snapshot_id = Column(UUID)
+    snapshot_id = Column(String(36))
     notes = Column(Text)
     
     def to_dict(self) -> dict:

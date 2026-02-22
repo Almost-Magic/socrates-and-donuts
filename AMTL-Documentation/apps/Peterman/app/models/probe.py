@@ -7,7 +7,7 @@ LLM probe results with normalisation data per DEC-010.
 import uuid
 import json
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Text, UUID as SQLUUID, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -18,7 +18,7 @@ class ProbeResult(Base, TimestampMixin):
     __tablename__ = 'probe_results'
     
     id = Column(Integer, primary_key=True)
-    domain_id = Column(SQLUUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     llm_provider = Column(String(50), nullable=False)
     query = Column(Text, nullable=False)
     run_number = Column(Integer, default=1)

@@ -5,9 +5,8 @@ Handles deployments and rollback snapshots per DEC-011.
 """
 
 import uuid
-from datetime import datetime
-from sqlalchemy import Column, String, Float, DateTime, Text, JSON, UUID, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB
+from datetime import datetime, timedelta
+from sqlalchemy import Column, String, Float, DateTime, Text, ForeignKey
 
 from app.models.database import Base, TimestampMixin
 
@@ -16,15 +15,15 @@ class Deployment(Base, TimestampMixin):
     """Deployment record per AMTL-PTR-TDD-1.0 Section 8.1.
     
     Attributes:
-        deployment_id: Primary key UUID.
+        deployment_id: Primary key UUID (stored as string for SQLite).
         domain_id: Reference to the domain.
         action_type: Type of action deployed.
         target_url: URL where the change was deployed.
         html_before: Full HTML before change.
         html_after: Full HTML after change.
         diff: Unified diff of changes.
-        metadata_before: Metadata before change.
-        metadata_after: Metadata after change.
+        metadata_before: Metadata before change (stored as JSON text).
+        metadata_after: Metadata after change (stored as JSON text).
         approval_id: Reference to approval if applicable.
         deployed_at: When deployment occurred.
         rollback_status: Snapshot status (available, used, expired).
@@ -34,16 +33,16 @@ class Deployment(Base, TimestampMixin):
     
     __tablename__ = 'deployments'
     
-    deployment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    domain_id = Column(UUID(as_uuid=True), ForeignKey('domains.domain_id'), nullable=False)
+    deployment_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    domain_id = Column(String(36), ForeignKey('domains.domain_id'), nullable=False)
     action_type = Column(String(100), nullable=False)
     target_url = Column(String(500))
     html_before = Column(Text)
     html_after = Column(Text)
     diff = Column(Text)
-    metadata_before = Column(JSONB)
-    metadata_after = Column(JSONB)
-    approval_id = Column(UUID)
+    metadata_before = Column(Text)  # JSON stored as text
+    metadata_after = Column(Text)  # JSON stored as text
+    approval_id = Column(String(36))
     deployed_at = Column(DateTime, default=datetime.utcnow)
     rollback_status = Column(String(20), default='available')
     rollback_expires_at = Column(DateTime)
