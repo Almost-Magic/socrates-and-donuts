@@ -29,8 +29,10 @@ test.describe('Deployed Site Navigation Test Suite (HashRouter)', () => {
   test('The Vault - shows empty state or entries', async ({ page }) => {
     await page.goto(BASE_URL + '/#/vault');
     await expect(page.getByRole('heading', { name: 'The Vault' })).toBeVisible();
-    await expect(page.locator('text=Write the angry message. Lock it. Decide tomorrow.')).toBeVisible();
-    await expect(page.locator('button:has-text("+ New Vault Entry")')).toBeVisible();
+    // Check for Vault tabs (these are consistent across versions)
+    await expect(page.locator('button:has-text("Insights")')).toBeVisible();
+    await expect(page.locator('button:has-text("Letters")')).toBeVisible();
+    await expect(page.locator('button:has-text("Unsent")')).toBeVisible();
   });
 
   test('Letter - shows letter writing UI', async ({ page }) => {
