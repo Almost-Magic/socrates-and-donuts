@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peterman — Autonomous SEO & LLM Presence Engine</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
+    <link rel="stylesheet" href="/static/css/peterman.css">
+</head>
+<body data-theme="dark">
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <circle cx="16" cy="16" r="14" stroke="url(#gold-gradient)" stroke-width="2"/>
+                    <path d="M10 16l4 4 8-8" stroke="url(#gold-gradient)" stroke-width="2" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gold-gradient" x1="0" y1="0" x2="32" y2="32">
+                            <stop stop-color="#C9944A"/>
+                            <stop offset="1" stop-color="#E5B566"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text" role="heading" aria-level="1">Peterman</span>
+            </div>
+            <span class="tagline">Autonomous SEO & LLM Presence Engine</span>
+        </div>
+        <div class="header-right">
+            <button class="btn-icon" id="theme-toggle" title="Toggle dark/light theme" aria-label="Toggle dark or light theme">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <button class="btn-help" id="help-toggle" title="Help" aria-label="Open help panel (Press ?)" aria-haspopup="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- War Room -->
+        <section class="war-room" id="war-room">
+            <div class="section-header">
+                <button class="btn-back" id="back-to-war-room" style="display:none;">← Back to War Room</button>
+                <h2 id="page-title">The War Room</h2>
+                <p class="section-subtitle" id="page-subtitle">Multi-domain overview</p>
+            </div>
+            
+            <!-- Domain Cards Grid (War Room) -->
+            <div class="domain-grid" id="domain-grid">
+                <!-- Domain Cards will be rendered here -->
+            </div>
+            
+            <!-- Domain Detail View -->
+            <div class="domain-detail" id="domain-detail" style="display:none;">
+                <!-- Domain Header -->
+                <div class="detail-header">
+                    <div class="detail-info">
+                        <h3 id="detail-domain-name"></h3>
+                        <span id="detail-domain-url"></span>
+                    </div>
+                    <div class="detail-actions">
+                        <span class="domain-status" id="detail-status"></span>
+                    </div>
+                </div>
+                
+                <!-- Score Overview -->
+                <div class="score-overview" id="score-overview">
+                    <div class="score-gauge-large">
+                        <svg width="160" height="160"><circle class="score-gauge-bg" cx="80" cy="80" r="70"/>
+                        <circle class="score-gauge-fill" id="detail-score-circle" cx="80" cy="80" r="70"/></svg>
+                        <span class="score-value-large" id="detail-score-value">--</span>
+                    </div>
+                    <div class="score-breakdown" id="score-breakdown"></div>
+                </div>
+                
+                <!-- Workflow Actions -->
+                <div class="workflow-actions" id="workflow-actions">
+                    <h4>Workflow Actions</h4>
+                    <div class="action-buttons">
+                        <button class="btn-action" data-action="crawl" title="Crawl domain">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            Crawl
+                        </button>
+                        <button class="btn-action" data-action="keywords" title="Generate keywords">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            Keywords
+                        </button>
+                        <button class="btn-action" data-action="probe" title="Run probe">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            Probe
+                        </button>
+                        <button class="btn-action" data-action="hallucinations" title="Detect hallucinations">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/><path d="M12 12v.01"/><path d="M11 17v.01"/><path d="M7 14v.01"/></svg>
+                            Hallucinations
+                        </button>
+                        <button class="btn-action" data-action="briefs" title="Content briefs">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                            Briefs
+                        </button>
+                        <button class="btn-action" data-action="approvals" title="Approvals">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            Approvals
+                        </button>
+                        <button class="btn-action" data-action="score" title="Refresh score">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                            Refresh Score
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Data Panels -->
+                <div class="data-panels" id="data-panels">
+                    <!-- Chambers Panel -->
+                    <div class="panel" id="panel-chambers">
+                        <div class="panel-header"><h4>Chambers</h4></div>
+                        <div class="panel-content" id="chambers-content">Loading...</div>
+                    </div>
+                    <!-- Probes Panel -->
+                    <div class="panel" id="panel-probes">
+                        <div class="panel-header"><h4>Probes</h4></div>
+                        <div class="panel-content" id="probes-content">Loading...</div>
+                    </div>
+                    <!-- Keywords Panel -->
+                    <div class="panel" id="panel-keywords">
+                        <div class="panel-header"><h4>Keywords</h4></div>
+                        <div class="panel-content" id="keywords-content">Loading...</div>
+                    </div>
+                    <!-- Hallucinations Panel -->
+                    <div class="panel" id="panel-hallucinations">
+                        <div class="panel-header"><h4>Hallucinations</h4></div>
+                        <div class="panel-content" id="hallucinations-content">Loading...</div>
+                    </div>
+                    <!-- Briefs Panel -->
+                    <div class="panel" id="panel-briefs">
+                        <div class="panel-header"><h4>Briefs (The Forge)</h4></div>
+                        <div class="panel-content" id="briefs-content">Loading...</div>
+                    </div>
+                    <!-- Approvals Panel -->
+                    <div class="panel" id="panel-approvals">
+                        <div class="panel-header"><h4>Approvals</h4></div>
+                        <div class="panel-content" id="approvals-content">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="24" cy="24" r="20"/>
+                        <path d="M24 16v16M16 24h16"/>
+                    </svg>
+                </div>
+                <h3>No domains yet</h3>
+                <p>Add your first domain to start monitoring SEO and LLM presence.</p>
+                <button class="btn-primary" id="add-domain-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add Domain
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Domain Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="add-domain-modal">
+            <div class="modal-header">
+                <h3>Add New Domain</h3>
+                <button class="btn-close" id="close-modal">&times;</button>
+            </div>
+            <form id="add-domain-form">
+                <div class="form-group">
+                    <label for="domain-name">Domain Name</label>
+                    <input type="text" id="domain-name" placeholder="example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="display-name">Display Name</label>
+                    <input type="text" id="display-name" placeholder="Example Inc">
+                </div>
+                <div class="form-group">
+                    <label for="owner-label">Owner Label</label>
+                    <input type="text" id="owner-label" placeholder="Internal / Client Name">
+                </div>
+                <div class="form-group">
+                    <label for="cms-type">CMS Type</label>
+                    <select id="cms-type">
+                        <option value="">Select CMS...</option>
+                        <option value="wordpress">WordPress</option>
+                        <option value="webflow">Webflow</option>
+                        <option value="ghost">Ghost</option>
+                        <option value="static">Static Site</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="budget">Weekly Budget (AUD)</label>
+                    <input type="number" id="budget" value="50" min="0" step="10">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-add">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Domain</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Help Panel -->
+    <div class="help-panel" id="help-panel">
+        <div class="help-header">
+            <h3>Contextual Help</h3>
+            <button class="btn-close" id="close-help">&times;</button>
+        </div>
+        <div class="help-content" id="help-content">
+            <!-- Help content will be injected here -->
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

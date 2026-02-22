@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  peterman-db:
+    image: pgvector/pgvector:pg16
+    container_name: peterman-db
+    environment:
+      POSTGRES_DB: peterman
+      POSTGRES_USER: peterman
+      POSTGRES_PASSWORD: ${PETERMAN_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - peterman_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U peterman -d peterman"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  peterman-redis:
+    image: redis:7-alpine
+    container_name: peterman-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  peterman_data:
+  redis_data:
