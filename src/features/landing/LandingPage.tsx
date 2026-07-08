@@ -125,7 +125,7 @@ export default function LandingPage() {
             {[
               { step: 'Step 1', title: 'Tell the mirror', desc: "Not a form. Not a quiz. Just talk." },
               { step: 'Step 2', title: 'Answer the questions', desc: "The mirror asks. You answer. The seeing happens in between." },
-              { step: 'Step 3', title: 'Decide from clarity', desc: "Act, wait, or let go — but do it clearly." },
+              { step: 'Step 3', title: 'Decide from clarity', desc: "Act, wait, or let go, but do it clearly." },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -150,16 +150,16 @@ export default function LandingPage() {
           <h2 className="text-3xl font-light text-gray-200 text-center mb-12">The Tools</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              { icon: '🪞', name: 'The Mirror', desc: 'A wise conversation that starts with your body' },
-              { icon: '🔐', name: 'The Vault', desc: 'Write the angry message. Lock it. Decide tomorrow.' },
-              { icon: '🔥', name: 'Letter You\'ll Never Send', desc: 'Write it. Burn it. Watch it dissolve.' },
-              { icon: '🌤️', name: 'Emotional Weather Map', desc: 'Your emotions as beautiful weather patterns' },
-              { icon: '🧭', name: 'Body Compass', desc: 'Tap where you feel it. Your body knows first.' },
-              { icon: '📔', name: 'Decision Journal', desc: 'Log it now. Review with fresh eyes later.' },
-              { icon: '✍️', name: 'Message Rewriter', desc: 'Your angry email in Calm, Empathetic, and Assertive' },
-              { icon: '📜', name: 'Wisdom Feed', desc: 'The anti-doomscroll. Curated wisdom, not outrage.' },
-              { icon: '⚡', name: 'Quick Capture', desc: 'Catch the thought before it\'s gone.' },
-              { icon: '🛡️', name: 'Crisis Support', desc: 'When things are serious, real help.' },
+              { icon: 'Mirror', name: 'The Mirror', desc: 'A wise conversation that starts with your body' },
+              { icon: 'Vault', name: 'The Vault', desc: 'Write the angry message. Lock it. Decide tomorrow.' },
+              { icon: 'Letter', name: 'Letter You\'ll Never Send', desc: 'Write it. Delete it. Let the first charge pass.' },
+              { icon: 'Weather', name: 'Emotional Weather Map', desc: 'Name the emotional weather before you act.' },
+              { icon: 'Body', name: 'Body Compass', desc: 'Tap where you feel it. Your body knows first.' },
+              { icon: 'Journal', name: 'Decision Journal', desc: 'Log it now. Review with fresh eyes later.' },
+              { icon: 'Rewrite', name: 'Message Rewriter', desc: 'Try calm, empathetic, and assertive versions.' },
+              { icon: 'Wisdom', name: 'Wisdom Feed', desc: 'The anti-doomscroll. Curated wisdom, not outrage.' },
+              { icon: 'Capture', name: 'Quick Capture', desc: 'Catch the thought before it is gone.' },
+              { icon: 'Support', name: 'Crisis Support', desc: 'When things are serious, real help.' },
             ].map((tool, i) => (
               <motion.div
                 key={i}
@@ -209,7 +209,7 @@ export default function LandingPage() {
             onClick={() => navigate('/mirror')}
             className="mt-8 text-gold hover:text-gold-hover transition-colors"
           >
-            Enter the Practice Space →
+            Enter the Practice Space 
           </motion.button>
         </motion.div>
       </section>
@@ -222,15 +222,15 @@ export default function LandingPage() {
             <p>In the Buddhist tradition, the Dhamma is given freely. Always has been.</p>
             <div className="flex justify-center gap-8 text-gray-300">
               <span>No ads</span>
-              <span>•</span>
+              <span>|</span>
               <span>No premium tier</span>
-              <span>•</span>
+              <span>|</span>
               <span>No data collection</span>
             </div>
             <p>Your conversations stay on your device.</p>
             <p>The code is open source.</p>
             <p>Wisdom belongs to everyone.</p>
-            <p className="text-gold mt-8">This is dana — the practice of generosity.</p>
+            <p className="text-gold mt-8">This is dana, the practice of generosity.</p>
           </div>
         </div>
       </section>
@@ -278,7 +278,7 @@ export default function LandingPage() {
             Built by Almost Magic Tech Lab
           </p>
           <p className="text-gold/60 text-sm italic">
-            Sabbē sattā sukhī hontu — May all beings be happy.
+            May all beings be happy.
           </p>
         </div>
       </footer>
